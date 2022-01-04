@@ -90,6 +90,10 @@ Vue.component('name-manager', {
         editNameStart: function (name) {
             this.editName.editing = true;
             this.editName.oldName = name;
+            this.$nextTick(function () {
+                var inputElement = this.$refs['editNameInput'];
+                inputElement.focus();
+            })
         },
         editNameCancel: function () {
             this.editName.editing = false;
@@ -112,6 +116,10 @@ Vue.component('name-manager', {
         },
         newNameStart: function () {
             this.newName.editing = true;
+            this.$nextTick(function () {
+                var inputElement = this.$refs['newNameInput'];
+                inputElement.focus();
+            })
         },
         newNameCancel: function () {
             this.newName.editing = false;
@@ -119,8 +127,10 @@ Vue.component('name-manager', {
         },
         newNameSubmit: function () {
             var newFloor = this.nameList.slice();
-            newFloor.push(this.newName.newName);
-            newFloor.push(this.newName.newName);
+            var name = this.newName.newName;
+            newFloor.push(name);
+            newFloor.push(name);
+            console.log(name);
             this.newNameCancel();
             this.$emit('replace-floor', newFloor);
         },
@@ -327,71 +337,83 @@ Vue.component('name-manager', {
         v-if="editName.editing"
         class="manager-inner round-and-shadow"
     >
-        <p>
-            <span>New name for</span>
-            <span class="artist-name">"{{editName.oldName}}":</span>
-        </p>
-        <p>
-            <input
-                v-model="editName.newName"
-                type="text"
-            />
-        </p>
-        <p>
-            <button
-                @click="editNameCancel"
-            >Cancel</button>
-            <button
-                :disabled="
-                    editName.oldName === editName.newName
-                    || checkForbiddenEdit
-                    || checkEmptyEdit
-                "
-                @click="editNameSubmit"
-            >OK</button>
-        </p>
-        <p v-if="!checkForbiddenEdit">
-            <span>TIP: keep the display name reasonably short!</span>
-        </p>
-        <p v-if="checkForbiddenEdit">
-            <span
-                class="warning"
-            >"{{editName.newName}}" is the name of another artist! Please make the new name unique!</span>
-        </p>
+        <form
+            @submit.prevent="editNameSubmit"
+        >
+            <p>
+                <span>New name for</span>
+                <span class="artist-name">"{{editName.oldName}}":</span>
+            </p>
+            <p>
+                <input
+                    v-model="editName.newName"
+                    type="text"
+                    ref="editNameInput"
+                />
+            </p>
+            <p>
+                <button
+                    @click="editNameCancel"
+                    type="button"
+                >Cancel</button>
+                <button
+                    :disabled="
+                        editName.oldName === editName.newName
+                        || checkForbiddenEdit
+                        || checkEmptyEdit
+                    "
+                    type="submit"
+                >OK</button>
+            </p>
+            <p v-if="!checkForbiddenEdit">
+                <span>TIP: keep the display name reasonably short!</span>
+            </p>
+            <p v-if="checkForbiddenEdit">
+                <span
+                    class="warning"
+                >"{{editName.newName}}" is the name of another artist! Please make the new name unique!</span>
+            </p>
+        </form>
     </div>
     <div
         v-if="newName.editing"
         class="manager-inner round-and-shadow"
     >
-        <p>
-            <span>New artist's name:</span>
-        </p>
-        <p>
-            <input
-                v-model="newName.newName"
-                type="text"
-            />
-        </p>
-        <p>
-            <button
-                @click="newNameCancel"
-            >Cancel</button>
-            <button
-                :disabled="
-                    checkForbiddenNew
-                    || checkEmptyNew
-                "
-                @click="newNameSubmit"
-            >OK</button>
-        </p>
-        <p v-if="!checkForbiddenNew">
-            <span>TIP: keep the display name reasonably short!</span>
-        </p>
-        <p v-if="checkForbiddenNew">
-            <span
-                class="warning"
-            >"{{newName.newName}}" is the name of another artist! Please make the new name unique!</span>
-        </p>
+        <form
+            @submit.prevent="newNameSubmit"
+        >
+            <p>
+                <span>New artist's name:</span>
+            </p>
+            <p>
+                <input
+                    v-model="newName.newName"
+                    type="text"
+                    ref="newNameInput"
+                />
+            </p>
+            <p>
+                <button
+                    @click="newNameCancel"
+                    type="button"
+                >Cancel</button>
+                <button
+                    :disabled="
+                        checkForbiddenNew
+                        || checkEmptyNew
+                    "
+                    type="submit"
+                >OK</button>
+            </p>
+            <p v-if="!checkForbiddenNew">
+                <span>TIP: keep the display name reasonably short!</span>
+            </p>
+            <p v-if="checkForbiddenNew">
+                <span
+                    class="warning"
+                >"{{newName.newName}}" is the name of another artist! Please make the new name unique!</span>
+            </p>
+        </form>
     </div>
     <div
         class="manager-inner"
