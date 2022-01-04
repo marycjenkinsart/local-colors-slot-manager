@@ -28,6 +28,10 @@ Vue.component('name-manager', {
                 oldName: '',
                 newName: '',
             },
+            newName: {
+                editing: false,
+                newName: '',
+            },
             guestName: this.guestNameString || 'GUEST',
             // shift: 0,
         };
@@ -48,7 +52,23 @@ Vue.component('name-manager', {
             unique.splice(oldIndex,1);
             return unique;
         },
-        checkForbidden: function () {
+        checkForbiddenNew: function () {
+            if (
+                this.forbiddenNewNames.includes(this.newName.newName)
+            ) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        checkEmptyNew: function () {
+            if (!this.newName.newName) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        checkForbiddenEdit: function () {
             if (
                 this.editName.oldName != this.editName.newName
                 && this.forbiddenNewNames.includes(this.editName.newName)
@@ -58,7 +78,7 @@ Vue.component('name-manager', {
                 return false;
             }
         },
-        checkEmpty: function () {
+        checkEmptyEdit: function () {
             if (!this.editName.newName) {
                 return true;
             } else {
@@ -89,6 +109,20 @@ Vue.component('name-manager', {
                 }
             })
             this.editNameCancel();
+            this.$emit('replace-floor', newFloor);
+        },
+        newNameStart: function () {
+            this.newName.editing = true;
+        },
+        newNameCancel: function () {
+            this.newName.editing = false;
+            this.newName.newName = '';
+        },
+        newNameSubmit: function () {
+            var newFloor = this.nameList.slice();
+            newFloor.push(this.newName.newName);
+            newFloor.push(this.newName.newName);
+            this.newNameCancel();
             this.$emit('replace-floor', newFloor);
         },
         // detectWrapping: function (array) {
@@ -350,16 +384,50 @@ Vue.component('name-manager', {
             <button
                 :disabled="
                     editName.oldName === editName.newName
-                    || checkForbidden
-                    || checkEmpty
+                    || checkForbiddenEdit
+                    || checkEmptyEdit
                 "
                 @click="editNameSubmit"
             >OK</button>
         </p>
-        <p v-if="!checkForbidden">
+        <p v-if="!checkForbiddenEdit">
             <span>TIP: keep the display name reasonably short!</span>
         </p>
-        <p v-if="checkForbidden">
+        <p v-if="checkForbiddenEdit">
+            <span
+                class="warning"
+            >"{{editName.newName}}" is the name of another artist! Please make the new name unique!</span>
+        </p>
+    </div>
+    <div
+        v-if="newName.editing"
+        class="manager-inner round-and-shadow"
+    >
+        <p>
+            <span>New artist's name:</span>
+        </p>
+        <p>
+            <input
+                v-model="newName.newName"
+                type="text"
+            />
+        </p>
+        <p>
+            <button
+                @click="newNameCancel"
+            >Cancel</button>
+            <button
+                :disabled="
+                    checkForbiddenNew
+                    || checkEmptyNew
+                "
+                @click="newNameSubmit"
+            >OK</button>
+        </p>
+        <p v-if="!checkForbiddenNew">
+            <span>TIP: keep the display name reasonably short!</span>
+        </p>
+        <p v-if="checkForbiddenNew">
             <span
                 class="warning"
             >"{{editName.newName}}"" is the name of another artist! Please make the new name unique!</span>
@@ -367,7 +435,7 @@ Vue.component('name-manager', {
     </div>
     <div
         class="manager-inner"
-        v-if="manage && !editName.editing"
+        v-if="manage && !editName.editing && !newName.editing"
     >
         <div>
             <p
@@ -394,7 +462,7 @@ Vue.component('name-manager', {
                 >Rotate ½ slot ↓</button>
                 <button
                 class="third"
-                    @click=""
+                    @click="newNameStart"
                 >+ Add Artist</button>
             </p>
             <table class="whole">
