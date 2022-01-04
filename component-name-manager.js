@@ -102,7 +102,6 @@ Vue.component('name-manager', {
             var newName = this.editName.newName;
             this.nameList.forEach(function (name) {
                 if (name === oldName) {
-                    console.warn(newName)
                     newFloor.push(newName);
                 } else {
                     newFloor.push(name);
@@ -147,45 +146,6 @@ Vue.component('name-manager', {
                 }
             })
             return tally;
-        },
-        makeFancy: function (array) {
-            var result = [];
-            var latest = '';
-            array.forEach(function (halfSlot, index) {
-                if (latest === halfSlot) {
-                    result[result.length-1].slotSize += 0.5;
-                } else {
-                    result.push(
-                        {
-                            name: halfSlot,
-                            slotSize: 0.5,
-                            slotIndex: index
-                        }
-                    );
-                    latest = halfSlot;
-                }
-            })
-            result.forEach(function (artistObject) {
-                var indices = [];
-                array.forEach(function (halfSlot, index) {
-                    if (artistObject.name === halfSlot) {
-                        indices.push(index);
-                    }
-                })
-                artistObject.indices = indices;
-            })
-            // actually need index for actual slot being selected
-            return result;
-        },
-        makeUnfancy: function (array) {
-            var result = [];
-            array.forEach(function (object) {
-                var halfSlots = object.slotSize * 2;
-                for (let index = 0; index < halfSlots; index++) {
-                    result.push(object.name);
-                }
-            })
-            return result;
         },
         reduceArtist: function (slotIndex) {
             var newFloor = this.nameList.slice();
@@ -347,7 +307,7 @@ Vue.component('name-manager', {
                 }
             })
             this.$emit('replace-floor', newFloor);
-        }
+        },
     },
     template: /*html*/`
 <div class="name-manager">
@@ -430,7 +390,7 @@ Vue.component('name-manager', {
         <p v-if="checkForbiddenNew">
             <span
                 class="warning"
-            >"{{editName.newName}}"" is the name of another artist! Please make the new name unique!</span>
+            >"{{newName.newName}}" is the name of another artist! Please make the new name unique!</span>
         </p>
     </div>
     <div
