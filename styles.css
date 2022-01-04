@@ -14,7 +14,7 @@ body {
 	margin: 0;
 }
 #app {
-	padding: 0 16px;
+	padding: 16px;
 	margin: 0 auto;
 }
 
@@ -22,22 +22,17 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
 	padding: 0.8em 0 0.2em 0;
-}
-p {
-	padding-bottom: 8px;
-	padding-top: 4px;
-}
-h1, h2, h3 {
-	color: #910000;
+	font-weight: 700;
 }
 h1 {
 	font-weight: 900;
 }
-h2 {
-	font-weight: 700;
+h2, h3 {
+	color: #910000;
 }
-h3 {
-	font-weight: 500;
+p {
+	padding-bottom: 8px;
+	padding-top: 4px;
 }
 
 button {
@@ -48,6 +43,35 @@ button {
 	border-radius: 0.35em;
 	border-width: 1px;
 	border-style: solid;
+	background-color: #eee;
+}
+button:hover:enabled {
+	color: #910000;
+	border-color: #910000;
+	background-color: #f4eeee;
+}
+button:disabled {
+	cursor: default;
+}
+
+a {
+	color: #000;
+	text-decoration: none;
+}
+a:hover {
+	color: #910000;
+	text-decoration: underline;
+}
+
+nav a {
+	padding-right: 8px;
+}
+
+ul, ol {
+	list-style-type: none;
+}
+li {
+	padding: 0 0 4px 0;
 }
 
 /* *-*-*-*   TABLES   *-*-*-*  */
@@ -56,13 +80,6 @@ table, th, td {
 	border-color: #999;
 	border-collapse: collapse;
 	padding: 4px;
-}
-table tr:nth-child(even) {
-	background-color: #fff;
-}
-table tr:nth-child(odd) {
-	background-color: #eee;
-	border-top: 2px solid #888;
 }
 
 /* *-*-*-*   GENERICS   *-*-*-*  */
@@ -87,21 +104,42 @@ table tr:nth-child(odd) {
 	text-align: center;
 }
 
-/* *-*-*-*   SPECIFICS   *-*-*-*  */
-
-.artist-controls {
-	width: 240px;
+.flat {
+	padding-top: 0px;
 }
+
+/* *-*-*-*   SPECIFICS   *-*-*-*  */
 
 .artist-name {
 	font-weight: bold;
 }
 
-/* 
-.blue-button:enabled {
-	background-color: rgb(172, 196, 248);
+.manager-box {
+	padding: 8px 12px;
+	background-color: #ccc;
+	margin-bottom: 8px;
+	width: 400px;
 }
 
-.blue-button:disabled {
-	background-color: rgb(80, 108, 170);
-} */
+.manager-inner {
+	background-color: #fff;
+	margin: 5px;
+	padding: 8px 16px;
+}
+.round-and-shadow {
+	border-radius: 8px;
+	box-shadow: 3px 3px 5px rgba(0,0,0,.5);
+}
+
+.white-bg {
+	background-color: #fff;
+}
+
+.gray-bg {
+	background-color: #ddd;
+}
+
+.warning {
+	color: #910000;
+	font-weight: bold;
+}

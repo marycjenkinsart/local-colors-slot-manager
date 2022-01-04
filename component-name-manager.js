@@ -1,4 +1,7 @@
 Vue.component('name-manager', {
+	mixins: [
+		mixins,
+	],
     props: {
         nameList: {
             type: Array,
@@ -8,23 +11,28 @@ Vue.component('name-manager', {
             type: String,
             require: true,
         },
+        manage: {
+            type: Boolean,
+            require: true,
+        },
         guestNameString: {
             type: String,
             require: false,
-        }
+        },
     },
     data: function () {
         return {
             lockGuest: false,
+            editName: {
+                editing: false,
+                oldName: '',
+                newName: '',
+            },
             guestName: this.guestNameString || 'GUEST',
             // shift: 0,
         };
     },
     computed: {
-        displayFloor: function () {
-            var result = this.floorName + 'stairs'
-            return result.toLocaleUpperCase();
-        },
         slotCount: function () {
             return this.nameList.length / 2;
         },
@@ -34,8 +42,55 @@ Vue.component('name-manager', {
         fancyNameList: function () {
             return this.makeFancy(this.nameList);
         },
+        forbiddenNewNames: function () {
+            var unique = this.nameList.filter(this.getUnique);
+            var oldIndex = unique.indexOf(this.editName.oldName);
+            unique.splice(oldIndex,1);
+            return unique;
+        },
+        checkForbidden: function () {
+            if (
+                this.editName.oldName != this.editName.newName
+                && this.forbiddenNewNames.includes(this.editName.newName)
+            ) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        checkEmpty: function () {
+            if (!this.editName.newName) {
+                return true;
+            } else {
+                return false;
+            }
+        },
     },
     methods: {
+        editNameStart: function (name) {
+            this.editName.editing = true;
+            this.editName.oldName = name;
+        },
+        editNameCancel: function () {
+            this.editName.editing = false;
+            this.editName.oldName = '';
+            this.editName.newName = '';
+        },
+        editNameSubmit: function () {
+            var newFloor = [];
+            var oldName = this.editName.oldName;
+            var newName = this.editName.newName;
+            this.nameList.forEach(function (name) {
+                if (name === oldName) {
+                    console.warn(newName)
+                    newFloor.push(newName);
+                } else {
+                    newFloor.push(name);
+                }
+            })
+            this.editNameCancel();
+            this.$emit('replace-floor', newFloor);
+        },
         // detectWrapping: function (array) {
         //     var first = array[0];
         //     var last = array[array.length-1];
@@ -243,23 +298,18 @@ Vue.component('name-manager', {
         rotateArtistUp: function (slotIndex) {
             var newFloor = this.nameList.slice();
             var indices = this.getContiguousIndices(slotIndex);
-            console.log(`contiguous indices: ${JSON.stringify(indices)}`);
             var upIndices = this.getContiguousIndices(this.findUpNeighbor(slotIndex));
-            console.log(`up neighbor's contiguous indices: ${JSON.stringify(upIndices)}`);
             var moveCount = upIndices.length;
             var workingIndex; // ewww
             var self = this;
             indices.forEach(function (movingPiece) {
                 workingIndex = movingPiece;
-                console.log(`MOVING PIECE AT INDEX ${workingIndex}`)
                 for (let index = 0; index < self.shift; index++) {
                     workingIndex = self.findUpIndex(workingIndex);
                 }
                 for (let index = 0; index < moveCount; index++) {
-                    console.log(`moving from ${workingIndex}`)
                     newFloor = self.moveOneSlotUp(workingIndex, newFloor);
                     workingIndex = self.findUpIndex(workingIndex);
-                    console.log(newFloor.slice());
                 }
             })
             this.$emit('replace-floor', newFloor);
@@ -267,75 +317,126 @@ Vue.component('name-manager', {
     },
     template: /*html*/`
 <div class="name-manager">
-    <h3>
-        <span>{{displayFloor}} ({{slotCount}})</span>
-        
-    </h3>
-    <div>
-        <p
-            v-if="hasGuestArtist"
-        >
-            <label>
-                <input
-                v-model="lockGuest"
-                type="checkbox"
-            />
-                <span>Lock guest artist position (floor rotation only)</span>
-            </label>
-        </p>
-        <p class="artist-controls">
-            <button
-                class="third"
-                @click="rotateFloorCCW"
-                title="rotate counter-clockwise"
-            >↑ Rotate</button>
-            <button
-            class="third"
-                @click="rotateFloorCW"
-                title="rotate clockwise"
-            >Rotate ↓</button>
-            <button
-            class="third"
-                @click=""
-            >+ Add Artist</button>
-        </p>
-        <table class="artist-controls">
-            <tbody>
-                <template
+    <div v-if="!manage">
+        <ul>
+            <li
                 v-for="(artist, index) in fancyNameList"
-                >
-                    <tr class="whole">
-                        <td class="center half">
-                            <span class="artist-name">{{artist.name}}</span>
-                        </td>
-                        <td class="quarter">
-                            <span
-                                v-if="artist.slotSize != 1"
-                            > ({{getDisplaySlotSize(artist.slotSize)}})</span>
-                        </td>
-                        <td class="center quarter">
-                            <button
-                                class="blue-button"
-                                @click="reduceArtist(artist.slotIndex)"
-                            >–</button>
-                            <button
-                                class="blue-button"
-                                @click="expandArtist(artist.slotIndex)"
-                            >+</button>
-                        </td>
-                    </tr>
-                    <tr class="whole">
-                        <td class="center">
-                            <button
-                                class="mini"
-                                @click="rotateArtistUp(findDownNeighbor(index))"
-                            >↑↓ Swap</button>
-                        </td>
-                        <td></td>
-                    </tr>
-                </template>
-            </tbody>
-        </table>
+            >
+                <span class="artist-name">{{artist.name}}</span>
+                <span
+                    v-if="artist.slotSize != 1"
+                > ({{getDisplaySlotSize(artist.slotSize)}})</span>
+            </li>
+        </ul>
+    </div>
+    <div
+        v-if="editName.editing"
+        class="manager-inner round-and-shadow"
+    >
+        <p>
+            <span>New name for</span>
+            <span class="artist-name">"{{editName.oldName}}":</span>
+        </p>
+        <p>
+            <input
+                v-model="editName.newName"
+                type="text"
+            />
+        </p>
+        <p>
+            <button
+                @click="editNameCancel"
+            >Cancel</button>
+            <button
+                :disabled="
+                    editName.oldName === editName.newName
+                    || checkForbidden
+                    || checkEmpty
+                "
+                @click="editNameSubmit"
+            >OK</button>
+        </p>
+        <p v-if="!checkForbidden">
+            <span>TIP: keep the display name reasonably short!</span>
+        </p>
+        <p v-if="checkForbidden">
+            <span
+                class="warning"
+            >"{{editName.newName}}"" is the name of another artist! Please make the new name unique!</span>
+        </p>
+    </div>
+    <div
+        class="manager-inner"
+        v-if="manage && !editName.editing"
+    >
+        <div>
+            <p
+                v-if="hasGuestArtist"
+            >
+                <label>
+                    <input
+                    v-model="lockGuest"
+                    type="checkbox"
+                />
+                    <span>Lock guest artist position (floor rotation only)</span>
+                </label>
+            </p>
+            <p>
+                <button
+                    class="third"
+                    @click="rotateFloorCCW"
+                    title="rotate counter-clockwise"
+                >↑ Rotate ½ slot</button>
+                <button
+                class="third"
+                    @click="rotateFloorCW"
+                    title="rotate clockwise"
+                >Rotate ½ slot ↓</button>
+                <button
+                class="third"
+                    @click=""
+                >+ Add Artist</button>
+            </p>
+            <table class="whole">
+                <tbody>
+                    <template
+                    v-for="(artist, index) in fancyNameList"
+                    >
+                        <tr class="gray-bg">
+                            <td class="center half">
+                                <span class="artist-name">{{artist.name}}</span>
+                            </td>
+                            <td>
+                                <span> {{getDisplaySlotSize(artist.slotSize)}} slot</span><span
+                                    v-if="artist.slotSize > 1"
+                                >s</span>
+                            </td>
+                            <td class="center">
+                                <button
+                                    :disabled="artist.name === guestName"
+                                    @click="editNameStart(artist.name)"
+                                >edit name</button>
+                                <button
+                                    @click="reduceArtist(artist.slotIndex)"
+                                >–</button>
+                                <button
+                                    @click="expandArtist(artist.slotIndex)"
+                                >+</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="center">
+                                <button
+                                    class="mini"
+                                    @click="rotateArtistUp(findDownNeighbor(index))"
+                                >↑↓ Swap</button>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 `
