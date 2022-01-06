@@ -318,6 +318,11 @@ Vue.component('name-manager', {
             })
             this.$emit('replace-floor', newFloor);
         },
+        getSwapMessage: function (fancyIndex) {
+            var targetArtist = this.fancyNameList[fancyIndex].name;
+            var neighborArtist = this.nameList[this.findDownNeighbor(fancyIndex)];
+            return `swap ${targetArtist} and ${neighborArtist}`
+        }
     },
     template: /*html*/`
 <div class="name-manager">
@@ -420,32 +425,32 @@ Vue.component('name-manager', {
         v-if="manage && !editName.editing && !newName.editing"
     >
         <div>
+            <p>
+                <button
+                    title="Rotate counter-clockwise"
+                    @click="rotateFloorCCW"
+                >↑ Rotate ½ slot</button>
+                <button
+                    title="Rotate clockwise"
+                    @click="rotateFloorCW"
+                >Rotate ½ slot ↓</button>
+                <button
+                    title="Add a new artist and choose their name"
+                    @click="newNameStart"
+                >Add Artist</button>
+            </p>
             <p
                 v-if="hasGuestArtist"
             >
                 <label>
+                    <span
+                        title="Keeps the guest in place during a rotation"
+                    >Lock guest: </span>
                     <input
-                    v-model="lockGuest"
-                    type="checkbox"
-                />
-                    <span>Lock guest artist position (floor rotation only)</span>
+                        v-model="lockGuest"
+                        type="checkbox"
+                    />
                 </label>
-            </p>
-            <p>
-                <button
-                    class="third"
-                    @click="rotateFloorCCW"
-                    title="rotate counter-clockwise"
-                >↑ Rotate ½ slot</button>
-                <button
-                class="third"
-                    @click="rotateFloorCW"
-                    title="rotate clockwise"
-                >Rotate ½ slot ↓</button>
-                <button
-                class="third"
-                    @click="newNameStart"
-                >+ Add Artist</button>
             </p>
             <table class="whole">
                 <tbody>
@@ -453,33 +458,36 @@ Vue.component('name-manager', {
                     v-for="(artist, index) in fancyNameList"
                     >
                         <tr class="gray-bg">
-                            <td class="center half">
+                            <td class="third">
                                 <span class="artist-name">{{artist.name}}</span>
                             </td>
-                            <td>
-                                <span> {{getDisplaySlotSize(artist.slotSize)}} slot</span><span
-                                    v-if="artist.slotSize > 1"
-                                >s</span>
-                            </td>
-                            <td class="center">
+                            <td class="third">
                                 <button
                                     :disabled="artist.name === guestName"
                                     @click="editNameStart(artist.name)"
                                 >edit name</button>
+                            </td>
+                            <td class="third">
                                 <button
+                                    title="Reduce artist slot size/count"
                                     @click="reduceArtist(artist.slotIndex)"
                                 >–</button>
                                 <button
+                                    title="Increase artist slot size/count"
                                     @click="expandArtist(artist.slotIndex)"
                                 >+</button>
+                                <span>{{getDisplaySlotSize(artist.slotSize)}} slot</span><span
+                                    v-if="artist.slotSize > 1"
+                                >s</span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="center">
+                            <td>
                                 <button
                                     class="mini"
+                                    :title="getSwapMessage(index)"
                                     @click="rotateArtistUp(findDownNeighbor(index))"
-                                >↑↓ Swap</button>
+                                >Swap ↑↓</button>
                             </td>
                             <td></td>
                         </tr>

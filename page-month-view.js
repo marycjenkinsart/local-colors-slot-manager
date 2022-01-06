@@ -7,6 +7,7 @@ var monthViewPage = Vue.component('month-view', {
         return {
             rotationId: '2021-12',
             guestName: guestNameString,
+            lockGuest: true,
             move: {
                 inProgress: false,
                 name: '',
@@ -116,11 +117,50 @@ var monthViewPage = Vue.component('month-view', {
         replaceFloor: function (floorName, event) {
             this.artists[floorName] = event;
         },
+        swapFloorsButton: function () {
+            if (this.lockGuest) {
+                this.freezeGuestAndSwapFloors();
+            } else {
+                this.swapFloors();
+            }
+        },
         swapFloors: function () {
             var newArtists = {};
             newArtists.feat = this.artists.feat;
             newArtists.up = this.artists.down;
             newArtists.down = this.artists.up;
+            this.artists = newArtists;
+        },
+        freezeGuestAndSwapFloors: function () {
+            var guestName = this.guestName;
+            var upGuestIndices = [];
+            var upSansGuests = [];
+            this.artists.up.forEach(function (halfSlot, index) {
+                if (halfSlot === guestName) {
+                    upGuestIndices.push(index);
+                } else {
+                    upSansGuests.push(halfSlot);
+                }
+            })
+            var downGuestIndices = [];
+            var downSansGuests = [];
+            this.artists.down.forEach(function (halfSlot, index) {
+                if (halfSlot === guestName) {
+                    downGuestIndices.push(index);
+                } else {
+                    downSansGuests.push(halfSlot);
+                }
+            })
+            var newArtists = {};
+            newArtists.feat = this.artists.feat;
+            newArtists.up = downSansGuests;
+            newArtists.down = upSansGuests;
+            downGuestIndices.forEach(function (guestIndex) {
+                newArtists.down.splice(guestIndex, 0, guestName);
+            })
+            upGuestIndices.forEach(function (guestIndex) {
+                newArtists.up.splice(guestIndex, 0, guestName);
+            })
             this.artists = newArtists;
         },
         moveArtistToOtherFloorStart: function () {
@@ -181,13 +221,33 @@ var monthViewPage = Vue.component('month-view', {
     <h2>Rotation: {{getLongDate(rotationId)}}</h2>
     <p>
         <button
-            :disabled="move.inProgress"
-            @click="swapFloors"
-        >swap artists on each floor</button>
+            disabled
+            title="Change the label for this rotation."
+            @click=""
+        >edit rotation name</button>
+    </p>
+    <p class="flat">
         <button
+            title="Choose an artist to move to the opposite floor."
             :disabled="move.inProgress"
             @click="moveArtistToOtherFloorStart"
         >move artist to another floor</button>
+    </p>
+    <p class="flat">
+        <button
+            title="Move all upstairs artists downstairs and vice versa."
+            :disabled="move.inProgress"
+            @click="swapFloorsButton"
+        >swap floors</button>
+        <label>
+            <input
+            v-model="lockGuest"
+            type="checkbox"
+        />
+            <span
+                title="Keeps the guest in place during a floor swap."
+            >Lock guest</span>
+        </label>
     </p>
     <div
         v-if="move.inProgress"
@@ -244,6 +304,7 @@ var monthViewPage = Vue.component('month-view', {
                 Featured
             </span>
             <button
+                disabled
                 v-show="!manage.feat"
                 @click="manage.feat=true"
             >Manage</button>
@@ -302,6 +363,30 @@ var monthViewPage = Vue.component('month-view', {
             @replace-floor="replaceFloor('down',$event)"
         ></name-manager>
     </div>
+    <p>
+        <button
+            @click=""
+            disabled
+        >Cancel</button>
+        <button
+            @click=""
+            disabled
+        >Revert</button>
+        <button
+            @click=""
+            disabled
+        >Save</button>
+    </p>
+    <p>
+        <button
+            @click=""
+            disabled
+        >Download Maps</button>
+        <button
+            @click=""
+            disabled
+        >Quit</button>
+    </p>
 </div>
 `
 });
