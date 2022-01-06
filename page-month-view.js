@@ -5,7 +5,13 @@ var monthViewPage = Vue.component('month-view', {
     data: function () {
         var guestNameString = 'GUEST';
         return {
-            rotationId: '2021-12',
+            rotationLabel: {
+                year: 2021,
+                month: 12,
+                version: 1,
+                custom: '',
+                editing: false,
+            },
             guestName: guestNameString,
             lockGuest: true,
             move: {
@@ -105,14 +111,22 @@ var monthViewPage = Vue.component('month-view', {
                 return '½';
             }
         },
-        getLongDate: function (id) {
-            var splits = id.split('-');
-            var monthMap = [
-                'Jan', 'Feb', 'Mar', 'April', 'May', 'June',
-                'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
-            ]
-            var monthName = monthMap[parseInt(splits[1],10) - 1];
-            return monthName + ' ' + splits[0];
+        getLongLabel: function (year, month, version) {
+            var result = '';
+            if (this.rotationLabel.custom) {
+                result = this.rotationLabel.custom;
+            } else {
+                var monthMap = [
+                    'Jan', 'Feb', 'Mar', 'April', 'May', 'June',
+                    'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
+                ]
+                var monthName = monthMap[parseInt(month) - 1];
+                result = monthName + ' ' + year
+                if (version > 1) {
+                    result += ' v' + version;
+                }
+            }
+            return result;
         },
         replaceFloor: function (floorName, event) {
             this.artists[floorName] = event;
@@ -215,27 +229,126 @@ var monthViewPage = Vue.component('month-view', {
             this.move.message = '';
             this.move.inProgress = false;
         },
+        editRotationNameStart: function () {
+            this.rotationLabel.editing = true;
+        },
+        editRotationNameEnd: function () {
+            this.rotationLabel.editing = false;
+        },
+        incrementLabel: function (variable) {
+            if (variable === 'year') {
+                this.rotationLabel.year += 1;
+            } else if (variable === 'month') {
+                if (this.rotationLabel.month === 12) {
+                    this.rotationLabel.month = 1;
+                    this.rotationLabel.year += 1;
+                } else {
+                    this.rotationLabel.month += 1;
+                }
+            } else if (variable === 'version') {
+                this.rotationLabel.version += 1;
+            } else {
+                console.error(`You can't increment ${variable}!`)
+            }
+        },
+        decrementLabel: function (variable) {
+            if (variable === 'year') {
+                this.rotationLabel.year -= 1;
+            } else if (variable === 'month') {
+                if (this.rotationLabel.month === 1) {
+                    this.rotationLabel.month = 12;
+                    this.rotationLabel.year -= 1;
+                } else {
+                    this.rotationLabel.month -= 1;
+                }
+            } else if (variable === 'version') {
+                if (this.rotationLabel.version != 1) {
+                    this.rotationLabel.version -= 1;
+                }
+            } else {
+                console.error(`You can't decrement ${variable}!`)
+            }
+        },
     },
     template: /*html*/`
 <div id="month-view">
-    <h2>Rotation: {{getLongDate(rotationId)}}</h2>
+    <h2>
+        <span>Rotation: {{getLongLabel(
+                rotationLabel.year,
+                rotationLabel.month,
+                rotationLabel.version,
+            )}}</span>
+    </h2>
     <p>
         <button
-            disabled
-            title="Change the label for this rotation."
-            @click=""
+            :disabled="rotationLabel.editing"
+            title="Change the label for this rotation"
+            @click="editRotationNameStart"
         >edit rotation name</button>
     </p>
+    <div
+        v-if="rotationLabel.editing"
+        class="manager-box"
+    >
+        <div
+            class="manager-inner round-and-shadow"
+        >
+            <p>
+                <span>Month:</span>
+                <span class="red">{{rotationLabel.month}}</span>
+                <button
+                    @click="decrementLabel('month')"
+                >–</button>
+                <button
+                    @click="incrementLabel('month')"
+                >+</button>
+            </p>
+            <p>
+                <span>Year:</span>
+                <span class="red">{{rotationLabel.year}}</span>
+                <button
+                    @click="decrementLabel('year')"
+                >–</button>
+                <button
+                    @click="incrementLabel('year')"
+                >+</button>
+            </p>
+            <p>
+                <span>Layout version:</span>
+                <span class="red">{{rotationLabel.version}}</span>
+                <button
+                    @click="decrementLabel('version')"
+                >–</button>
+                <button
+                    @click="incrementLabel('version')"
+                >+</button>
+            </p>
+            <p>
+                <span>
+                    Custom label:
+                </span>
+                <input
+                    v-model="rotationLabel.custom"
+                    type="text"
+                />
+            </p>
+            <p>
+                <button
+                    @click="editRotationNameEnd"
+                >DONE</button>
+            </p>
+        </div>
+    </div>
     <p class="flat">
         <button
-            title="Choose an artist to move to the opposite floor."
+            title="Choose an artist to move to the opposite floor"
             :disabled="move.inProgress"
             @click="moveArtistToOtherFloorStart"
         >move artist to another floor</button>
     </p>
     <p class="flat">
         <button
-            title="Move all upstairs artists downstairs and vice versa."
+            title="Move all upstairs artists downstairs and vice versa"
             :disabled="move.inProgress"
             @click="swapFloorsButton"
         >swap floors</button>
