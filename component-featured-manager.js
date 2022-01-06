@@ -174,9 +174,17 @@ Vue.component('featured-manager', {
         },
         add3Dartist: function () {
             this.adding3D = true;
+            this.$nextTick(function () {
+                var inputElement = this.$refs['customNameInput'];
+                inputElement.focus();
+            })
         },
         addGroupShow: function () {
             this.addingGroup = true;
+            this.$nextTick(function () {
+                var inputElement = this.$refs['customNameInput'];
+                inputElement.focus();
+            })
         },
     },
     template: /*html*/`
@@ -184,6 +192,7 @@ Vue.component('featured-manager', {
     <div v-if="!manage">
         <ul>
             <li v-for="(artist, index) in artists.feat">
+                <span v-if="artists.feat[index].type === 'group'">Theme: </span>
                 <span class="artist-name">{{artist.name}}</span>
             </li>
         </ul>
@@ -204,16 +213,27 @@ Vue.component('featured-manager', {
         <p v-if="addingGroup">New theme for group show:</p>
         <p v-if="adding3D">Name of featured 3D artist:</p>
         <div v-if="addingGroup || adding3D">
-            <p><input v-model="customName" type="text" /></p>
-            <p>
-                <button
-                    @click="addingCustomCancel"
-                >Cancel</button>
-                <button
-                    :disabled="checkEmptyCustomName"
-                    @click="addingCustomConfirm"
-                >Ok</button>
-            </p>
+            <form
+                @submit.prevent="addingCustomConfirm"
+            >
+                <p>
+                    <input
+                        v-model="customName"
+                        type="text"
+                        ref="customNameInput"
+                    />
+                </p>
+                <p>
+                    <button
+                        @click="addingCustomCancel"
+                        type="button"
+                    >Cancel</button>
+                    <button
+                        :disabled="checkEmptyCustomName"
+                        type="submit"
+                    >Ok</button>
+                </p>
+            </form>
         </div>
         <div v-if="adding2D">
             <p>Move which artist to the featured show?</p>
