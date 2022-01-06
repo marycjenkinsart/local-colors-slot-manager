@@ -19,21 +19,27 @@ var monthViewPage = Vue.component('month-view', {
                 name: '',
             },
             manage: {
-                'feat': false,
+                'feat': true,
                 'up': false,
                 'down': false,
             },
-            featuredData: [
-                    {
-                        'Teri': {
-                            type: '2D',
-                            slotSize: 2,
-                        }
-                    }
-                ],
             artists: {
                 'feat': [ // can be more than one! or zero!
-                    'Teri',
+                    {
+                        name:'Teri',
+                        type: '2D',
+                        origSlotSize: 1,
+                    },
+                    {
+                        name:'Neena',
+                        type: '2D',
+                        origSlotSize: 0.5,
+                    },
+                    {
+                        name:'Perda',
+                        type: '3D',
+                        origSlotSize: 1,
+                    },
                 ],
                 'up': [
                     guestNameString,
@@ -68,19 +74,6 @@ var monthViewPage = Vue.component('month-view', {
         },
         downstairsSlotCount: function () {
             return artists.down.length / 2;
-        },
-        displayFeatured: function () {
-            var result = 'No featured artists found!'
-            var featureds = this.artists.feat
-            if (featureds.length > 0) {
-                result = featureds[0];
-            }
-            if (featureds.length > 1) {
-                for (let index = 1; index < featureds.length; index++) {
-                    result += ', ' + featureds[index];
-                }
-            }
-            return result;
         },
         uniqueUpstairs: function () {
             return this.artists.up.filter(this.getUnique).sort();
@@ -130,6 +123,9 @@ var monthViewPage = Vue.component('month-view', {
         },
         replaceFloor: function (floorName, event) {
             this.artists[floorName] = event;
+        },
+        replaceArtists: function (event) {
+            this.artists = event;
         },
         swapFloorsButton: function () {
             if (this.lockGuest) {
@@ -344,7 +340,7 @@ var monthViewPage = Vue.component('month-view', {
             title="Choose an artist to move to the opposite floor"
             :disabled="move.inProgress"
             @click="moveArtistToOtherFloorStart"
-        >move artist to another floor</button>
+        >move artist to opposite floor</button>
     </p>
     <p class="flat">
         <button
@@ -417,7 +413,6 @@ var monthViewPage = Vue.component('month-view', {
                 Featured
             </span>
             <button
-                disabled
                 v-show="!manage.feat"
                 @click="manage.feat=true"
             >Manage</button>
@@ -426,11 +421,14 @@ var monthViewPage = Vue.component('month-view', {
                 @click="manage.feat=false"
             >DONE</button>
         </h3>
-        <p>
-            <span class="artist-name">
-                {{displayFeatured}}
-            </span>
-        </p>
+        <featured-manager
+            :artists="artists"
+            :manage="manage.feat"
+            :unique-upstairs="uniqueUpstairs"
+            :unique-downstairs="uniqueDownstairs"
+            @replace-artists="replaceArtists($event)"
+        >
+        </featured-manager>
     </div>
     <div class="manager-box">
         <h3 class="flat">
