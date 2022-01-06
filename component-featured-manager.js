@@ -143,7 +143,7 @@ Vue.component('featured-manager', {
                 type: '2D',
                 origSlotSize: slotSize,
             })
-            this.message = this.moveName + ' added to the featured show!';
+            this.message = this.moveName + ' was added to the featured show!';
             this.$emit('replace-artists', newObject);
             this.move2Dcancel();
         },
@@ -159,6 +159,11 @@ Vue.component('featured-manager', {
                 name: this.customName,
                 type: type,
             })
+            if (this.addingGroup) {
+                this.message = 'Group theme "' + this.customName + '" added!';
+            } else if (this.adding3D) {
+                this.message = '3D artist "' + this.customName + '" added!';
+            }
             this.$emit('replace-artists', newObject);
             this.addingCustomCancel();
         },
@@ -227,7 +232,7 @@ Vue.component('featured-manager', {
                 </select>
             </p>
             <div v-if="move2D">
-                <p>Remove <strong>{{moveName}}</strong> from the {{moveFloor}}stairs to add to the featured show?</p>
+                <p>Remove <strong>{{moveName}}</strong> from the {{moveFloor}}stairs and add to the featured show?</p>
                 <p>
                     <button @click="move2Dcancel">Cancel</button>
                     <button @click="move2Dconfirm">Ok</button>
