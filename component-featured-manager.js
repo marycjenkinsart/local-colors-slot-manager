@@ -26,11 +26,19 @@ Vue.component('featured-manager', {
             adding2D: false,
             adding3D: false,
             addingGroup: false,
+            customName: '',
             move2D: '',
             message: '',
         };
     },
     computed: {
+        checkEmptyCustomName: function () {
+            if (this.customName.length > 1) {
+                return false;
+            } else {
+                return true;
+            }
+        },
         only2D: function () {
             var result = [];
             this.artists.feat.forEach(function (artist) {
@@ -139,20 +147,38 @@ Vue.component('featured-manager', {
             this.$emit('replace-artists', newObject);
             this.move2Dcancel();
         },
+        addingCustomConfirm: function () {
+            var newObject = JSON.parse(JSON.stringify(this.artists));
+            var type = '';
+            if (this.addingGroup) {
+                type = 'group';
+            } else if (this.adding3D) {
+                type = '3D';
+            }
+            newObject.feat.push({
+                name: this.customName,
+                type: type,
+            })
+            this.$emit('replace-artists', newObject);
+            this.addingCustomCancel();
+        },
+        addingCustomCancel: function () {
+            this.customName = '';
+            this.addingGroup = false;
+            this.adding3D = false;
+        },
         add3Dartist: function () {
-            
+            this.adding3D = true;
         },
         addGroupShow: function () {
-            
+            this.addingGroup = true;
         },
     },
     template: /*html*/`
 <div class="featured-manager">
     <div v-if="!manage">
         <ul>
-            <li
-                v-for="(artist, index) in artists.feat"
-            >
+            <li v-for="(artist, index) in artists.feat">
                 <span class="artist-name">{{artist.name}}</span>
             </li>
         </ul>
@@ -163,30 +189,38 @@ Vue.component('featured-manager', {
     >
         <p>{{message}}</p>
         <p>
-            <button
-                @click="message=''"
-            >Ok</button>
+            <button @click="message=''">Ok</button>
         </p>
     </div>
     <div
         v-if="adding2D || adding3D || addingGroup"
         class="manager-inner round-and-shadow"
     >
+        <p v-if="addingGroup">New theme for group show:</p>
+        <p v-if="adding3D">Name of featured 3D artist:</p>
+        <div v-if="addingGroup || adding3D">
+            <p><input v-model="customName" type="text" /></p>
+            <p>
+                <button
+                    @click="addingCustomCancel"
+                >Cancel</button>
+                <button
+                    :disabled="checkEmptyCustomName"
+                    @click="addingCustomConfirm"
+                >Ok</button>
+            </p>
+        </div>
         <div v-if="adding2D">
             <p>Move which artist to the featured show?</p>
             <p>
-                <select
-                    v-model="move2D"
-                >
+                <select v-model="move2D" >
                     <optgroup label="Upstairs">
-                        <option
-                            v-for="name in uniqueUpstairs"
+                        <option v-for="name in uniqueUpstairs"
                             :value="'up-' + name"
                         >{{name}}</option>
                     </optgroup>
                     <optgroup label="Downstairs">
-                        <option
-                            v-for="name in uniqueDownstairs"
+                        <option v-for="name in uniqueDownstairs"
                             :value="'down-' + name"
                         >{{name}}</option>
                     </optgroup>
@@ -195,15 +229,11 @@ Vue.component('featured-manager', {
             <div v-if="move2D">
                 <p>Remove <strong>{{moveName}}</strong> from the {{moveFloor}}stairs to add to the featured show?</p>
                 <p>
-                    <button
-                        @click="move2Dcancel"
-                    >Cancel</button>
-                    <button
-                        @click="move2Dconfirm"
-                    >Ok</button>
+                    <button @click="move2Dcancel">Cancel</button>
+                    <button @click="move2Dconfirm">Ok</button>
                 </p>
             </div>
-        </div>
+            </div>
     </div>
     <div 
         class="manager-inner"
@@ -211,7 +241,7 @@ Vue.component('featured-manager', {
             !adding2D && !adding3D && !addingGroup && !message
             && manage
         "
-    >
+        >
         <p>
             <button
                 @click="add2Dartist"
@@ -219,13 +249,11 @@ Vue.component('featured-manager', {
                 type="button"
             >add 2D/hybrid artist</button>
             <button
-                disabled
                 @click="add3Dartist"
                 title="Add an artist that isn't in either 2D rotation list"
                 type="button"
             >add 3D artist</button>
             <button
-                disabled
                 @click="addGroupShow"
                 title="Make a group show with a custom name"
                 type="button"
@@ -234,9 +262,7 @@ Vue.component('featured-manager', {
         <h3 v-if="only2D.length">2D / Hybrid Artists</h3>
         <table>
             <tbody>
-                <tr
-                    v-for="artist in only2D"
-                >
+                <tr v-for="artist in only2D">
                     <td>
                         <span class="artist-name">{{artist.name}}</span>
                     </td>
@@ -265,18 +291,25 @@ Vue.component('featured-manager', {
         <h3 v-if="only3D.length">3D Artists</h3>
         <table>
             <tbody>
-                <tr
-                    v-for="artist in only3D"
-                >
-                    <td>
-                        <span class="artist-name">{{artist.name}}</span>
-                    </td>
+                <tr v-for="artist in only3D">
+                    <td><span class="artist-name">{{artist.name}}</span></td>
                     <td>
                         <button
                             :title="'Remove ' + artist.name + ' from the featured show'"
                             @click="removeArtist(artist.name)"
                             type="button"
                         >remove from featured show</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 v-if="onlyGroup.length">Group Show</h3>
+        <table>
+            <tbody>
+                <tr v-for="artist in onlyGroup">
+                    <td><span class="artist-name">{{artist.name}}</span></td>
+                    <td>
+                        <button @click="removeArtist(artist.name)">remove group show theme</button>
                     </td>
                 </tr>
             </tbody>

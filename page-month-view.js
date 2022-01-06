@@ -19,7 +19,7 @@ var monthViewPage = Vue.component('month-view', {
                 name: '',
             },
             manage: {
-                'feat': true,
+                'feat': false,
                 'up': false,
                 'down': false,
             },
@@ -28,16 +28,6 @@ var monthViewPage = Vue.component('month-view', {
                     {
                         name:'Teri',
                         type: '2D',
-                        origSlotSize: 1,
-                    },
-                    {
-                        name:'Neena',
-                        type: '2D',
-                        origSlotSize: 0.5,
-                    },
-                    {
-                        name:'Perda',
-                        type: '3D',
                         origSlotSize: 1,
                     },
                 ],
