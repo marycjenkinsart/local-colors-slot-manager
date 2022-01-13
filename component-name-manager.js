@@ -130,7 +130,6 @@ Vue.component('name-manager', {
             var name = this.newName.newName;
             newFloor.push(name);
             newFloor.push(name);
-            console.log(name);
             this.newNameCancel();
             this.$emit('replace-floor', newFloor);
         },

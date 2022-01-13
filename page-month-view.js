@@ -32,7 +32,7 @@ var monthViewPage = Vue.component('month-view', {
                     },
                 ],
                 'up': [
-                    guestNameString,
+                    // guestNameString,
                     'Bill',
                     'Bill',
                     'J. Clay',
@@ -40,8 +40,8 @@ var monthViewPage = Vue.component('month-view', {
                     'Jeff M.',
                     'Emily',
                     'Emily',
-                    'Blaine',
-                    'Blaine',
+                    // 'Blaine',
+                    // 'Blaine',
                 ],
                 'down': [
                     'Adam',
@@ -84,7 +84,7 @@ var monthViewPage = Vue.component('month-view', {
         moveName: function () {
             var splits = this.move.name.split('-');
             return splits[1] || '';
-        }
+        },
     },
     methods: {
         getDisplaySlotSize: function (slotSize) {
@@ -200,7 +200,6 @@ var monthViewPage = Vue.component('month-view', {
             })
             this.artists[otherFloor] = strippedFloor;
             this.move.message = `${this.moveName} moved ${this.moveFloor}stairs!`;
-            console.log(`${this.moveName} moved ${this.moveFloor}stairs!`);
         },
         moveArtistToOtherFloorFail: function () {
             this.move.message = `An artist named ${this.moveName} is already present ${this.moveFloor}stairs! Rename one of the artists first to prevent accidental merging!`;
@@ -257,7 +256,12 @@ var monthViewPage = Vue.component('month-view', {
         },
     },
     template: /*html*/`
-<div id="month-view">
+<div
+    id="month-view"
+    style="
+        position: relative;
+    "
+>
     <h2>
         <span>Rotation: {{getLongLabel(
                 rotationLabel.year,
@@ -427,7 +431,7 @@ var monthViewPage = Vue.component('month-view', {
             </span>
             <button
                 v-show="!manage.up"
-                @click="manage.up=true"
+                @click="manage.up=true; manage.down=false;"
             >Manage</button>
             <button
                 v-show="manage.up"
@@ -449,7 +453,7 @@ var monthViewPage = Vue.component('month-view', {
         </span>
         <button
             v-show="!manage.down"
-            @click="manage.down=true"
+            @click="manage.down=true; manage.up=false;"
         >Manage</button>
         <button
             v-show="manage.down"
@@ -488,6 +492,21 @@ var monthViewPage = Vue.component('month-view', {
             disabled
         >Quit</button>
     </p>
+    <div
+        class="svg_preview"
+        style="
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+        "
+    >
+        <map-preview
+            :manage-up="manage.up"
+            :manage-down="manage.down"
+            :artists="artists"
+        ></map-preview>
+    </div>
 </div>
 `
 });
