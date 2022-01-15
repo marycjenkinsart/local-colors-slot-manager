@@ -32,7 +32,7 @@ var monthViewPage = Vue.component('month-view', {
                     },
                 ],
                 'up': [
-                    // guestNameString,
+                    guestNameString,
                     'Bill',
                     'Bill',
                     'J. Clay',
