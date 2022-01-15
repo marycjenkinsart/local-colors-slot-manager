@@ -2,69 +2,6 @@ Vue.component('map-preview', {
 	mixins: [
 		mixins,
 	],
-    data: function () {
-        return {
-            colorMap: { // unique artists, not slot count
-                count3: [
-                    'color-01', // red
-                    'color-15', // blue
-                    'color-19', // purple
-                ],
-                count4: [
-                    'color-01', // red
-                    'color-04', // golden orange
-                    'color-15', // blue
-                    'color-19', // purple
-                ],
-                count5: [
-                    'color-01', // red
-                    'color-04', // golden orange
-                    'color-10', // green
-                    'color-15', // blue
-                    'color-19', // purple
-                ],
-                count6: [
-                    'color-01', // red
-                    'color-04', // golden orange
-                    'color-10', // green
-                    'color-15', // blue
-                    'color-19', // purple
-                    'color-22', // dark magenta 
-                ],
-                count7: [
-                    'color-01', // red
-                    'color-04', // golden orange
-                    'color-10', // green
-                    'color-13', // cyan
-                    'color-17', // indigo blue
-                    'color-19', // purple
-                    'color-22', // dark magenta 
-                ],
-                count8: [
-                    'color-01', // red
-                    'color-04', // golden orange
-                    'color-08', // lime green
-                    'color-11', // deep green
-                    'color-14', // medium blue
-                    'color-17', // indigo blue
-                    'color-19', // purple
-                    'color-22', // dark magenta 
-                ],
-                count9: [
-                    'color-02', // orange red
-                    'color-05', // golden yellow
-                    'color-08', // lime green
-                    'color-11', // deep green
-                    'color-14', // medium blue
-                    'color-17', // indigo blue
-                    'color-19', // purple
-                    'color-21', // red-purple
-                    'color-23', // magenta 
-                ],
-                
-            }
-        };
-    },
     props: {
 		manageUp: {
 			type: Boolean,
@@ -130,7 +67,7 @@ Vue.component('map-preview', {
             var lookup = 'count' + this.uniqueArtists.length;
             return this.colorMap[lookup];
         },
-	},
+    },
     methods: {
         getArtistColorByIndex: function (index) {
             var slotName = this.artists.up[index - 1];
@@ -512,7 +449,7 @@ Vue.component('map-preview', {
 </g>
 </g>
 <g id="Edges_12_2_">
-<g id="_x31_2s-e-10not11_2_" v-if="slot10 !== slot11">
+<g id="_x31_2s-e-11not12" v-if="slot11 !== slot12">
 <g>
 <line class="st32" x1="179.5" y1="503.1" x2="178" y2="503.1"/>
 <line class="st33" x1="175.6" y1="503.1" x2="167.3" y2="503.1"/>

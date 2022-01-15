@@ -20,7 +20,7 @@ var monthViewPage = Vue.component('month-view', {
             },
             manage: {
                 'feat': false,
-                'up': true,
+                'up': false,
                 'down': false,
             },
             artists: {
@@ -42,8 +42,6 @@ var monthViewPage = Vue.component('month-view', {
                     'Emily',
                     'Blaine',
                     'Blaine',
-                    'temp',
-                    'temp',
                 ],
                 'down': [
                     'Adam',
@@ -260,9 +258,6 @@ var monthViewPage = Vue.component('month-view', {
     template: /*html*/`
 <div
     id="month-view"
-    style="
-        position: relative;
-    "
 >
     <h2>
         <span>Rotation: {{getLongLabel(
@@ -344,14 +339,16 @@ var monthViewPage = Vue.component('month-view', {
             :disabled="move.inProgress"
             @click="swapFloorsButton"
         >swap floors</button>
-        <label>
+        <label
+            v-if="uniqueUpstairs.includes(guestName) || uniqueDownstairs.includes(guestName)"
+        >
             <input
             v-model="lockGuest"
             type="checkbox"
         />
             <span
                 title="Keeps the guest in place during a floor swap."
-            >Lock guest</span>
+            >Lock guest position</span>
         </label>
     </p>
     <div
@@ -380,6 +377,11 @@ var monthViewPage = Vue.component('month-view', {
                             >{{name}}</option>
                         </optgroup>
                     </select>
+                    <div v-if="!moveName">
+                        <button
+                            @click="moveArtistToOtherFloorCancel"
+                        >Cancel</button>
+                    </div>
                 </p>
                 <div v-if="move.name">
                     <p>Move <strong>{{moveName}}</strong> {{moveFloor}}stairs?</p>
@@ -496,12 +498,6 @@ var monthViewPage = Vue.component('month-view', {
     </p>
     <div
         class="svg_preview"
-        style="
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 50%;
-        "
     >
         <map-preview
             :manage-up="manage.up"

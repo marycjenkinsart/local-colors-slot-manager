@@ -22,7 +22,8 @@ Vue.component('name-manager', {
     },
     data: function () {
         return {
-            lockGuest: false,
+            lockGuest: true,
+            listColors: false,
             editName: {
                 editing: false,
                 oldName: '',
@@ -31,6 +32,9 @@ Vue.component('name-manager', {
             newName: {
                 editing: false,
                 newName: '',
+            },
+            artistTransfer: {
+                attempt: false,
             },
             guestName: this.guestNameString || 'GUEST',
             // shift: 0,
@@ -85,8 +89,26 @@ Vue.component('name-manager', {
                 return false;
             }
         },
+        uniqueArtists: function () {
+            var result = this.nameList.filter(this.getUnique);
+            return result;
+        },
+        slotColors: function () {
+            var lookup = 'count' + this.uniqueArtists.length;
+            return this.colorMap[lookup];
+        },
     },
     methods: {
+        getArtistColorByName: function (name) {
+            var colorIndex = this.uniqueArtists.findIndex(function (uniqueName) {
+                return name === uniqueName;
+            });
+            var result = '';
+            if (this.listColors) {
+                result = this.slotColors[colorIndex];
+            }
+            return result;
+        },
         editNameStart: function (name) {
             this.editName.editing = true;
             this.editName.oldName = name;
@@ -321,7 +343,10 @@ Vue.component('name-manager', {
             var targetArtist = this.fancyNameList[fancyIndex].name;
             var neighborArtist = this.nameList[this.findDownNeighbor(fancyIndex)];
             return `swap ${targetArtist} and ${neighborArtist}`
-        }
+        },
+        attemptArtistMove: function (artistName) {
+            this.artistTransfer.attempt = true;
+        },
     },
     template: /*html*/`
 <div class="name-manager">
@@ -380,6 +405,21 @@ Vue.component('name-manager', {
         </form>
     </div>
     <div
+        v-if="artistTransfer.attempt"
+        class="manager-inner round-and-shadow"
+    >
+        <form
+            @submit.prevent="artistTransfer.attempt = false"
+        >
+            <p>Moving an artist to the opposite floor is currently handled on the overall view, not the floor view.</p>
+            <p>
+                <button
+                    type="submit"
+                >OK</button>
+            </p>
+        </form>
+    </div>
+    <div
         v-if="newName.editing"
         class="manager-inner round-and-shadow"
     >
@@ -421,7 +461,7 @@ Vue.component('name-manager', {
     </div>
     <div
         class="manager-inner"
-        v-if="manage && !editName.editing && !newName.editing"
+        v-if="manage && !editName.editing && !newName.editing && !artistTransfer.attempt"
     >
         <div>
             <p>
@@ -444,9 +484,20 @@ Vue.component('name-manager', {
                 <label>
                     <span
                         title="Keeps the guest in place during a rotation"
-                    >Lock guest: </span>
+                    >Lock guest position: </span>
                     <input
                         v-model="lockGuest"
+                        type="checkbox"
+                    />
+                </label>
+            </p>
+            <p>
+                <label>
+                    <span
+                        title="Turns on colored labels"
+                    >Colors: </span>
+                    <input
+                        v-model="listColors"
                         type="checkbox"
                     />
                 </label>
@@ -458,37 +509,45 @@ Vue.component('name-manager', {
                     >
                         <tr class="gray-bg">
                             <td class="third">
-                                <span class="artist-name">{{artist.name}}</span>
+                                <span
+                                    class="artist-name"
+                                    :class="getArtistColorByName(artist.name)"
+                                >{{artist.name}}</span>
                             </td>
                             <td class="third">
                                 <button
                                     :disabled="artist.name === guestName"
                                     @click="editNameStart(artist.name)"
-                                >edit name</button>
+                                    title="change the artist's name"
+                                >name</button>
+                                <button
+                                    @click="attemptArtistMove(artist.name)"
+                                    title="move artist to the other floor"
+                                >transfer</button>
                             </td>
                             <td class="third">
                                 <button
-                                    title="Reduce artist slot size/count"
+                                    title="Reduce artist slot size"
                                     @click="reduceArtist(artist.slotIndex)"
                                 >–</button>
                                 <button
-                                    title="Increase artist slot size/count"
+                                    title="Increase artist slot size"
                                     @click="expandArtist(artist.slotIndex)"
                                 >+</button>
-                                <span>{{getDisplaySlotSize(artist.slotSize)}} slot</span><span
+                                <span
+                                    class="medium-mini"
+                                >{{getDisplaySlotSize(artist.slotSize)}} slot</span><span
                                     v-if="artist.slotSize > 1"
+                                    class="medium-mini"
                                 >s</span>
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                <button
+                            <td><button
                                     class="mini"
                                     :title="getSwapMessage(index)"
                                     @click="rotateArtistUp(findDownNeighbor(index))"
-                                >Swap ↑↓</button>
-                            </td>
-                            <td></td>
+                                >Swap ↑↓</button></td>
                         </tr>
                     </template>
                 </tbody>
