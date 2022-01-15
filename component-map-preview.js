@@ -2,6 +2,69 @@ Vue.component('map-preview', {
 	mixins: [
 		mixins,
 	],
+    data: function () {
+        return {
+            colorMap: { // unique artists, not slot count
+                count3: [
+                    'color-01', // red
+                    'color-15', // blue
+                    'color-19', // purple
+                ],
+                count4: [
+                    'color-01', // red
+                    'color-04', // golden orange
+                    'color-15', // blue
+                    'color-19', // purple
+                ],
+                count5: [
+                    'color-01', // red
+                    'color-04', // golden orange
+                    'color-10', // green
+                    'color-15', // blue
+                    'color-19', // purple
+                ],
+                count6: [
+                    'color-01', // red
+                    'color-04', // golden orange
+                    'color-10', // green
+                    'color-15', // blue
+                    'color-19', // purple
+                    'color-22', // dark magenta 
+                ],
+                count7: [
+                    'color-01', // red
+                    'color-04', // golden orange
+                    'color-10', // green
+                    'color-13', // cyan
+                    'color-17', // indigo blue
+                    'color-19', // purple
+                    'color-22', // dark magenta 
+                ],
+                count8: [
+                    'color-01', // red
+                    'color-04', // golden orange
+                    'color-08', // lime green
+                    'color-11', // deep green
+                    'color-14', // medium blue
+                    'color-17', // indigo blue
+                    'color-19', // purple
+                    'color-22', // dark magenta 
+                ],
+                count9: [
+                    'color-02', // orange red
+                    'color-05', // golden yellow
+                    'color-08', // lime green
+                    'color-11', // deep green
+                    'color-14', // medium blue
+                    'color-17', // indigo blue
+                    'color-19', // purple
+                    'color-21', // red-purple
+                    'color-23', // magenta 
+                ],
+                
+            }
+        };
+    },
     props: {
 		manageUp: {
 			type: Boolean,
@@ -17,9 +80,6 @@ Vue.component('map-preview', {
 		}
 	},
     computed: {
-		slotCount: function () {
-			return 7; //TODO
-		},
         slot01: function () {
             return this.artists.up[0] || 'ERROR';
         },
@@ -41,11 +101,29 @@ Vue.component('map-preview', {
         slot07: function () {
             return this.artists.up[6] || 'ERROR';
         },
+		slotCount: function () {
+			return 7; //TODO
+		},
+        uniqueArtists: function () {
+            var result = this.artists.up.filter(this.getUnique);
+            return result;
+        },
+        slotColors: function () {
+            var lookup = 'count' + this.uniqueArtists.length;
+            return this.colorMap[lookup];
+        },
 	},
-    methods: {},
+    methods: {
+        getArtistColorByIndex: function (index) {
+            var slotName = this.artists.up[index - 1];
+            var colorIndex = this.uniqueArtists.findIndex(function (item) {
+                return item === slotName;
+            });
+            return this.slotColors[colorIndex];
+        },
+    },
     template: /*html*/`
 <div class="map-preview">
-
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 24.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"  viewBox="0 0 218.4 630.7" style="enable-background:new 0 0 218.4 630.7;" xml:space="preserve">
@@ -75,8 +153,8 @@ Vue.component('map-preview', {
 <rect x="145.7" y="424.4" class="st0" width="33.8" height="10.5"/>
 <rect x="145.7" y="413.9" class="st0" width="33.8" height="10.5"/>
 <rect x="109.6" y="27" class="st1" width="10.8" height="6.1"/>
-<g>
-<rect x="26" y="540.2" transform="matrix(0.255 -0.9669 0.9669 0.255 -493.5443 442.51)" class="st2" width="28.8" height="2.6"/>
+<g> 
+<rect x="25.9" y="540.2" transform="matrix(0.255 -0.9669 0.9669 0.255 -493.5775 442.4347)" class="st2" width="28.8" height="2.6"/>
 <rect x="38" y="555.8" class="st0" width="28.8" height="2.6"/>
 <path class="st0" d="M45,527.8c12.5,3.1,21.8,14.4,21.8,28"/>
 </g>
@@ -85,8 +163,8 @@ Vue.component('map-preview', {
 <g>
 <path class="st1" d="M39.7,17.1c-1.2,7.4,2.7,15,9.9,18.1"/>
 </g>
-<rect x="45.2" y="27" transform="matrix(0.3954 -0.9185 0.9185 0.3954 6.9255 66.0248)" class="st3" width="16.8" height="1.5"/>
-<rect x="47.3" y="9.2" transform="matrix(0.1614 -0.9869 0.9869 0.1614 22.874 62.2188)" class="st4" width="1.5" height="16.8"/>
+<rect x="45.2" y="27" transform="matrix(0.3954 -0.9185 0.9185 0.3954 6.9079 66.0257)" class="st3" width="16.8" height="1.5"/> 
+<rect x="47.2" y="9.2" transform="matrix(0.1614 -0.9869 0.9869 0.1614 22.8442 62.1614)" class="st4" width="1.5" height="16.8"/>
 </g>
 <polyline class="st0" points="183.8,149 183.8,329.4 141.3,329.4 141.3,347.4 "/>
 <line class="st5" x1="182.1" y1="149" x2="182.7" y2="99.7"/>
@@ -95,13 +173,13 @@ Vue.component('map-preview', {
 <polyline class="st5" points="60.9,79.1 0,50.8 23.2,0 99.6,35.5 "/>
 <line class="st5" x1="59.5" y1="16.9" x2="35.1" y2="67.1"/>
 <g>
-<rect x="13" y="11" transform="matrix(0.4254 -0.905 0.905 0.4254 -2.0973 30.7189)" class="st6" width="20.3" height="12.1"/>
-<path class="st1" d="M27.1,13.3c1.6,0.7,1.9,3.4,0.7,5.9c-1.2,2.5-3.4,3.9-5,3.2s-1.9-3.4-0.7-5.9C23.3,14,25.6,12.6,27.1,13.3z" />
-<rect x="19" y="12.9" transform="matrix(0.4254 -0.905 0.905 0.4254 -2.5234 26.8255)" class="st6" width="1.8" height="5"/>
+<rect x="13" y="11" transform="matrix(0.4254 -0.905 0.905 0.4254 -2.0846 30.7592)" class="st6" width="20.3" height="12.1"/>
+<path class="st1" d="M27.1,13.3c1.6,0.7,1.9,3.4,0.7,5.9c-1.2,2.5-3.4,3.9-5,3.2s-1.9-3.4-0.7-5.9S25.6,12.6,27.1,13.3z"/>
+<rect x="19" y="12.9" transform="matrix(0.4254 -0.905 0.905 0.4254 -2.4849 26.8206)" class="st6" width="1.8" height="5"/>
 <path class="st1" d="M22.5,9.8c0.6,0.3,0.9,1,0.6,1.6s-1,0.9-1.6,0.6s-0.9-1-0.6-1.6C21.2,9.8,21.9,9.5,22.5,9.8z"/>
-<path class="st1" d="M18.3,18.9c0.6,0.3,0.9,1,0.6,1.6c-0.3,0.6-1,0.9-1.6,0.6c-0.6-0.3-0.9-1-0.6-1.6 C16.9,18.8,17.7,18.6,18.3,18.9z"/>
+<path class="st1" d="M18.3,18.9c0.6,0.3,0.9,1,0.6,1.6s-1,0.9-1.6,0.6s-0.9-1-0.6-1.6C16.9,18.8,17.7,18.6,18.3,18.9z"/>
 </g>
-<rect x="1.3" y="39" transform="matrix(0.4254 -0.905 0.905 0.4254 -33.1101 30.4351)" class="st6" width="12.2" height="4.5"/>
+<rect x="1.3" y="39" transform="matrix(0.4254 -0.905 0.905 0.4254 -33.1296 30.3918)" class="st6" width="12.2" height="4.5"/>
 <path class="st1" d="M17.8,39.4c3.1,1.4,4.4,5.1,2.9,8.1c-1.4,3.1-5.1,4.4-8.1,2.9c-3.1-1.4-4.4-5.1-2.9-8.1 C11.1,39.2,14.7,37.9,17.8,39.4z"/>
 <path class="st1" d="M16.5,42.1c1.6,0.7,2.2,2.6,1.5,4.2c-0.7,1.6-2.6,2.2-4.2,1.5s-2.2-2.6-1.5-4.2C13.1,42,15,41.3,16.5,42.1z"/>
 <circle class="st1" cx="181.2" cy="176.5" r="1.6"/>
@@ -110,59 +188,59 @@ Vue.component('map-preview', {
 <polyline class="st0" points="152.4,570.7 107,535 84.8,535 67,555.7 "/>
 <polyline class="st0" points="152.2,99.7 182.7,99.7 182.7,27 120.4,27 109.6,27 99.1,27 99.1,49.1 96.1,49.1 "/>
 <polyline class="st0" points="179.5,476.7 183.7,476.7 183.7,484.8 179.5,484.8 179.5,536.1 "/> 
-<rect x="114.9" y="525.1" transform="matrix(0.6181 -0.7861 0.7861 0.6181 -368.7982 305.6481)" class="st7" width="30.6" height="14.5"/>
+<rect x="114.9" y="525.1" transform="matrix(0.6181 -0.7861 0.7861 0.6181 -368.7673 305.6198)" class="st7" width="30.6" height="14.5"/>
 <g>
-<path class="st8" d="M124.6,517.4c4.4,3.5,1.2,6.8-2.3,11.2s-5.9,8.4-10.3,4.9c-4.4-3.5-5.2-9.9-1.7-14.3 C113.7,514.7,120.1,513.9,124.6,517.4z"/>
-<path class="st8" d="M123.7,521.9c2.7,2.1,0.7,4.1-1.4,6.8c-2.1,2.7-3.6,5.1-6.2,2.9c-2.7-2.1-3.1-6-1-8.7 C117.1,520.2,121,519.7,123.7,521.9z"/>
+<path class="st8" d="M124.6,517.4c4.4,3.5,1.2,6.8-2.3,11.2s-5.9,8.4-10.3,4.9s-5.2-9.9-1.7-14.3 C113.7,514.7,120.1,513.9,124.6,517.4z"/>
+<path class="st8" d="M123.7,521.9c2.7,2.1,0.7,4.1-1.4,6.8s-3.6,5.1-6.2,2.9c-2.7-2.1-3.1-6-1-8.7 C117.1,520.2,121,519.7,123.7,521.9z"/>
 </g>
 <g>
 <path class="st8" d="M146.1,537.9c3,2.4,3.6,6.8,1.2,9.8c-2.4,3-6.8,3.6-9.8,1.2c-3-2.4-3.6-6.8-1.2-9.8 C138.6,536.1,143,535.5,146.1,537.9z"/>
 <path class="st8" d="M153.3,542.7c0.7,0.6,1,1.4-3.5,7.1c-4.5,5.7-5.4,5.6-6.1,5.1c-0.7-0.6-1-1.4,3.5-7.1 C151.7,542,152.6,542.1,153.3,542.7z"/> 
-<rect x="146.6" y="532.1" transform="matrix(0.6183 -0.786 0.786 0.6183 -365.9895 321.6769)" class="st9" width="3.2" height="11"/> 
-<rect x="136" y="545.6" transform="matrix(0.6182 -0.786 0.786 0.6182 -380.6309 318.539)" class="st10" width="3.2" height="11"/>
+<rect x="146.6" y="532.1" transform="matrix(0.6183 -0.786 0.786 0.6183 -365.9557 321.69)" class="st9" width="3.2" height="11"/> 
+<rect x="136" y="545.6" transform="matrix(0.6182 -0.786 0.786 0.6182 -380.6188 318.5488)" class="st10" width="3.2" height="11"/>
 </g>
 <g id="featured-show-jl_1_">
-<text transform="matrix(0 -1 1 0 46.4052 226.6182)" class="st11 st12 st13 jl">FEATURED SHOW</text >
+<text transform="matrix(0 -1 1 0 46.4052 183)" class="st11 st12 st13">FEATURED SHOW</text>
 </g>
 <g id="featured-show-jl">
-<text transform="matrix(0 -1 1 0 46.4052 364.8369)" class="st11 st12 st13 jl">FEATURED SHOW</text >
+<text transform="matrix(0 -1 1 0 46.4052 321.2188)" class="st11 st12 st13">FEATURED SHOW</text>
 </g>
 <g id="jewelry-jl">
-<text transform="matrix(0 -1 1 0 47.4059 456.8008)" class="st11 st12 st13 jl">JEWELRY</text >
+<text transform="matrix(0 -1 1 0 47.4059 429.6504)" class="st11 st12 st13">JEWELRY</text>
 </g>
 </g>
 <g id="show_if_slots_7" v-if="slotCount === 7">
 <g id="Slots">
 <g id="_x30_7s-s-7">
-<rect x="150.4" y="360.1" class="st14" width="22.4" height="4.1"/>
-<rect x="31.2" y="481.2" class="st14" width="3.8" height="47.8"/> 
-<rect x="162.8" y="559.2" transform="matrix(0.6173 -0.7867 0.7867 0.6173 -374.1624 352.9585)" class="st14" width="25.9" height="3.8"/>
+<rect x="150.4" y="360.1" class="st14" width="22.4" height="4.1" :class="getArtistColorByIndex(7)"/>
+<rect x="31.2" y="481.2" class="st14" width="3.8" height="47.8" :class="getArtistColorByIndex(7)"/>
+<rect x="162.8" y="559.2" transform="matrix(0.6173 -0.7867 0.7867 0.6173 -374.1425 352.9732)" class="st14" width="25.9" height="3.8" :class="getArtistColorByIndex(7)"/>
 </g>
 <g id="_x30_7s-s-6">
-<rect x="141.3" y="434.2" class="st15" width="3.8" height="49.2"/>
-<rect x="179.5" y="489.5" class="st15" width="3.9" height="40.3"/>
+<rect x="141.3" y="434.2" class="st15" width="3.8" height="49.2" :class="getArtistColorByIndex(6)"/>
+<rect x="179.5" y="489.5" class="st15" width="3.9" height="40.3" :class="getArtistColorByIndex(6)"/>
 </g>
 <g id="_x30_7s-s-5">
-<rect x="141.3" y="329.4" class="st16" width="3.8" height="15.8"/>
-<rect x="141.3" y="381.8" class="st16" width="3.8" height="52.4"/>
-<rect x="183.8" y="303.6" class="st16" width="3.9" height="25.7"/>
+<rect x="141.3" y="329.4" class="st16" width="3.8" height="15.8" :class="getArtistColorByIndex(5)"/>
+<rect x="141.3" y="381.8" class="st16" width="3.8" height="52.4" :class="getArtistColorByIndex(5)"/>
+<rect x="183.8" y="303.6" class="st16" width="3.9" height="25.7" :class="getArtistColorByIndex(5)"/>
 </g>
-<rect id="_x30_7s-s-4" x="183.8" y="209.7" class="st17" width="3.9" height="94"/>
+<rect id="_x30_7s-s-4" x="183.8" y="209.7" class="st17" width="3.9" height="94" :class="getArtistColorByIndex(4)"/>
 <g id="_x30_7s-s-3">
 <g>
-<rect x="183.8" y="149" class="st18" width="3.9" height="60.7"/> 
-<rect x="158.6" y="139.5" transform="matrix(0.9215 0.3883 -0.3883 0.9215 68.3253 -55.2047)" class="st18" width="24.3" height="3.8"/>
+<rect x="183.8" y="149" class="st18" width="3.9" height="60.7" :class="getArtistColorByIndex(3)"/>
+<rect x="168.9" y="129.2" transform="matrix(0.3883 -0.9215 0.9215 0.3883 -25.8465 243.8568)" class="st18" width="3.8" height="24.3" :class="getArtistColorByIndex(3)"/>
 </g>
 </g>
 <g id="_x30_7s-s-2">
 <g>
-<rect x="182.7" y="27" class="st19" width="3.9" height="71.3"/> 
-<rect x="142.1" y="131.3" transform="matrix(0.9215 0.3883 -0.3883 0.9215 63.584 -48.2481)" class="st19" width="18.2" height="3.8"/>
+<rect x="182.7" y="27" class="st19" width="3.9" height="71.3" :class="getArtistColorByIndex(2)"/>
+<rect x="149.3" y="124.1" transform="matrix(0.3883 -0.9215 0.9215 0.3883 -30.2706 220.8098)" class="st19" width="3.8" height="18.2" :class="getArtistColorByIndex(2)"/>
 </g>
 </g>
 <g id="_x30_7s-s-1">
-<rect x="35.6" y="90.8" transform="matrix(0.411 -0.9116 0.9116 0.411 -50.82 106.7735)" class="st20" width="43.2" height="3.9"/>
-<rect x="125.7" y="23.2" class="st20" width="50.8" height="3.8"/>
+<rect x="35.6" y="90.8" transform="matrix(0.411 -0.9116 0.9116 0.411 -50.8402 106.8104)" class="st20" width="43.2" height="3.9" :class="getArtistColorByIndex(1)"/>
+<rect x="125.7" y="23.2" class="st20" width="50.8" height="3.8" :class="getArtistColorByIndex(1)"/>
 </g>
 </g>
 <g id="Edges">
@@ -197,97 +275,107 @@ Vue.component('map-preview', {
 </g>
 <g id="Measurements">
 <g id="_x30_7s-m-5not6" v-if="slot05 !== slot06">
-<text transform="matrix(0 1 -1 0 167.3652 451.5637)" class="st23 st24 st25">68”</text>
-<text transform="matrix(0 1 -1 0 167.3652 451.5637)" class="st26 st24 st25">68”</text>
-<text transform="matrix(0 1 -1 0 167.3652 451.5637)" class="st23 st24 st25">68”</text>
+<text transform="matrix(0 1 -1 0 167.3652 458.8002)" class="st23 st24 st25">68”</text>
+<text transform="matrix(0 1 -1 0 167.3652 458.8002)" class="st26 st24 st25">68”</text>
+<text transform="matrix(0 1 -1 0 167.3652 458.8002)" class="st23 st24 st25">68”</text>
 <polyline class="st0" points="154.1,483.4 163.4,458.8 154.1,434.2 "/>
 </g>
 <g id="_x30_7s-m-4not5" v-if="slot04 !== slot05">
-<text transform="matrix(-8.979319e-11 1 -1 -8.979319e-11 209.8027 309.4319)" class="st23 st24 st25">36”</text>
-<polyline class="st0" points="196.5,329.7 205.9,316.7 196.5,303.6 "/>
+<text transform="matrix(-8.979319e-11 1 -1 -8.979319e-11 203.8027 316.6728)" class="st23 st24 st25">36”</text>
+<polyline class="st0" points="190.5,329.7 199.9,316.7 190.5,303.6 "/>
 </g>
 <g id="_x30_7s-m-3not4" v-if="slot03 !== slot04">
-<text transform="matrix(-8.979319e-11 1 -1 -8.979319e-11 209.8027 172.1091)" class="st23 st24 st25">84”</text>
-<polyline class="st0" points="196.5,209.7 205.9,179.3 196.5,149 "/>
+<text transform="matrix(-8.979319e-11 1 -1 -8.979319e-11 203.8027 179.35)" class="st23 st24 st25">84”</text>
+<polyline class="st0" points="190.5,209.7 199.9,179.3 190.5,149 "/>
 </g>
 <g id="_x30_7s-m-2not3" v-if="slot02 !== slot03">
-<text transform="matrix(0.9212 0.389 -0.389 0.9212 153.5276 111.6642)" class="st23 st24 st27">67”</text>
-<polyline class="st0" points="163.8,129.3 159.1,117.2 147,122.2 "/>
+<text transform="matrix(0.9212 0.389 -0.389 0.9212 158.4487 119.2052)" class="st23 st24 st27">67”</text>
+<polyline class="st0" points="160.8,133.3 156.1,121.2 144,126.2 "/>
 </g>
 </g>
 <g id="Labels">
 <g id="_x30_7s-l-7zzz">
-<text transform="matrix(8.979319e-11 -1 1 8.979319e-11 47.0526 504.812)" class="st14 st12 st13">{{slot07}}</text>
+<text transform="matrix(8.979319e-11 -1 1 8.979319e-11 47.0526 504.8115)" class="st14 st12 st13" :class="getArtistColorByIndex(7)">{{slot07}}</text  >
 </g>
 <g id="_x30_7s-l-7zz">
-<text transform="matrix(1 0 0 1 161.9476 376.0063)" class="st14 st12 st13">{{slot07}}</text>
+<text transform="matrix(1 0 0 1 161.9476 376.0063)" class="st14 st12 st13" :class="getArtistColorByIndex(7)">{{slot07}}</text  >
 </g>
 <g id="_x30_7s-l-7">
-<text transform="matrix(-0.6223 0.7828 -0.7828 -0.6223 167.0467 552.9548)" class="st14 st12 st13">{{slot07}}</text>
+<text transform="matrix(-0.6223 0.7828 -0.7828 -0.6223 167.0468 552.9548)" class="st14 st12 st13" :class="getArtistColorByIndex(7)">{{slot07}}</text  >
 </g>
 <g id="_x30_7s-l-6not5" v-if="slot06 !== slot05">
-<text transform="matrix(0 1 -1 0 128.6484 458.1434)" class="st15 st12 st13">{{slot06}}</text>
+<text transform="matrix(0 1 -1 0 128.6484 458.1434)" class="st15 st12 st13" :class="getArtistColorByIndex(6)">{{slot06}}</text  >
 </g>
-<g id="_x30_7s-l-5">
-<text transform="matrix(0 1 -1 0 168.8164 508.8047)" class="st15 st12 st13">{{slot05}}</text>
+<g id="_x30_7s-l-6">
+<text transform="matrix(0 1 -1 0 168.8164 508.8047)" class="st15 st12 st13" :class="getArtistColorByIndex(6)">{{slot06}}</text  >
 </g>
 <g id="_x30_7s-l-5and6" v-if="slot05 === slot06">
-<text transform="matrix(0 1 -1 0 128.6484 432.1982)" class="st15 st12 st13">{{slot05}}</text>
+<text transform="matrix(0 1 -1 0 128.6484 432.1982)" class="st15 st12 st13" :class="getArtistColorByIndex(5)">{{slot05}}</text  >
 </g>
 <g id="_x30_7s-l-5not6_1_" v-if="slot05 !== slot06">
-<text transform="matrix(0 1 -1 0 127.8496 404.3509)" class="st16 st12 st13">{{slot05}}</text>
+<text transform="matrix(0 1 -1 0 127.8496 404.3509)" class="st16 st12 st13" :class="getArtistColorByIndex(5)">{{slot05}}</text  >
 </g>
 <g id="_x30_7s-l-5z">
-<text transform="matrix(0 1 -1 0 128.6484 336.6378)" class="st16 st12 st13">{{slot05}}</text>
+<text transform="matrix(0 1 -1 0 128.6484 336.6378)" class="st16 st12 st13" :class="getArtistColorByIndex(5)">{{slot05}}</text  >
 </g>
 <g id="_x30_7s-l-5-jr">
-<text transform="matrix(1 0 0 1 182.1089 323.5477)" class="st16 st12 st13 jr">{{slot05}}</text >
+<text transform="matrix(1 0 0 1 182.1089 323.5477)" class="st16 st12 st13 jr" :class="getArtistColorByIndex(5)">{{slot05}}</text  >
 </g>
 <g id="_x30_7s-l-4and5" v-if="slot04 === slot05">
-<text transform="matrix(0 1 -1 0 172.4844 272.2133)" class="st17 st12 st13">{{slot04}}</text>
+<text transform="matrix(0 1 -1 0 172.4844 272.2133)" class="st17 st12 st13" :class="getArtistColorByIndex(4)">{{slot04}}</text  >
 </g>
 <g id="_x30_7s-l-4not5" v-if="slot04 !== slot05">
-<text transform="matrix(0 1 -1 0 172.4844 251.5733)" class="st17 st12 st13">{{slot04}}</text>
+<text transform="matrix(0 1 -1 0 172.4844 251.5733)" class="st17 st12 st13" :class="getArtistColorByIndex(4)">{{slot04}}</text  >
 </g>
 <g id="_x30_7s-l-3">
-<text transform="matrix(0 1 -1 0 172.4844 177.6521)" class="st18 st12 st13">{{slot03}}</text>
+<text transform="matrix(0 1 -1 0 172.4844 177.6521)" class="st18 st12 st13" :class="getArtistColorByIndex(3)">{{slot03}}</text  >
 </g>
 <g id="_x30_7s-l-2and3" v-if="slot02 === slot03">
-<text transform="matrix(0.9183 0.396 -0.396 0.9183 155.5052 148.333)" class="st19 st12 st28">{{slot02}}</text>
+<text transform="matrix(0.9183 0.396 -0.396 0.9183 155.5056 148.333)" class="st19 st12 st28" :class="getArtistColorByIndex(2)">{{slot02}}</text  >
 </g>
 <g id="_x30_7s-l-2not3-jr" v-if="slot02 !== slot03">
-<text transform="matrix(0.9183 0.396 -0.396 0.9183 152.9827 147.5843)" class="st19 st12 st28 jr">{{slot02}}</text >
+<text transform="matrix(0.9183 0.396 -0.396 0.9183 152.9828 147.5838)" class="st19 st12 st28 jr" :class="getArtistColorByIndex(2)">{{slot02}}</text  >
 </g>
 <g id="_x30_7s-l-2">
-<text transform="matrix(0 1 -1 0 171.4824 65.4022)" class="st19 st12 st13">{{slot02}}</text>
+<text transform="matrix(0 1 -1 0 171.4824 65.4022)" class="st19 st12 st13" :class="getArtistColorByIndex(2)">{{slot02}}</text  >
 </g>
 <g id="_x30_7s-l-1z">
-<text transform="matrix(1 0 0 1 147.3024 37.7803)" class="st20 st12 st13">{{slot01}}</text>
+<text transform="matrix(1 0 0 1 147.3024 37.7803)" class="st20 st12 st13" :class="getArtistColorByIndex(1)">{{slot01}}</text  >
 </g>
 <g id="_x30_7s-l-1">
-<text transform="matrix(0.444 -0.896 0.896 0.444 68.9994 98.6992)" class="st20 st12 st13">{{slot01}}</text>
+<text transform="matrix(0.444 -0.896 0.896 0.444 68.9994 98.6992)" class="st20 st12 st13" :class="getArtistColorByIndex(1)">{{slot01}}</text  >
 </g>
 </g>
 </g>
 <g id="Pallet">
-<rect x="-37" y="314" class="st29" width="23" height="15.4"/>
-<rect x="-37" y="329.2" class="st30" width="23" height="15.4"/>
-<rect x="-37" y="344.7" class="st31" width="23" height="15.4"/>
-<rect x="-37" y="360.1" class="st32" width="23" height="15.4"/>
-<rect x="-37" y="375.5" class="st33" width="23" height="15.4"/>
-<rect x="-37" y="390.8" class="st34" width="23" height="15.4"/>
-<rect x="-37" y="406.2" class="st35" width="23" height="15.4"/>
-<rect x="-37" y="421.6" class="st36" width="23" height="15.4"/>
-<rect x="-37" y="437" class="st37" width="23" height="15.4"/>
-<rect x="-37" y="452.3" class="st38" width="23" height="15.4"/>
-<rect x="-37" y="467.7" class="st39" width="23" height="15.4"/>
-<rect x="-37" y="483.1" class="st40" width="23" height="15.4"/>
-<rect x="-37" y="498.5" class="st41" width="23" height="15.4"/>
-<rect x="-37" y="513.9" class="st42" width="23" height="15.4"/>
-<rect x="-37" y="529.2" class="st0" width="23" height="15.4"/>
-<rect x="-37" y="544.7" class="st8" width="23" height="15.4"/>
+<rect id="color-01" x="-37" y="21.6" class="st29" width="23" height="15.4"/>
+<rect id="color-02" x="-37" y="36.9" class="st30" width="23" height="15.4"/>
+<rect id="color-03" x="-37" y="52.3" class="st31" width="23" height="15.4"/>
+<rect id="color-04" x="-37" y="67.7" class="st32" width="23" height="15.4"/>
+<rect id="color-05" x="-37" y="83.1" class="st33" width="23" height="15.4"/>
+<rect id="color-06" x="-37" y="98.4" class="st34" width="23" height="15.4"/>
+<rect id="color-07" x="-37" y="113.8" class="st35" width="23" height="15.4"/>
+<rect id="color-08" x="-37" y="129.2" class="st36" width="23" height="15.4"/>
+<rect id="color-09" x="-37" y="144.6" class="st37" width="23" height="15.4"/>
+<rect id="color-10" x="-37" y="159.9" class="st38" width="23" height="15.4"/>
+<rect id="color-11" x="-37" y="175.3" class="st39" width="23" height="15.4"/>
+<rect id="color-12" x="-37" y="190.7" class="st40" width="23" height="15.4"/>
+<rect id="color-13" x="-37" y="206.1" class="st41" width="23" height="15.4"/>
+<rect id="color-14" x="-37" y="221.5" class="st42" width="23" height="15.4"/>
+<rect id="color-15" x="-37" y="236.9" class="st43" width="23" height="15.4"/>
+<rect id="color-16" x="-37" y="252.3" class="st44" width="23" height="15.4"/>
+<rect id="color-17" x="-37" y="267.7" class="st45" width="23" height="15.4"/>
+<rect id="color-18" x="-37" y="283.1" class="st23" width="23" height="15.4"/>
+<rect id="color-19" x="-37" y="298.5" class="st46" width="23" height="15.4"/>
+<rect id="color-20" x="-37" y="313.9" class="st47" width="23" height="15.4"/>
+<rect id="color-21" x="-37" y="329.2" class="st48" width="23" height="15.4"/>
+<rect id="color-22" x="-37" y="344.6" class="st49" width="23" height="15.4"/>
+<rect id="color-23" x="-37" y="360" class="st50" width="23" height="15.4"/>
+<rect x="-37" y="375.4" class="st11" width="23" height="15.4"/>
+<rect x="-37" y="390.8" class="st0" width="23" height="15.4"/>
+<rect x="-37" y="406.2" class="st8" width="23" height="15.4"/>
 </g>
-</svg>
+</svg>    
 
 </div>
 `
