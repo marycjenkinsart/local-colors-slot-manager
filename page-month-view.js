@@ -20,7 +20,7 @@ var monthViewPage = Vue.component('month-view', {
             },
             manage: {
                 'feat': false,
-                'up': false,
+                'up': true,
                 'down': false,
             },
             artists: {
@@ -40,8 +40,8 @@ var monthViewPage = Vue.component('month-view', {
                     'Jeff M.',
                     'Emily',
                     'Emily',
-                    // 'Blaine',
-                    // 'Blaine',
+                    'Blaine',
+                    'Blaine',
                 ],
                 'down': [
                     'Adam',
