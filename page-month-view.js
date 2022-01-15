@@ -42,6 +42,8 @@ var monthViewPage = Vue.component('month-view', {
                     'Emily',
                     'Blaine',
                     'Blaine',
+                    'temp',
+                    'temp',
                 ],
                 'down': [
                     'Adam',
