@@ -26,18 +26,18 @@
 	.st20{fill:#D7DF23;}
 	.st21{fill:#74BF44;}
 	.st22{fill:#0DB04B;}
-	.st23{fill:#00A54F;}
-	.st24{fill:none;stroke:#2E3192;stroke-linecap:square;stroke-miterlimit:10;}
-	.st25{fill:none;stroke:#2E3192;stroke-linecap:square;stroke-miterlimit:10;stroke-dasharray:2.3759,2.3759;}
-	.st26{fill:none;stroke:#FFFFFF;stroke-width:2;stroke-miterlimit:10;}
-	.st27{font-family:'ArialMT';}
-	.st28{font-size:10px;}
-	.st29{fill:#2E3192;}
-	.st30{font-size:9.9985px;}
+	.st23{fill:#00A9AC;}
+	.st24{fill:#29AAE1;}
+	.st25{fill:none;stroke:#2E3192;stroke-linecap:square;stroke-miterlimit:10;}
+	.st26{fill:none;stroke:#2E3192;stroke-linecap:square;stroke-miterlimit:10;stroke-dasharray:2.3759,2.3759;}
+	.st27{fill:#2E3192;}
+	.st28{font-family:'ArialMT';}
+	.st29{font-size:10px;}
+	.st30{fill:none;stroke:#FFFFFF;stroke-width:2;stroke-miterlimit:10;}
 	.st31{font-size:12.0025px;}
 	.st32{fill:#ED1C24;}
-	.st33{display:none;}
-	.st34{display:inline;}
+	.st33{fill:#00A54F;}
+	.st34{font-size:9.9985px;}
 	.st35{fill:#EB2027;}
 	.st36{fill:#F05A25;}
 	.st37{fill:#F48120;}
@@ -46,16 +46,14 @@
 	.st40{fill:#FBED21;}
 	.st41{fill:#D6DE27;}
 	.st42{fill:#A4CD39;}
-	.st43{fill:#00A9AC;}
-	.st44{fill:#29AAE1;}
-	.st45{fill:#0095DA;}
-	.st46{fill:#007DC5;}
-	.st47{fill:#0066B3;}
-	.st48{fill:#034EA2;}
-	.st49{fill:#5C2D91;}
-	.st50{fill:#812990;}
-	.st51{fill:#A3238E;}
-	.st52{fill:#C6168D;}
+	.st43{fill:#0095DA;}
+	.st44{fill:#007DC5;}
+	.st45{fill:#0066B3;}
+	.st46{fill:#034EA2;}
+	.st47{fill:#5C2D91;}
+	.st48{fill:#812990;}
+	.st49{fill:#A3238E;}
+	.st50{fill:#C6168D;}
 </style>
 <g id="Upstairs_Base">
 	<polyline class="st0" points="141.3,368.8 138.9,367.2 141.3,364.7 138.9,362.5 141.3,360.4 138.9,358.1 141.3,355.6 138.9,353.4 
@@ -153,186 +151,357 @@
 		<text transform="matrix(0 -1 1 0 47.4059 429.6504)" class="st11 st12 st13">JEWELRY</text>
 	</g>
 </g>
-<g id="show_if_slots_10">
-	<g id="Slots_10">
-		<g id="_x31_0s-s-1">
+<g id="show_if_slots_11">
+	<g id="Slots_11">
+		<g id="_x31_1s-s-1">
+			<rect x="122.9" y="23.1" class="st14" width="59.8" height="3.9"/>
+		</g>
+		<g id="_x31_1s-s-2">
+			<rect x="182.7" y="27" class="st15" width="3.9" height="59.8"/>
+		</g>
+		<g id="_x31_1s-s-3">
+			<rect x="182.7" y="86.8" class="st16" width="3.9" height="16.7"/>
+			
+				<rect x="35.5" y="90.8" transform="matrix(0.411 -0.9116 0.9116 0.411 -50.8971 106.7238)" class="st16" width="43.2" height="3.9"/>
+		</g>
+		<g id="_x31_1s-s-4">
+			<rect id="stop" x="183.8" y="149" class="st17" width="3.9" height="26.4"/>
+			
+				<rect id="illustrator_x5F_no_1_" x="170.8" y="132.3" transform="matrix(0.3872 -0.922 0.922 0.3872 -25.2587 246.4457)" class="st17" width="3.9" height="19.8"/>
+			
+				<rect x="151.3" y="122.7" transform="matrix(0.3883 -0.9215 0.9215 0.3883 -29.801 223.1954)" class="st17" width="3.8" height="22.6"/>
+		</g>
+		<g id="_x31_1s-s-5">
+			<rect x="183.8" y="175.4" class="st18" width="3.9" height="56.8"/>
+		</g>
+		<g id="_x31_1s-s-6">
+			<rect id="at" x="183.9" y="232.2" class="st19" width="3.8" height="55.8"/>
+		</g>
+		<g id="_x31_1s-s-7">
+			<rect id="is_1_" x="141.3" y="329.4" class="st20" width="3.8" height="16.5"/>
+			<rect id="illustrator" x="183.9" y="288" class="st20" width="3.8" height="41.4"/>
+		</g>
+		<g id="_x31_1s-s-8">
+			<rect id="bad_2_" x="141.3" y="381.8" class="st21" width="3.8" height="59.8"/>
+		</g>
+		<g id="_x31_1s-s-9">
+			<polyline class="st22" points="141.2,441.6 145.1,441.6 145.1,483.3 141.2,483.3 			"/>
+			<rect x="179.5" y="489.5" class="st22" width="3.9" height="18.1"/>
+		</g>
+		<g id="_x31_1s-s-10">
+			<rect x="179.5" y="507.5" class="st23" width="3.9" height="23.9"/>
+			<polyline class="st23" points="31.3,481.2 35.2,481.2 35.2,516.6 31.3,516.6 			"/>
+		</g>
+		<g id="_x31_1s-s-11">
+			<rect x="145.7" y="350.2" class="st24" width="33.9" height="3.9"/>
+			
+				<rect x="162.8" y="559.2" transform="matrix(0.6173 -0.7867 0.7867 0.6173 -374.1757 352.987)" class="st24" width="25.9" height="3.8"/>
+		</g>
+	</g>
+	<g id="Edges_11">
+		<g id="_x31_1s-e-9not10">
+			<g>
+				<line class="st25" x1="179.5" y1="507.5" x2="178" y2="507.5"/>
+				<line class="st26" x1="175.6" y1="507.5" x2="167.3" y2="507.5"/>
+				<line class="st25" x1="166.1" y1="507.5" x2="164.6" y2="507.5"/>
+			</g>
+		</g>
+		<g id="_x31_1s-e-8not9_1_">
+			<g>
+				<line class="st25" x1="141.4" y1="441.6" x2="139.9" y2="441.6"/>
+				<line class="st26" x1="137.5" y1="441.6" x2="129.2" y2="441.6"/>
+				<line class="st25" x1="128" y1="441.6" x2="126.5" y2="441.6"/>
+			</g>
+		</g>
+		<g id="_x31_1s-e-6not7">
+			<g>
+				<line class="st25" x1="183.8" y1="288" x2="182.3" y2="288"/>
+				<line class="st26" x1="179.9" y1="288" x2="171.6" y2="288"/>
+				<line class="st25" x1="170.4" y1="288" x2="168.9" y2="288"/>
+			</g>
+		</g>
+		<g id="_x31_1s-e-5not6_1_">
+			<g>
+				<line class="st25" x1="183.8" y1="232.2" x2="182.3" y2="232.2"/>
+				<line class="st26" x1="179.9" y1="232.2" x2="171.6" y2="232.2"/>
+				<line class="st25" x1="170.4" y1="232.2" x2="168.9" y2="232.2"/>
+			</g>
+		</g>
+		<g id="_x31_1s-e-4not5">
+			<g>
+				<line class="st25" x1="183.8" y1="175.4" x2="182.3" y2="175.4"/>
+				<line class="st26" x1="179.9" y1="175.4" x2="171.6" y2="175.4"/>
+				<line class="st25" x1="170.4" y1="175.4" x2="168.9" y2="175.4"/>
+			</g>
+		</g>
+		<g id="_x31_1s-e-2not3">
+			<g>
+				<line class="st25" x1="182.7" y1="86.8" x2="181.2" y2="86.8"/>
+				<line class="st26" x1="178.8" y1="86.8" x2="170.5" y2="86.8"/>
+				<line class="st25" x1="169.3" y1="86.8" x2="167.8" y2="86.8"/>
+			</g>
+		</g>
+	</g>
+	<g id="Measurements_11">
+		<g id="_x31_1s-m-9not10">
+			<text transform="matrix(0 1 -1 0 203.9297 496.1748)" class="st27 st28 st29">32”</text>
+			<polyline class="st0" points="190.7,507.5 200,496.2 190.7,484.8 			"/>
+		</g>
+		<g id="_x31_1s-m-8not9">
+			<text transform="matrix(0 1 -1 0 161.3652 463.4916)" class="st30 st28 st29">60”</text>
+			<text transform="matrix(0 1 -1 0 161.3652 463.492)" class="st27 st28 st29">60”</text>
+			<polyline class="st0" points="148.1,485.4 157.4,463.6 148.1,441.6 			"/>
+		</g>
+		<g id="_x31_1s-m-6not7">
+			<text transform="matrix(0 1 -1 0 203.9297 308.6794)" class="st27 st28 st29">57”</text>
+			<polyline class="st0" points="190.7,329.4 200,308.7 190.7,288 			"/>
+		</g>
+		<g id="_x31_1s-m-5not6">
+			<text transform="matrix(0 1 -1 0 190.6992 232.2001)" class="st27 st28 st29">half-ish</text>
+		</g>
+		<g id="_x31_1s-m-4not5">
+			<text transform="matrix(0 1 -1 0 203.9297 162.1761)" class="st27 st28 st29">36”</text>
+			<polyline class="st0" points="190.7,175.4 200,162.2 190.7,149 			"/>
+		</g>
+		<g id="_x31_1s-m-2not3">
+			<text transform="matrix(0 1 -1 0 202.9395 93.2627)" class="st27 st28 st29">18”</text>
+			<polyline class="st0" points="189.7,99.7 199,93.3 189.7,86.8 			"/>
+		</g>
+	</g>
+	<g id="Labels_11">
+		<g id="_x31_1s-l-11z">
+			<text transform="matrix(1 0 0 1 161.9476 365.9983)" class="st20 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-10not9-jr">
+			<text transform="matrix(1 0 0 1 176.8228 519.8721)" class="st19 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-9and10">
+			<text transform="matrix(0 1 -1 0 168.8164 505.8609)" class="st19 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-9not10-jr_1_">
+			<text transform="matrix(1 0 0 1 176.823 501.8575)" class="st19 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-11">
+			<text transform="matrix(-0.6223 0.7828 -0.7828 -0.6223 167.0468 552.9548)" class="st20 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-10-jr">
+			<text transform="matrix(8.979319e-11 -1 1 8.979319e-11 47.0526 486.0127)" class="st20 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-9_1_">
+			<text transform="matrix(0 1 -1 0 128.6484 464.2461)" class="st19 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-8">
+			<text transform="matrix(0 1 -1 0 128.6484 406.1997)" class="st19 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-7z">
+			<text transform="matrix(0 1 -1 0 172.4844 307.1243)" class="st19 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-7">
+			<text transform="matrix(0 1 -1 0 128.6484 335.2117)" class="st19 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-6">
+			<text transform="matrix(0 1 -1 0 172.4844 259.0856)" class="st17 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-5">
+			<text transform="matrix(0 1 -1 0 172.4844 202.7634)" class="st17 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-4">
+			<text transform="matrix(0.9183 0.396 -0.396 0.9183 157.9448 149.0002)" class="st16 st12 st31">|</text>
+		</g>
+		<g id="_x31_1s-l-3not2-jr">
+			<text transform="matrix(1 0 0 1 180.4887 96.9622)" class="st15 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-3">
+			<text transform="matrix(0.444 -0.896 0.896 0.444 68.9994 98.6992)" class="st32 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-2">
+			<text transform="matrix(0 1 -1 0 172.4824 57.931)" class="st15 st12 st13">|</text>
+		</g>
+		<g id="_x31_1s-l-1">
+			<text transform="matrix(1 0 0 1 152.0198 37.7803)" class="st14 st12 st13">|</text>
+		</g>
+	</g>
+</g>
+<g id="show_if_slots_10_1_">
+	<g id="Slots_10_1_">
+		<g id="_x31_0s-s-1_1_">
 			
 				<rect x="35.5" y="90.8" transform="matrix(0.411 -0.9116 0.9116 0.411 -50.8971 106.7238)" class="st14" width="43.2" height="3.9"/>
 			<rect x="122.9" y="23.1" class="st14" width="22.6" height="3.9"/>
 		</g>
-		<g id="_x31_0s-s-2">
+		<g id="_x31_0s-s-2_1_">
 			<rect x="182.7" y="27" class="st15" width="3.9" height="28.9"/>
 			<rect x="145.5" y="23.1" class="st15" width="37.2" height="3.9"/>
 		</g>
-		<g id="_x31_0s-s-3">
+		<g id="_x31_0s-s-3_1_">
 			
 				<rect x="151.3" y="122.7" transform="matrix(0.3883 -0.9215 0.9215 0.3883 -29.801 223.1954)" class="st16" width="3.8" height="22.6"/>
 			<rect x="182.7" y="55.9" class="st16" width="3.9" height="43.8"/>
 		</g>
-		<g id="_x31_0s-s-4">
-			<rect id="stop" x="183.8" y="149" class="st17" width="3.9" height="45.9"/>
+		<g id="_x31_0s-s-4_1_">
+			<rect id="stop_1_" x="183.8" y="149" class="st17" width="3.9" height="45.9"/>
 			
-				<rect id="illustrator_x5F_no_1_" x="170.8" y="132.3" transform="matrix(0.3872 -0.922 0.922 0.3872 -25.2587 246.4457)" class="st17" width="3.9" height="19.8"/>
+				<rect id="illustrator_x5F_no_2_" x="170.8" y="132.3" transform="matrix(0.3872 -0.922 0.922 0.3872 -25.2587 246.4457)" class="st17" width="3.9" height="19.8"/>
 		</g>
-		<g id="_x31_0s-s-5">
+		<g id="_x31_0s-s-5_1_">
 			<rect x="183.8" y="194.9" class="st18" width="3.9" height="65.8"/>
 		</g>
-		<g id="_x31_0s-s-6">
-			<rect id="at" x="183.9" y="260.7" class="st19" width="3.8" height="65.8"/>
+		<g id="_x31_0s-s-6_1_">
+			<rect id="at_1_" x="183.9" y="260.7" class="st19" width="3.8" height="65.8"/>
 		</g>
-		<g id="_x31_0s-s-7">
-			<rect id="is_1_" x="141.3" y="329.4" class="st20" width="3.8" height="15.8"/>
-			<rect id="illustrator" x="141.3" y="381.8" class="st20" width="3.8" height="50"/>
+		<g id="_x31_0s-s-7_1_">
+			<rect id="is_3_" x="141.3" y="329.4" class="st20" width="3.8" height="15.8"/>
+			<rect id="illustrator_2_" x="141.3" y="381.8" class="st20" width="3.8" height="50"/>
 		</g>
-		<g id="_x31_0s-s-8">
-			<rect id="bad_2_" x="141.3" y="431.8" class="st21" width="3.8" height="65.8"/>
+		<g id="_x31_0s-s-8_1_">
+			<rect id="bad_3_" x="141.3" y="431.8" class="st21" width="3.8" height="65.8"/>
 		</g>
-		<g id="_x31_0s-s-9">
+		<g id="_x31_0s-s-9_1_">
 			<polyline class="st22" points="31.3,481.2 35.2,481.2 35.2,525.8 31.3,525.8 			"/>
 			
 				<rect x="166.6" y="557.3" transform="matrix(0.6173 -0.7867 0.7867 0.6173 -372.1442 353.401)" class="st22" width="21.2" height="3.8"/>
 		</g>
-		<g id="_x31_0s-s-10">
-			<rect x="148.7" y="350.2" class="st23" width="28.1" height="3.9"/>
-			<rect x="179.5" y="489" class="st23" width="3.9" height="42.5"/>
+		<g id="_x31_0s-s-10_1_">
+			<rect x="148.7" y="350.2" class="st33" width="28.1" height="3.9"/>
+			<rect x="179.5" y="489" class="st33" width="3.9" height="42.5"/>
 		</g>
 	</g>
-	<g id="Edges_10">
-		<g id="_x31_0s-e-7not8">
+	<g id="Edges_10_1_">
+		<g id="_x31_0s-e-7not8_1_">
 			<g>
-				<line class="st24" x1="141.4" y1="431.8" x2="139.9" y2="431.8"/>
-				<line class="st25" x1="137.5" y1="431.8" x2="129.2" y2="431.8"/>
-				<line class="st24" x1="128" y1="431.8" x2="126.5" y2="431.8"/>
+				<line class="st25" x1="141.4" y1="431.8" x2="139.9" y2="431.8"/>
+				<line class="st26" x1="137.5" y1="431.8" x2="129.2" y2="431.8"/>
+				<line class="st25" x1="128" y1="431.8" x2="126.5" y2="431.8"/>
 			</g>
 		</g>
-		<g id="_x31_0s-e-5not6">
+		<g id="_x31_0s-e-5not6_1_">
 			<g>
-				<line class="st24" x1="183.8" y1="260.7" x2="182.3" y2="260.7"/>
-				<line class="st25" x1="179.9" y1="260.7" x2="171.6" y2="260.7"/>
-				<line class="st24" x1="170.4" y1="260.7" x2="168.9" y2="260.7"/>
+				<line class="st25" x1="183.8" y1="260.7" x2="182.3" y2="260.7"/>
+				<line class="st26" x1="179.9" y1="260.7" x2="171.6" y2="260.7"/>
+				<line class="st25" x1="170.4" y1="260.7" x2="168.9" y2="260.7"/>
 			</g>
 		</g>
-		<g id="_x31_0s-e-4not5">
+		<g id="_x31_0s-e-4not5_1_">
 			<g>
-				<line class="st24" x1="183.8" y1="194.9" x2="182.3" y2="194.9"/>
-				<line class="st25" x1="179.9" y1="194.9" x2="171.6" y2="194.9"/>
-				<line class="st24" x1="170.4" y1="194.9" x2="168.9" y2="194.9"/>
+				<line class="st25" x1="183.8" y1="194.9" x2="182.3" y2="194.9"/>
+				<line class="st26" x1="179.9" y1="194.9" x2="171.6" y2="194.9"/>
+				<line class="st25" x1="170.4" y1="194.9" x2="168.9" y2="194.9"/>
 			</g>
 		</g>
-		<g id="_x31_0s-e-3not4">
+		<g id="_x31_0s-e-3not4_1_">
 			<g>
-				<line class="st24" x1="162.9" y1="140.2" x2="162.3" y2="141.6"/>
-				<line class="st25" x1="161.4" y1="143.8" x2="158.1" y2="151.5"/>
-				<line class="st24" x1="157.7" y1="152.6" x2="157.1" y2="154"/>
+				<line class="st25" x1="162.9" y1="140.2" x2="162.3" y2="141.6"/>
+				<line class="st26" x1="161.4" y1="143.8" x2="158.1" y2="151.5"/>
+				<line class="st25" x1="157.7" y1="152.6" x2="157.1" y2="154"/>
 			</g>
 		</g>
-		<g id="_x31_0s-e-2not3">
+		<g id="_x31_0s-e-2not3_1_">
 			<g>
-				<line class="st24" x1="182.7" y1="55.9" x2="181.2" y2="55.9"/>
-				<line class="st25" x1="178.8" y1="55.9" x2="170.5" y2="55.9"/>
-				<line class="st24" x1="169.3" y1="55.9" x2="167.8" y2="55.9"/>
+				<line class="st25" x1="182.7" y1="55.9" x2="181.2" y2="55.9"/>
+				<line class="st26" x1="178.8" y1="55.9" x2="170.5" y2="55.9"/>
+				<line class="st25" x1="169.3" y1="55.9" x2="167.8" y2="55.9"/>
 			</g>
 		</g>
-		<g id="_x31_0s-e-1not2">
+		<g id="_x31_0s-e-1not2_1_">
 			<g>
-				<line class="st24" x1="145.5" y1="27" x2="145.5" y2="28.5"/>
-				<line class="st25" x1="145.5" y1="30.9" x2="145.5" y2="39.2"/>
-				<line class="st24" x1="145.5" y1="40.4" x2="145.5" y2="41.9"/>
+				<line class="st25" x1="145.5" y1="27" x2="145.5" y2="28.5"/>
+				<line class="st26" x1="145.5" y1="30.9" x2="145.5" y2="39.2"/>
+				<line class="st25" x1="145.5" y1="40.4" x2="145.5" y2="41.9"/>
 			</g>
 		</g>
 	</g>
-	<g id="Measurements_10">
-		<g id="_x31_0s-m-7not8">
-			<text transform="matrix(0 1 -1 0 161.3652 405.1557)" class="st26 st27 st28">74”</text>
-			<text transform="matrix(0 1 -1 0 161.3652 405.1562)" class="st29 st27 st28">74”</text>
+	<g id="Measurements_10_1_">
+		<g id="_x31_0s-m-7not8_1_">
+			<text transform="matrix(0 1 -1 0 161.3652 405.1557)" class="st30 st28 st29">74”</text>
+			<text transform="matrix(0 1 -1 0 161.3652 405.1562)" class="st27 st28 st29">74”</text>
 			<polyline class="st0" points="148.1,431.8 157.4,405.3 148.1,378.5 			"/>
 		</g>
-		<g id="_x31_0s-m-5not6">
-			<text transform="matrix(0 1 -1 0 203.9297 295.0534)" class="st29 st27 st28">95”</text>
+		<g id="_x31_0s-m-5not6_1_">
+			<text transform="matrix(0 1 -1 0 203.9297 295.0534)" class="st27 st28 st29">95”</text>
 			<polyline class="st0" points="190.7,329.4 200,295.1 190.7,260.7 			"/>
 		</g>
-		<g id="_x31_0s-m-4not5">
-			<text transform="matrix(0 1 -1 0 203.9297 171.9685)" class="st29 st27 st28">64”</text>
+		<g id="_x31_0s-m-4not5_1_">
+			<text transform="matrix(0 1 -1 0 203.9297 171.9685)" class="st27 st28 st29">64”</text>
 			<polyline class="st0" points="190.7,194.9 200,172 190.7,149 			"/>
 		</g>
-		<g id="_x31_0s-m-3not4">
-			<text transform="matrix(0.9212 0.389 -0.389 0.9212 163.4494 134.046)" class="st29 st27 st30">half-ish</text>
+		<g id="_x31_0s-m-3not4_1_">
+			<text transform="matrix(0.9212 0.389 -0.389 0.9212 163.4494 134.046)" class="st27 st28 st34">half-ish</text>
 		</g>
-		<g id="_x31_0s-m-2not3_1_">
-			<text transform="matrix(0 1 -1 0 202.9395 79.1002)" class="st29 st27 st28">60”</text>
+		<g id="_x31_0s-m-2not3_2_">
+			<text transform="matrix(0 1 -1 0 202.9395 79.1002)" class="st27 st28 st29">60”</text>
 			<polyline class="st0" points="189.7,99.7 199,77.9 189.7,55.9 			"/>
 		</g>
-		<g id="_x31_0s-m-1not2">
-			<text transform="matrix(1 0 0 1 164.3784 7.8708)" class="st29 st27 st28">51”</text>
+		<g id="_x31_0s-m-1not2_1_">
+			<text transform="matrix(1 0 0 1 164.3784 7.8708)" class="st27 st28 st29">51”</text>
 			<polyline class="st0" points="182.7,21.1 164.2,11.8 145.5,21.1 			"/>
 		</g>
-		<g id="_x31_0s-m-1and2">
+		<g id="_x31_0s-m-1and2_1_">
 			<line class="st0" x1="163.7" y1="83.1" x2="84.6" y2="90.8"/>
-			<text transform="matrix(0.9956 -9.409466e-02 9.409466e-02 0.9956 122.0056 85.1015)" class="st26 st27 st28">can trade</text>
-			<text transform="matrix(0.9956 -9.409466e-02 9.409466e-02 0.9956 122.006 85.1014)" class="st29 st27 st28">can trade</text>
-			<polygon class="st29" points="159.5,80.5 160.5,86.9 167.4,82.2 			"/>
-			<polygon class="st29" points="87.4,93.4 86.4,86.9 79.6,91.7 			"/>
+			<text transform="matrix(0.9956 -9.409466e-02 9.409466e-02 0.9956 122.0056 85.1015)" class="st30 st28 st29">can trade</text>
+			<text transform="matrix(0.9956 -9.409466e-02 9.409466e-02 0.9956 122.006 85.1014)" class="st27 st28 st29">can trade</text>
+			<polygon class="st27" points="159.5,80.5 160.5,86.9 167.4,82.2 			"/>
+			<polygon class="st27" points="87.4,93.4 86.4,86.9 79.6,91.7 			"/>
 		</g>
 	</g>
-	<g id="Labels_10">
-		<g id="_x31_0s-l-10z">
+	<g id="Labels_10_1_">
+		<g id="_x31_0s-l-10z_1_">
 			<text transform="matrix(1 0 0 1 161.9476 365.9983)" class="st20 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-10">
+		<g id="_x31_0s-l-10_1_">
 			<text transform="matrix(0 1 -1 0 168.8164 508.8633)" class="st19 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-9">
+		<g id="_x31_0s-l-9_1_">
 			<text transform="matrix(-0.6223 0.7828 -0.7828 -0.6223 167.0468 552.9548)" class="st20 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-9-jr">
+		<g id="_x31_0s-l-9-jr_1_">
 			<text transform="matrix(8.979319e-11 -1 1 8.979319e-11 47.0526 486.0127)" class="st20 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-8">
+		<g id="_x31_0s-l-8_1_">
 			<text transform="matrix(0 1 -1 0 128.6484 462.3132)" class="st19 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-7z">
+		<g id="_x31_0s-l-7z_1_">
 			<text transform="matrix(0 1 -1 0 128.1406 401.8834)" class="st19 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-7">
+		<g id="_x31_0s-l-7_1_">
 			<text transform="matrix(0 1 -1 0 128.6484 335.2117)" class="st19 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-6">
+		<g id="_x31_0s-l-6_1_">
 			<text transform="matrix(0 1 -1 0 172.4844 294.6503)" class="st17 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-5">
+		<g id="_x31_0s-l-5_1_">
 			<text transform="matrix(0 1 -1 0 172.4844 226.5959)" class="st17 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-4">
+		<g id="_x31_0s-l-4_1_">
 			<text transform="matrix(0 1 -1 0 172.4844 170.5041)" class="st17 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-3not4-jr">
+		<g id="_x31_0s-l-3not4-jr_1_">
 			<text transform="matrix(0.9183 0.396 -0.396 0.9183 155.5056 148.333)" class="st16 st12 st31">|</text>
 		</g>
-		<g id="_x31_0s-l-3and4">
+		<g id="_x31_0s-l-3and4_1_">
 			<text transform="matrix(0.9183 0.396 -0.396 0.9183 153.504 147.3322)" class="st16 st12 st31">|</text>
 		</g>
-		<g id="_x31_0s-l-3not2-jl">
+		<g id="_x31_0s-l-3not2-jl_1_">
 			<text transform="matrix(0 1 -1 0 172.4824 57.931)" class="st15 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-2and3">
+		<g id="_x31_0s-l-2and3_1_">
 			<text transform="matrix(0 1 -1 0 172.4824 62.935)" class="st15 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-2not1-jr">
+		<g id="_x31_0s-l-2not1-jr_1_">
 			<text transform="matrix(1 0 0 1 180.0422 37.7803)" class="st14 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-1and2_1_">
+		<g id="_x31_0s-l-1and2_2_">
 			<text transform="matrix(1 0 0 1 152.0198 37.7803)" class="st14 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-1not2-jr">
+		<g id="_x31_0s-l-1not2-jr_1_">
 			<text transform="matrix(1 0 0 1 143.1988 37.7803)" class="st14 st12 st13">|</text>
 		</g>
-		<g id="_x31_0s-l-1">
+		<g id="_x31_0s-l-1_1_">
 			<text transform="matrix(0.444 -0.896 0.896 0.444 68.9994 98.6992)" class="st32 st12 st13">|</text>
 		</g>
 	</g>
 </g>
-<g id="show_if_slots_9_1_" class="st33">
-	<g id="Slots_9" class="st34">
+<g id="show_if_slots_9_1_">
+	<g id="Slots_9">
 		<g id="_x30_9s-s-1_1_">
 			
 				<rect x="35.5" y="90.8" transform="matrix(0.411 -0.9116 0.9116 0.411 -50.8971 106.7238)" class="st14" width="43.2" height="3.9"/>
@@ -371,67 +540,67 @@
 			<rect x="179.5" y="489" class="st22" width="3.9" height="42.5"/>
 		</g>
 	</g>
-	<g id="Edges_9" class="st34">
+	<g id="Edges_9">
 		<g id="_x30_9s-e-6not7_1_">
 			<g>
-				<line class="st24" x1="141.4" y1="404.9" x2="139.9" y2="404.9"/>
-				<line class="st25" x1="137.5" y1="404.9" x2="129.2" y2="404.9"/>
-				<line class="st24" x1="128" y1="404.9" x2="126.5" y2="404.9"/>
+				<line class="st25" x1="141.4" y1="404.9" x2="139.9" y2="404.9"/>
+				<line class="st26" x1="137.5" y1="404.9" x2="129.2" y2="404.9"/>
+				<line class="st25" x1="128" y1="404.9" x2="126.5" y2="404.9"/>
 			</g>
 		</g>
 		<g id="_x30_9s-e-5not6_1_">
 			<g>
-				<line class="st24" x1="183.8" y1="295.2" x2="182.3" y2="295.2"/>
-				<line class="st25" x1="179.9" y1="295.2" x2="171.6" y2="295.2"/>
-				<line class="st24" x1="170.4" y1="295.2" x2="168.9" y2="295.2"/>
+				<line class="st25" x1="183.8" y1="295.2" x2="182.3" y2="295.2"/>
+				<line class="st26" x1="179.9" y1="295.2" x2="171.6" y2="295.2"/>
+				<line class="st25" x1="170.4" y1="295.2" x2="168.9" y2="295.2"/>
 			</g>
 		</g>
 		<g id="_x30_9s-e-4not5_2_">
 			<g>
-				<line class="st24" x1="183.8" y1="222.1" x2="182.3" y2="222.1"/>
-				<line class="st25" x1="179.9" y1="222.1" x2="171.6" y2="222.1"/>
-				<line class="st24" x1="170.4" y1="222.1" x2="168.9" y2="222.1"/>
+				<line class="st25" x1="183.8" y1="222.1" x2="182.3" y2="222.1"/>
+				<line class="st26" x1="179.9" y1="222.1" x2="171.6" y2="222.1"/>
+				<line class="st25" x1="170.4" y1="222.1" x2="168.9" y2="222.1"/>
 			</g>
 		</g>
 		<g id="_x30_9s-e-2not3_1_">
 			<g>
-				<line class="st24" x1="183.8" y1="70.2" x2="182.3" y2="70.2"/>
-				<line class="st25" x1="179.9" y1="70.2" x2="171.6" y2="70.2"/>
-				<line class="st24" x1="170.4" y1="70.2" x2="168.9" y2="70.2"/>
+				<line class="st25" x1="183.8" y1="70.2" x2="182.3" y2="70.2"/>
+				<line class="st26" x1="179.9" y1="70.2" x2="171.6" y2="70.2"/>
+				<line class="st25" x1="170.4" y1="70.2" x2="168.9" y2="70.2"/>
 			</g>
 		</g>
 		<g id="_x30_9s-e-1not2_1_">
 			<g>
-				<line class="st24" x1="153" y1="27" x2="153" y2="28.5"/>
-				<line class="st25" x1="153" y1="30.9" x2="153" y2="39.2"/>
-				<line class="st24" x1="153" y1="40.4" x2="153" y2="41.9"/>
+				<line class="st25" x1="153" y1="27" x2="153" y2="28.5"/>
+				<line class="st26" x1="153" y1="30.9" x2="153" y2="39.2"/>
+				<line class="st25" x1="153" y1="40.4" x2="153" y2="41.9"/>
 			</g>
 		</g>
 	</g>
-	<g id="Measurements_9" class="st34">
+	<g id="Measurements_9">
 		<g id="_x30_9s-m-6not7_1_">
-			<text transform="matrix(0 1 -1 0 161.3652 385.1529)" class="st26 st27 st28">37”</text>
-			<text transform="matrix(0 1 -1 0 161.3652 385.1528)" class="st29 st27 st28">37”</text>
+			<text transform="matrix(0 1 -1 0 161.3652 385.1529)" class="st30 st28 st29">37”</text>
+			<text transform="matrix(0 1 -1 0 161.3652 385.1528)" class="st27 st28 st29">37”</text>
 			<polyline class="st0" points="148.1,404.9 157.4,391.8 148.1,378.5 			"/>
 		</g>
 		<g id="_x30_9s-m-5not6_1_">
-			<text transform="matrix(0 1 -1 0 203.9297 312.2614)" class="st29 st27 st28">48”</text>
+			<text transform="matrix(0 1 -1 0 203.9297 312.2614)" class="st27 st28 st29">48”</text>
 			<polyline class="st0" points="190.7,329.4 200,312.3 190.7,295.2 			"/>
 		</g>
 		<g id="_x30_9s-m-4not5_1_">
-			<text transform="matrix(0 1 -1 0 203.9297 182.2207)" class="st29 st27 st28">101”</text>
+			<text transform="matrix(0 1 -1 0 203.9297 182.2207)" class="st27 st28 st29">101”</text>
 			<polyline class="st0" points="190.7,222.1 200,185.6 190.7,149 			"/>
 		</g>
 		<g id="_x30_9s-m-2not3_1_">
-			<text transform="matrix(0 1 -1 0 202.9395 84.8503)" class="st29 st27 st28">41”</text>
+			<text transform="matrix(0 1 -1 0 202.9395 84.8503)" class="st27 st28 st29">41”</text>
 			<polyline class="st0" points="189.7,99.7 199,84.9 189.7,70 			"/>
 		</g>
 		<g id="_x30_9s-m-2not1_2_">
-			<text transform="matrix(1 0 0 1 167.8503 7.8708)" class="st29 st27 st28">41”</text>
+			<text transform="matrix(1 0 0 1 167.8503 7.8708)" class="st27 st28 st29">41”</text>
 			<polyline class="st0" points="182.7,21.1 167.9,11.8 153,21.1 			"/>
 		</g>
 	</g>
-	<g id="Labels_9" class="st34">
+	<g id="Labels_9">
 		<g id="_x30_9s-l-9z_1_">
 			<text transform="matrix(1 0 0 1 161.9476 365.9983)" class="st20 st12 st13">|</text>
 		</g>
@@ -482,8 +651,8 @@
 		</g>
 	</g>
 </g>
-<g id="show_if_slots_8_1_" class="st33">
-	<g id="Slots_8" class="st34">
+<g id="show_if_slots_8_1_">
+	<g id="Slots_8">
 		<g id="_x30_8s-s-1_1_">
 			
 				<rect x="35.5" y="90.8" transform="matrix(0.411 -0.9116 0.9116 0.411 -50.8971 106.7238)" class="st14" width="43.2" height="3.9"/>
@@ -518,63 +687,63 @@
 			<rect x="142.9" y="350.2" class="st20" width="39.4" height="3.9"/>
 		</g>
 	</g>
-	<g id="Edges_8" class="st34">
+	<g id="Edges_8">
 		<g id="_x30_8s-e-6not7_1_">
 			<g>
-				<line class="st24" x1="141.4" y1="463.9" x2="139.9" y2="463.9"/>
-				<line class="st25" x1="137.5" y1="463.9" x2="129.2" y2="463.9"/>
-				<line class="st24" x1="128" y1="463.9" x2="126.5" y2="463.9"/>
+				<line class="st25" x1="141.4" y1="463.9" x2="139.9" y2="463.9"/>
+				<line class="st26" x1="137.5" y1="463.9" x2="129.2" y2="463.9"/>
+				<line class="st25" x1="128" y1="463.9" x2="126.5" y2="463.9"/>
 			</g>
 		</g>
 		<g id="_x30_8s-e-7not8_1_">
 			<g>
-				<line class="st24" x1="179.5" y1="511.3" x2="178" y2="511.3"/>
-				<line class="st25" x1="175.6" y1="511.3" x2="167.3" y2="511.3"/>
-				<line class="st24" x1="166.1" y1="511.3" x2="164.6" y2="511.3"/>
+				<line class="st25" x1="179.5" y1="511.3" x2="178" y2="511.3"/>
+				<line class="st26" x1="175.6" y1="511.3" x2="167.3" y2="511.3"/>
+				<line class="st25" x1="166.1" y1="511.3" x2="164.6" y2="511.3"/>
 			</g>
 		</g>
 		<g id="_x30_8s-e-4not5_1_">
 			<g>
-				<line class="st24" x1="183.8" y1="262.9" x2="182.3" y2="262.9"/>
-				<line class="st25" x1="179.9" y1="262.9" x2="171.6" y2="262.9"/>
-				<line class="st24" x1="170.4" y1="262.9" x2="168.9" y2="262.9"/>
+				<line class="st25" x1="183.8" y1="262.9" x2="182.3" y2="262.9"/>
+				<line class="st26" x1="179.9" y1="262.9" x2="171.6" y2="262.9"/>
+				<line class="st25" x1="170.4" y1="262.9" x2="168.9" y2="262.9"/>
 			</g>
 		</g>
 		<g id="_x30_8s-e-3not4_1_">
 			<g>
-				<line class="st24" x1="183.8" y1="180.9" x2="182.3" y2="180.9"/>
-				<line class="st25" x1="179.9" y1="180.9" x2="171.6" y2="180.9"/>
-				<line class="st24" x1="170.4" y1="180.9" x2="168.9" y2="180.9"/>
+				<line class="st25" x1="183.8" y1="180.9" x2="182.3" y2="180.9"/>
+				<line class="st26" x1="179.9" y1="180.9" x2="171.6" y2="180.9"/>
+				<line class="st25" x1="170.4" y1="180.9" x2="168.9" y2="180.9"/>
 			</g>
 		</g>
 		<g id="_x30_8s-e-1not2_1_">
 			<g>
-				<line class="st24" x1="161.8" y1="27" x2="161.8" y2="28.5"/>
-				<line class="st25" x1="161.8" y1="30.9" x2="161.8" y2="39.2"/>
-				<line class="st24" x1="161.8" y1="40.4" x2="161.8" y2="41.9"/>
+				<line class="st25" x1="161.8" y1="27" x2="161.8" y2="28.5"/>
+				<line class="st26" x1="161.8" y1="30.9" x2="161.8" y2="39.2"/>
+				<line class="st25" x1="161.8" y1="40.4" x2="161.8" y2="41.9"/>
 			</g>
 		</g>
 	</g>
-	<g id="Measurements_8" class="st34">
+	<g id="Measurements_8">
 		<g id="_x30_8s-m-6not7_1_">
-			<text transform="matrix(0 1 -1 0 167.3652 473.675)" class="st26 st27 st28">27”</text>
-			<text transform="matrix(0 1 -1 0 167.3652 473.6749)" class="st29 st27 st28">27”</text>
+			<text transform="matrix(0 1 -1 0 167.3652 473.675)" class="st30 st28 st29">27”</text>
+			<text transform="matrix(0 1 -1 0 167.3652 473.6749)" class="st27 st28 st29">27”</text>
 			<polyline class="st0" points="154.1,483.4 163.4,473.7 154.1,463.9 			"/>
 		</g>
 		<g id="_x30_8s-m-4not5_1_">
-			<text transform="matrix(0 1 -1 0 203.9297 296.1207)" class="st29 st27 st28">92”</text>
+			<text transform="matrix(0 1 -1 0 203.9297 296.1207)" class="st27 st28 st29">92”</text>
 			<polyline class="st0" points="190.7,329.4 200,296.2 190.7,262.9 			"/>
 		</g>
 		<g id="_x30_8s-m-2not1_1_">
-			<text transform="matrix(1 0 0 1 172.4848 7.8708)" class="st29 st27 st28">29”</text>
+			<text transform="matrix(1 0 0 1 172.4848 7.8708)" class="st27 st28 st29">29”</text>
 			<polyline class="st0" points="182.7,21.1 172.3,11.8 161.8,21.1 			"/>
 		</g>
 		<g id="_x30_8s-m-3not4_1_">
 			<polyline class="st0" points="190.7,180.9 200,164.9 190.7,149 			"/>
-			<text transform="matrix(0 1 -1 0 203.9297 164.9342)" class="st29 st27 st28">44”</text>
+			<text transform="matrix(0 1 -1 0 203.9297 164.9342)" class="st27 st28 st29">44”</text>
 		</g>
 	</g>
-	<g id="Labels_8" class="st34">
+	<g id="Labels_8">
 		<g id="_x30_8s-l-7zzz_1_">
 			<text transform="matrix(8.979319e-11 -1 1 8.979319e-11 47.0526 504.8115)" class="st20 st12 st13">|</text>
 		</g>
@@ -622,8 +791,8 @@
 		</g>
 	</g>
 </g>
-<g id="show_if_slots_7" class="st33">
-	<g id="Slots_7" class="st34">
+<g id="show_if_slots_7">
+	<g id="Slots_7">
 		<g id="_x30_7s-s-7_1_">
 			<rect x="150.4" y="350.1" class="st20" width="22.4" height="4.1"/>
 			<rect x="31.2" y="481.2" class="st20" width="3.8" height="47.8"/>
@@ -660,57 +829,57 @@
 			<rect x="125.7" y="23.2" class="st32" width="50.8" height="3.8"/>
 		</g>
 	</g>
-	<g id="Edges_7" class="st34">
+	<g id="Edges_7">
 		<g id="_x30_7s-e-5not6_1_">
 			<g>
-				<line class="st24" x1="141.4" y1="434.2" x2="139.9" y2="434.2"/>
-				<line class="st25" x1="137.5" y1="434.2" x2="129.2" y2="434.2"/>
-				<line class="st24" x1="128" y1="434.2" x2="126.5" y2="434.2"/>
+				<line class="st25" x1="141.4" y1="434.2" x2="139.9" y2="434.2"/>
+				<line class="st26" x1="137.5" y1="434.2" x2="129.2" y2="434.2"/>
+				<line class="st25" x1="128" y1="434.2" x2="126.5" y2="434.2"/>
 			</g>
 		</g>
 		<g id="_x30_7s-e-4not5_1_">
 			<g>
-				<line class="st24" x1="183.8" y1="303.6" x2="182.3" y2="303.6"/>
-				<line class="st25" x1="179.9" y1="303.6" x2="171.6" y2="303.6"/>
-				<line class="st24" x1="170.4" y1="303.6" x2="168.9" y2="303.6"/>
+				<line class="st25" x1="183.8" y1="303.6" x2="182.3" y2="303.6"/>
+				<line class="st26" x1="179.9" y1="303.6" x2="171.6" y2="303.6"/>
+				<line class="st25" x1="170.4" y1="303.6" x2="168.9" y2="303.6"/>
 			</g>
 		</g>
 		<g id="_x30_7s-e-3not4_1_">
 			<g>
-				<line class="st24" x1="183.8" y1="209.7" x2="182.3" y2="209.7"/>
-				<line class="st25" x1="179.9" y1="209.7" x2="171.6" y2="209.7"/>
-				<line class="st24" x1="170.4" y1="209.7" x2="168.9" y2="209.7"/>
+				<line class="st25" x1="183.8" y1="209.7" x2="182.3" y2="209.7"/>
+				<line class="st26" x1="179.9" y1="209.7" x2="171.6" y2="209.7"/>
+				<line class="st25" x1="170.4" y1="209.7" x2="168.9" y2="209.7"/>
 			</g>
 		</g>
 		<g id="_x30_7s-e-2not3_1_">
 			<g>
-				<line class="st24" x1="158.8" y1="138.4" x2="158.2" y2="139.8"/>
-				<line class="st25" x1="157.3" y1="142" x2="154" y2="149.7"/>
-				<line class="st24" x1="153.6" y1="150.8" x2="153" y2="152.2"/>
+				<line class="st25" x1="158.8" y1="138.4" x2="158.2" y2="139.8"/>
+				<line class="st26" x1="157.3" y1="142" x2="154" y2="149.7"/>
+				<line class="st25" x1="153.6" y1="150.8" x2="153" y2="152.2"/>
 			</g>
 		</g>
 	</g>
-	<g id="Measurements_7" class="st34">
+	<g id="Measurements_7">
 		<g id="_x30_7s-m-5not6_1_">
-			<text transform="matrix(0 1 -1 0 167.3652 458.8002)" class="st29 st27 st28">68”</text>
-			<text transform="matrix(0 1 -1 0 167.3652 458.8002)" class="st26 st27 st28">68”</text>
-			<text transform="matrix(0 1 -1 0 167.3652 458.8002)" class="st29 st27 st28">68”</text>
+			<text transform="matrix(0 1 -1 0 167.3652 458.8002)" class="st27 st28 st29">68”</text>
+			<text transform="matrix(0 1 -1 0 167.3652 458.8002)" class="st30 st28 st29">68”</text>
+			<text transform="matrix(0 1 -1 0 167.3652 458.8002)" class="st27 st28 st29">68”</text>
 			<polyline class="st0" points="154.1,483.4 163.4,458.8 154.1,434.2 			"/>
 		</g>
 		<g id="_x30_7s-m-4not5_1_">
-			<text transform="matrix(-8.979319e-11 1 -1 -8.979319e-11 203.8027 316.6728)" class="st29 st27 st28">36”</text>
+			<text transform="matrix(-8.979319e-11 1 -1 -8.979319e-11 203.8027 316.6728)" class="st27 st28 st29">36”</text>
 			<polyline class="st0" points="190.5,329.7 199.9,316.7 190.5,303.6 			"/>
 		</g>
 		<g id="_x30_7s-m-3not4_1_">
-			<text transform="matrix(-8.979319e-11 1 -1 -8.979319e-11 203.8027 179.35)" class="st29 st27 st28">84”</text>
+			<text transform="matrix(-8.979319e-11 1 -1 -8.979319e-11 203.8027 179.35)" class="st27 st28 st29">84”</text>
 			<polyline class="st0" points="190.5,209.7 199.9,179.3 190.5,149 			"/>
 		</g>
 		<g id="_x30_7s-m-2not3_2_">
-			<text transform="matrix(0.9212 0.389 -0.389 0.9212 158.4487 119.2052)" class="st29 st27 st30">25”</text>
+			<text transform="matrix(0.9212 0.389 -0.389 0.9212 158.4487 119.2052)" class="st27 st28 st34">25”</text>
 			<polyline class="st0" points="160.8,133.3 156.1,121.2 144,126.2 			"/>
 		</g>
 	</g>
-	<g id="Labels_7" class="st34">
+	<g id="Labels_7">
 		<g id="_x30_7s-l-7zzz_1_">
 			<text transform="matrix(8.979319e-11 -1 1 8.979319e-11 47.0526 504.8115)" class="st20 st12 st13">|</text>
 		</g>
@@ -775,18 +944,18 @@
 	<rect id="color-08" x="-37" y="129.2" class="st42" width="23" height="15.4"/>
 	<rect id="color-09" x="-37" y="144.6" class="st21" width="23" height="15.4"/>
 	<rect id="color-10" x="-37" y="159.9" class="st22" width="23" height="15.4"/>
-	<rect id="color-11" x="-37" y="175.3" class="st23" width="23" height="15.4"/>
-	<rect id="color-12" x="-37" y="190.7" class="st43" width="23" height="15.4"/>
-	<rect id="color-13" x="-37" y="206.1" class="st44" width="23" height="15.4"/>
-	<rect id="color-14" x="-37" y="221.5" class="st45" width="23" height="15.4"/>
-	<rect id="color-15" x="-37" y="236.9" class="st46" width="23" height="15.4"/>
-	<rect id="color-16" x="-37" y="252.3" class="st47" width="23" height="15.4"/>
-	<rect id="color-17" x="-37" y="267.7" class="st48" width="23" height="15.4"/>
-	<rect id="color-18" x="-37" y="283.1" class="st29" width="23" height="15.4"/>
-	<rect id="color-19" x="-37" y="298.5" class="st49" width="23" height="15.4"/>
-	<rect id="color-20" x="-37" y="313.9" class="st50" width="23" height="15.4"/>
-	<rect id="color-21" x="-37" y="329.2" class="st51" width="23" height="15.4"/>
-	<rect id="color-22" x="-37" y="344.6" class="st52" width="23" height="15.4"/>
+	<rect id="color-11" x="-37" y="175.3" class="st33" width="23" height="15.4"/>
+	<rect id="color-12" x="-37" y="190.7" class="st23" width="23" height="15.4"/>
+	<rect id="color-13" x="-37" y="206.1" class="st24" width="23" height="15.4"/>
+	<rect id="color-14" x="-37" y="221.5" class="st43" width="23" height="15.4"/>
+	<rect id="color-15" x="-37" y="236.9" class="st44" width="23" height="15.4"/>
+	<rect id="color-16" x="-37" y="252.3" class="st45" width="23" height="15.4"/>
+	<rect id="color-17" x="-37" y="267.7" class="st46" width="23" height="15.4"/>
+	<rect id="color-18" x="-37" y="283.1" class="st27" width="23" height="15.4"/>
+	<rect id="color-19" x="-37" y="298.5" class="st47" width="23" height="15.4"/>
+	<rect id="color-20" x="-37" y="313.9" class="st48" width="23" height="15.4"/>
+	<rect id="color-21" x="-37" y="329.2" class="st49" width="23" height="15.4"/>
+	<rect id="color-22" x="-37" y="344.6" class="st50" width="23" height="15.4"/>
 	<rect id="color-23" x="-37" y="360" class="st14" width="23" height="15.4"/>
 	<rect x="-37" y="375.4" class="st11" width="23" height="15.4"/>
 	<rect x="-37" y="390.8" class="st0" width="23" height="15.4"/>
