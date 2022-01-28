@@ -53,8 +53,6 @@ var monthViewPage = Vue.component('month-view', {
                     'Mary',
                     'Jan',
                     'Jan',
-                    'test',
-                    'test',
                     'asdf',
                     'Adam',
                 ],
