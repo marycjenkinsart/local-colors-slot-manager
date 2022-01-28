@@ -154,8 +154,10 @@ table, th, td {
 .svg_preview {
 	position: absolute;
 	top: 0;
-	right: 0;
-	width: 50%;
+	left: 400px;
+	width: auto;
+	height: 30vh;
+	aspect-ratio: 1;
 }
 #month-view {
 	position: relative;
