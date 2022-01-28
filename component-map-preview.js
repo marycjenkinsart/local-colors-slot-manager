@@ -21,9 +21,9 @@ Vue.component('map-preview', {
     template: /*html*/`
 <div class="map-preview">
     <floor-preview
-        :manage="manageUp"
-        :artists="artists.up"
-        :floor-name="'up'"
+        :manage="manageDown"
+        :artists="artists.down"
+        :floor-name="'down'"
     >
     </floor-preview>
 </div>
