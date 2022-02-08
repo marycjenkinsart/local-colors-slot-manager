@@ -4,7 +4,7 @@
 	 viewBox="0 0 197 547.5" style="enable-background:new 0 0 197 547.5;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:none;stroke:#2E3191;stroke-miterlimit:10;}
-	.st1{fill:none;stroke:#2E3191;stroke-miterlimit:10;stroke-dasharray:1,1;}
+	.st1{fill:none;stroke:#2E3191;stroke-width:1;stroke-miterlimit:10.0002;}
 	.st2{fill:none;stroke:#C6C3E1;stroke-miterlimit:10;}
 	.st3{fill:#FBED21;}
 	.st4{fill:none;}
@@ -61,8 +61,7 @@
 			<path class="st0" d="M59.1,416.1c9.6-2.4,16.8-11.1,16.8-21.5"/>
 		</g>
 		<rect x="53.7" y="392.6" class="st0" width="22.1" height="2"/>
-		
-			<rect x="44.3" y="404.6" transform="matrix(0.242 0.9703 -0.9703 0.242 435.5689 253.7072)" class="st0" width="22.1" height="2"/>
+		<rect x="54.4" y="394.5" transform="matrix(0.9703 -0.242 0.242 0.9703 -96.4984 25.4633)" class="st1" width="2" height="22.1"/>
 	</g>
 	<polyline class="st0" points="69.9,40.5 69.9,41.8 72.4,41.8 72.4,49.5 75.9,49.5 75.9,27.6 120.2,27.6 120.2,49.5 123.7,49.5 
 		123.7,41.8 126.6,41.8 126.6,40.5 	"/>
@@ -74,7 +73,6 @@
 	<polyline class="st0" points="175.7,320.1 175.7,366.8 175.7,441.7 	"/>
 	<polyline class="st0" points="76.7,392.6 135.8,392.6 135.8,343.7 139.4,343.7 139.4,436.9 	"/>
 	<path class="st0" d="M145.4,305.5c-9.6,0-19.4,10.9-19.4,21.6s5.6,16.5,13.3,16.5"/>
-	<rect x="51.2" y="392.6" class="st1" width="84.6" height="152.6"/>
 	<rect x="146.2" y="110.8" class="st2" width="21.3" height="194.7"/>
 </g>
 <g id="show_if_slots_16_1_">
@@ -117,12 +115,10 @@
 	<g id="Slots_13">
 		<g id="_x31_3s-s-1">
 			<rect x="135.8" y="356.9" class="st9" width="3.9" height="35.7"/>
-			
-				<rect x="124.7" y="385.4" transform="matrix(-3.105090e-11 1 -1 -3.105090e-11 521.1827 267.9296)" class="st9" width="3.9" height="18.3"/>
+			<rect x="117.5" y="392.6" class="st9" width="18.3" height="3.9"/>
 		</g>
 		<g id="_x31_3s-s-2">
-			
-				<rect x="95" y="379.1" transform="matrix(-7.809682e-11 1 -1 -7.809682e-11 491.5364 297.576)" class="st10" width="3.9" height="31"/>
+			<rect x="81.4" y="392.6" class="st10" width="31" height="3.9"/>
 			<rect x="47.3" y="369.6" class="st10" width="3.9" height="23"/>
 		</g>
 		<g id="_x31_3s-s-3">
@@ -141,15 +137,12 @@
 			<rect x="24.6" y="61.3" class="st15" width="3.9" height="54"/>
 		</g>
 		<g id="_x31_3s-s-8">
-			
-				<rect x="91.2" y="8.4" transform="matrix(-2.869812e-11 1 -1 -2.869812e-11 118.824 -67.5259)" class="st16" width="3.9" height="34.5"/>
-			
-				<rect x="24.6" y="41.8" transform="matrix(-1 -1.599577e-11 1.599577e-11 -1 53.1508 103.1397)" class="st16" width="3.9" height="19.5"/>
+			<rect x="75.9" y="23.7" class="st16" width="34.5" height="3.9"/>
+			<rect x="24.7" y="41.8" class="st16" width="3.9" height="19.5"/>
 		</g>
 		<g id="_x31_3s-s-9">
 			<rect x="167.6" y="41.8" class="st17" width="3.9" height="44.2"/>
-			
-				<rect x="113.4" y="20.7" transform="matrix(1.138521e-10 -1 1 1.138521e-10 89.6659 140.964)" class="st17" width="3.9" height="9.8"/>
+			<rect x="110.4" y="23.7" class="st17" width="9.8" height="3.9"/>
 		</g>
 		<g id="_x31_3s-s-10">
 			<rect x="167.6" y="110.8" class="st3" width="3.9" height="32.7"/>
@@ -349,12 +342,10 @@
 	<g id="Slots_12">
 		<g id="_x31_2s-s-1">
 			<rect x="135.8" y="346.9" class="st9" width="3.6" height="45.7"/>
-			
-				<rect x="118" y="378.7" transform="matrix(-5.386821e-11 1 -1 -5.386821e-11 514.4502 274.6621)" class="st9" width="3.9" height="31.8"/>
+			<rect x="104" y="392.7" class="st9" width="31.8" height="3.9"/>
 		</g>
 		<g id="_x31_2s-s-2">
-			
-				<rect x="89.8" y="383.7" transform="matrix(-5.504415e-11 1 -1 -5.504415e-11 486.2493 302.863)" class="st10" width="3.9" height="21.8"/>
+			<rect x="80.7" y="392.7" class="st10" width="21.8" height="3.9"/>
 			<rect x="47.3" y="369.6" class="st10" width="3.9" height="23"/>
 			<rect x="24.6" y="355.8" class="st10" width="3.9" height="13.8"/>
 		</g>
@@ -373,19 +364,15 @@
 		</g>
 		<g id="_x31_2s-s-7">
 			<rect x="24.6" y="41.8" class="st15" width="3.9" height="47.2"/>
-			
-				<rect x="79.7" y="19.9" transform="matrix(3.787021e-11 -1 1 3.787021e-11 56.0131 107.3113)" class="st15" width="3.9" height="11.4"/>
+			<rect x="75.9" y="23.7" class="st15" width="11.4" height="3.9"/>
 		</g>
 		<g id="_x31_2s-s-8">
-			
-				<rect x="101.9" y="9.2" transform="matrix(-2.728591e-11 1 -1 -2.728591e-11 129.4513 -78.1531)" class="st16" width="3.9" height="32.8"/>
-			
-				<rect x="167.6" y="41.8" transform="matrix(-1 -2.117074e-11 2.117074e-11 -1 338.9908 109.3707)" class="st16" width="3.9" height="25.8"/>
+			<rect x="87.5" y="23.7" class="st16" width="32.8" height="3.9"/>
+			<rect x="167.5" y="41.8" class="st16" width="3.9" height="25.8"/>
 		</g>
 		<g id="_x31_2s-s-9">
 			<rect x="167.6" y="67.6" class="st17" width="3.9" height="39.8"/>
-			
-				<rect x="167.6" y="110.8" transform="matrix(-1 -3.055646e-10 3.055646e-10 -1 338.9908 240.5165)" class="st17" width="3.9" height="18.9"/>
+			<rect x="167.5" y="110.8" class="st17" width="3.9" height="18.9"/>
 		</g>
 		<g id="_x31_2s-s-10">
 			<rect x="167.6" y="129.7" class="st3" width="3.9" height="58.6"/>
@@ -595,12 +582,10 @@
 	<g id="Slots_11">
 		<g id="_x31_1s-s-1">
 			<rect x="135.8" y="353.7" class="st9" width="3.6" height="39"/>
-			
-				<rect x="121.4" y="382.1" transform="matrix(-4.234143e-11 1 -1 -4.234143e-11 517.8439 271.2684)" class="st9" width="3.9" height="25"/>
+			<rect x="110.7" y="392.7" class="st9" width="25" height="3.9"/>
 		</g>
 		<g id="_x31_1s-s-2">
-			
-				<rect x="89.2" y="384.2" transform="matrix(-5.198615e-11 1 -1 -5.198615e-11 485.6785 303.4338)" class="st10" width="3.9" height="20.7"/>
+			<rect x="80.8" y="392.6" class="st10" width="20.7" height="3.9"/>
 			<rect x="47.3" y="369.6" class="st10" width="3.9" height="23"/>
 			<rect x="24.6" y="349.6" class="st10" width="3.9" height="20"/>
 		</g>
@@ -619,12 +604,10 @@
 		</g>
 		<g id="_x31_1s-s-7">
 			<rect x="24.6" y="41.8" class="st15" width="3.9" height="19.7"/>
-			
-				<rect x="96.1" y="3.5" transform="matrix(1.463079e-10 -1 1 1.463079e-10 72.4331 123.7313)" class="st15" width="3.9" height="44.3"/>
+			<rect x="75.9" y="23.7" class="st15" width="44.3" height="3.9"/>
 		</g>
 		<g id="_x31_1s-s-8">
-			
-				<rect x="167.6" y="41.8" transform="matrix(-1 -5.269175e-11 5.269175e-11 -1 338.9908 147.5386)" class="st16" width="3.9" height="63.9"/>
+			<rect x="167.5" y="41.8" class="st16" width="3.9" height="63.9"/>
 		</g>
 		<g id="_x31_1s-s-9">
 			<rect x="167.6" y="112.1" class="st17" width="3.9" height="63.9"/>
@@ -788,12 +771,10 @@
 	<g id="Slots_10">
 		<g id="_x31_0s-s-1">
 			<rect x="135.8" y="347.9" class="st9" width="3.6" height="44.7"/>
-			
-				<rect x="121" y="381.7" transform="matrix(-5.033947e-11 1 -1 -5.033947e-11 517.5154 271.5969)" class="st9" width="3.9" height="25.7"/>
+			<rect x="110.1" y="392.6" class="st9" width="25.7" height="3.9"/>
 		</g>
 		<g id="_x31_0s-s-2">
-			
-				<rect x="82.5" y="389.7" transform="matrix(-2.446417e-11 1 -1 -2.446417e-11 478.9648 310.1475)" class="st10" width="3.9" height="9.7"/>
+			<rect x="79.6" y="392.6" class="st10" width="9.7" height="3.9"/>
 			<rect x="47.3" y="369.6" class="st10" width="3.9" height="23"/>
 			<rect x="24.6" y="332.5" class="st10" width="3.9" height="37.1"/>
 		</g>
@@ -809,19 +790,15 @@
 		</g>
 		<g id="_x31_0s-s-6">
 			<rect x="24.6" y="41.8" class="st14" width="3.9" height="47.2"/>
-			
-				<rect x="85.6" y="14.1" transform="matrix(6.445339e-11 -1 1 6.445339e-11 61.8445 113.1426)" class="st14" width="3.9" height="23.1"/>
+			<rect x="75.9" y="23.6" class="st14" width="23.1" height="3.9"/>
 		</g>
 		<g id="_x31_0s-s-7">
 			<rect x="167.6" y="41.8" class="st15" width="3.9" height="49.2"/>
-			
-				<rect x="107.7" y="15.1" transform="matrix(7.009599e-11 -1 1 7.009599e-11 83.9845 135.2827)" class="st15" width="3.9" height="21.2"/>
+			<rect x="99.1" y="23.7" class="st15" width="21.2" height="3.9"/>
 		</g>
 		<g id="_x31_0s-s-8">
-			
-				<rect x="167.6" y="110.8" transform="matrix(-1 -4.445878e-11 4.445878e-11 -1 338.9907 275.6513)" class="st16" width="3.9" height="54"/>
-			
-				<rect x="167.6" y="91" transform="matrix(-1 -4.445878e-11 4.445878e-11 -1 338.9908 198.2894)" class="st16" width="3.9" height="16.4"/>
+			<rect x="167.5" y="110.9" class="st16" width="3.9" height="54"/>
+			<rect x="167.5" y="90.9" class="st16" width="3.9" height="16.4"/>
 		</g>
 		<g id="_x31_0s-s-9">
 			<rect x="167.6" y="164.8" class="st17" width="3.9" height="70.3"/>
@@ -990,8 +967,7 @@
 	<g id="Slots_9">
 		<g id="_x30_9s-s-1">
 			<rect x="135.8" y="353.7" class="st9" width="3.6" height="38.9"/>
-			
-				<rect x="106.1" y="375.1" transform="matrix(-7.621477e-11 1 -1 -7.621477e-11 502.6248 286.4876)" class="st9" width="3.9" height="38.9"/>
+			<rect x="88.6" y="392.6" class="st9" width="38.9" height="3.9"/>
 		</g>
 		<g id="_x30_9s-s-2">
 			<rect x="47.3" y="369.6" class="st10" width="3.9" height="15.7"/>
@@ -1009,17 +985,14 @@
 		</g>
 		<g id="_x30_9s-s-6">
 			<rect x="167.6" y="42" class="st14" width="3.9" height="26.9"/>
-			
-				<rect x="96.3" y="0.2" transform="matrix(1.425491e-10 -1 1 1.425491e-10 72.6131 123.9112)" class="st14" width="3.9" height="50.8"/>
+			<rect x="72.8" y="23.7" class="st14" width="50.8" height="3.9"/>
 		</g>
 		<g id="_x30_9s-s-7">
 			<rect x="167.6" y="68.9" class="st15" width="3.9" height="38.6"/>
-			
-				<rect x="167.6" y="110.8" transform="matrix(-1 -2.140511e-10 2.140511e-10 -1 338.9909 261.0337)" class="st15" width="3.9" height="39.4"/>
+			<rect x="167.5" y="110.8" class="st15" width="3.9" height="39.4"/>
 		</g>
 		<g id="_x30_9s-s-8">
-			
-				<rect x="167.6" y="150.2" transform="matrix(-1 -6.398272e-11 6.398272e-11 -1 338.9913 378.1602)" class="st16" width="3.9" height="77.8"/>
+			<rect x="167.5" y="150.2" class="st16" width="3.9" height="77.8"/>
 		</g>
 		<g id="_x30_9s-s-9">
 			<rect x="167.6" y="228" class="st17" width="3.9" height="77.8"/>
@@ -1147,8 +1120,7 @@
 	<g id="Slots_8">
 		<g id="_x30_8s-s-1">
 			<rect x="135.8" y="348.7" class="st9" width="3.6" height="44"/>
-			
-				<rect x="106.6" y="372.6" transform="matrix(-7.621477e-11 1 -1 -7.621477e-11 503.1252 285.9872)" class="st9" width="3.9" height="43.9"/>
+			<rect x="86.6" y="392.6" class="st9" width="43.9" height="3.9"/>
 		</g>
 		<g id="_x30_8s-s-2">
 			<rect x="47.3" y="369.6" class="st10" width="3.9" height="11.2"/>
@@ -1163,22 +1135,18 @@
 		<g id="_x30_8s-s-5">
 			<rect x="24.6" y="41.8" class="st13" width="3.9" height="44.6"/>
 			<g id="_x30_8s-s-5_1_">
-				
-					<rect x="96.3" y="4" transform="matrix(5.645535e-11 -1 1 5.645535e-11 72.613 123.9114)" class="st13" width="3.9" height="43.2"/>
+				<rect x="76.6" y="23.7" class="st13" width="43.2" height="3.9"/>
 			</g>
 		</g>
 		<g id="_x30_8s-s-6">
 			<rect x="167.6" y="110.8" class="st14" width="3.9" height="19.2"/>
-			
-				<rect x="167.6" y="38.7" transform="matrix(-1 -1.872437e-10 1.872437e-10 -1 338.9908 146.0158)" class="st14" width="3.9" height="68.6"/>
+			<rect x="167.5" y="38.7" class="st14" width="3.9" height="68.6"/>
 		</g>
 		<g id="_x30_8s-s-7">
-			
-				<rect x="167.6" y="130" transform="matrix(-1 -2.140511e-10 2.140511e-10 -1 338.9909 347.9203)" class="st15" width="3.9" height="87.8"/>
+			<rect x="167.5" y="130.1" class="st15" width="3.9" height="87.8"/>
 		</g>
 		<g id="_x30_8s-s-8">
-			
-				<rect x="167.6" y="217.9" transform="matrix(-1 -1.279653e-10 1.279653e-10 -1 338.9919 523.5957)" class="st16" width="3.9" height="87.8"/>
+			<rect x="167.5" y="217.9" class="st16" width="3.9" height="87.8"/>
 		</g>
 	</g>
 	<g id="Edges_8">
@@ -1272,8 +1240,7 @@
 	<g id="Slots_7">
 		<g id="_x30_7s-s-1">
 			<rect x="135.8" y="351.9" class="st9" width="3.6" height="40.7"/>
-			
-				<rect x="103.1" y="376.2" transform="matrix(-6.398278e-11 1 -1 -6.398278e-11 499.5803 289.5321)" class="st9" width="3.9" height="36.8"/>
+			<rect x="86.6" y="392.6" class="st9" width="36.8" height="3.9"/>
 		</g>
 		<g id="_x30_7s-s-2">
 			<rect x="47.3" y="369.6" class="st10" width="3.9" height="23"/>
@@ -1291,16 +1258,14 @@
 		<g id="_x30_7s-s-5">
 			<rect x="167.6" y="45" class="st13" width="3.9" height="59.2"/>
 			<g id="_x30_8s-s-5_3_">
-				
-					<rect x="96.3" y="5" transform="matrix(5.410256e-11 -1 1 5.410256e-11 72.613 123.9114)" class="st13" width="3.9" height="41.4"/>
+				<rect x="77.6" y="23.7" class="st13" width="41.4" height="3.9"/>
 			</g>
 		</g>
 		<g id="_x30_7s-s-6">
 			<rect x="167.6" y="110.8" class="st14" width="3.9" height="97.3"/>
 		</g>
 		<g id="_x30_7s-s-7">
-			
-				<rect x="167.6" y="208.2" transform="matrix(-1 -2.272237e-10 2.272237e-10 -1 338.9909 513.6686)" class="st15" width="3.9" height="97.3"/>
+			<rect x="167.5" y="208.2" class="st15" width="3.9" height="97.3"/>
 		</g>
 	</g>
 	<g id="Edges_7">

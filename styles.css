@@ -156,8 +156,7 @@ table, th, td {
 	top: 0;
 	left: 400px;
 	width: auto;
-	height: 30vh;
-	aspect-ratio: 1;
+	height: 100%;
 }
 #month-view {
 	position: relative;

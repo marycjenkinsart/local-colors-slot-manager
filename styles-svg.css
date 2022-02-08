@@ -1,15 +1,17 @@
 text {
 	text-anchor: middle;
 }
-text.jr {
+text.jr, tspan.jr {
 	text-anchor:end;
 }
-text.jl {
+text.jl, tspan.jl {
 	text-anchor:start;
 }
 
+.bigfont{font-size:24px;}
+
 /* Auto (from illustrator) */
-.st0{fill:none;stroke:#2E3191;stroke-miterlimit:10;} .st1{fill:none;stroke:#2E3191;stroke-miterlimit:10;stroke-dasharray:1,1;} .st2{fill:none;stroke:#C6C3E1;stroke-miterlimit:10;} .st3{fill:#FBED21;} .st4{fill:none;} .st5{font-family:'MyriadPro-Bold';} .st6{font-size:10px;} .st7{fill:#EB2027;} .st8{font-size:12px;} .st9{fill:#EC038C;} .st10{fill:#A3238E;} .st11{fill:#5C2D91;} .st12{fill:#034EA2;} .st13{fill:#007DC5;} .st14{fill:#29AAE1;} .st15{fill:#00A54F;} .st16{fill:#74BF44;} .st17{fill:#D6DE27;} .st18{fill:#FFCB04;} .st19{fill:#F48120;} .st20{fill:none;stroke:#2E3192;stroke-linecap:square;stroke-miterlimit:10;} .st21{fill:none;stroke:#2E3192;stroke-linecap:square;stroke-miterlimit:10;stroke-dasharray:2.3759,2.3759;} .st22{fill:#2E3192;} .st23{font-family:'ArialMT';} .st24{fill:none;stroke:#2E3192;stroke-miterlimit:10;} .st25{fill:#ED1C24;} .st26{fill:#F05A25;} .st27{fill:#F9A61B;} .st28{fill:#A4CD39;} .st29{fill:#0DB04B;} .st30{fill:#00A9AC;} .st31{fill:#0095DA;} .st32{fill:#0066B3;} .st33{fill:#812990;} .st34{fill:#C6168D;} .st35{fill:#200000;} .st36{fill:none;stroke:#D3D1E9;stroke-miterlimit:10;}
+.st0{fill:none;stroke:#2E3191;stroke-miterlimit:10;} .st1{fill:none;stroke:#2E3191;stroke-miterlimit:10;stroke-dasharray:1,1;} .st2{fill:none;stroke:#C6C3E1;stroke-miterlimit:10;} .st3{fill:#FBED21;} .st4{fill:none;} .st5{font-family:'MyriadPro-Bold';} .st6{font-size:10px;} .st7{fill:#EB2027;} .st8{font-size:12px;} .st9{fill:#EC038C;} .st10{fill:#A3238E;} .st11{fill:#5C2D91;} .st12{fill:#034EA2;} .st13{fill:#007DC5;} .st14{fill:#29AAE1;} .st15{fill:#00A54F;} .st16{fill:#74BF44;} .st17{fill:#D6DE27;} .st18{fill:#FFCB04;} .st19{fill:#F48120;} .st20{fill:none;stroke:#2E3192;stroke-linecap:square;stroke-miterlimit:10;} .st21{fill:none;stroke:#2E3192;stroke-linecap:square;stroke-miterlimit:10;stroke-dasharray:2.3759,2.3759;} .st22{fill:#2E3192;} .st23{font-family:'ArialMT';} .st24{fill:none;stroke:#2E3192;stroke-miterlimit:10;} .st25{fill:#ED1C24;} .st26{fill:#F05A25;} .st27{fill:#F9A61B;} .st28{fill:#A4CD39;} .st29{fill:#0DB04B;} .st30{fill:#00A9AC;} .st31{fill:#0095DA;} .st32{fill:#0066B3;} .st33{fill:#812990;} .st34{fill:#C6168D;} .st35{fill:#000;} .st36{fill:none;stroke:#D3D1E9;stroke-miterlimit:10;}
 
 .ust0{fill:none;stroke:#2E3192;stroke-miterlimit:10;}
 .ust1{fill:none;stroke:#C7C4E2;stroke-miterlimit:10;}
@@ -22,7 +24,7 @@ text.jl {
 .ust8{fill:none;stroke:#D3D1E9;stroke-miterlimit:10;}
 .ust9{fill:#FFFFFF;stroke:#C7C4E2;stroke-width:1;stroke-miterlimit:10.0035;}
 .ust10{fill:#FFFFFF;stroke:#C7C4E2;stroke-width:1;stroke-miterlimit:9.9986;}
-.ust11{fill:#200000;}
+.ust11{fill:#000;}
 .ust12{font-family:'MyriadPro-Bold';}
 .ust13{font-size:12px;}
 .ust14{fill:#FBED21;}

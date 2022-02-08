@@ -14,6 +14,14 @@ Vue.component('floor-preview', {
         floorName: {
             type: String,
             require: true,
+        },
+        origin: {
+            type: Object,
+            require: false,
+        },
+        canvasSize: {
+            type: Object,
+            require: true,
         }
     },
     computed: {
@@ -67,6 +75,21 @@ Vue.component('floor-preview', {
             var lookup = 'count' + this.uniqueArtists.length;
             return this.colorMap[lookup];
         },
+        stringX: function () {
+            var result = this.origin.x || 0;
+            return result + 'px';
+        },
+        stringY: function () {
+            var result = this.origin.y || 0;
+            return result + 'px';
+        },
+		canvasSizeString: function () {
+			result = "0 0 "
+			x = this.canvasSize.x;
+			y = this.canvasSize.y;
+			result += x + ' ' + y;
+			return result;
+		},
     },
     methods: {
         getArtistColorByIndex: function (index) {
@@ -78,14 +101,15 @@ Vue.component('floor-preview', {
         },
     },
     template: /*html*/`
-<div>
-    <div
+<g>
+    <g
         v-if="floorName === 'up'"
         id="upstairs svg"
     >
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 24.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"  viewBox="0 0 218.4 630.7" ustyle="enable-background:new 0 0 218.4 630.7;" xml:space="preserve">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    :x="stringX"
+    :y="stringY"
+    :viewBox="canvasSizeString">
 <g id="Upstairs_Base">
 <polyline class="ust0" points="141.3,368.8 138.9,367.2 141.3,364.7 138.9,362.5 141.3,360.4 138.9,358.1 141.3,355.6 138.9,353.4  141.3,351.6 138.9,349.6 141.3,347.4 "/>
 <polyline class="ust0" points="150,105 151.9,107.5 148.4,108.8 150,112 146.7,112.9 148.3,116 144.8,117.3 146.5,120.4 143.2,121  145,123.9 141.6,124.9 "/>
@@ -118,29 +142,9 @@ Vue.component('floor-preview', {
 <path class="ust0" d="M45,527.8c12.5,3.1,21.8,14.4,21.8,28"/>
 </g>
 <line class="ust0" x1="96.1" y1="49.1" x2="94.4" y2="52.8"/>
-<g>
-<g>
-<path class="ust1" d="M39.7,17.1c-1.2,7.4,2.7,15,9.9,18.1"/>
-</g>
-<rect x="45.2" y="27" transform="matrix(0.3954 -0.9185 0.9185 0.3954 6.9402 66.0305)" class="ust3" width="16.8" height="1.5"/> 
-<rect x="47.2" y="9.4" transform="matrix(0.1614 -0.9869 0.9869 0.1614 22.6725 62.1847)" class="ust4" width="1.5" height="16.8"/>
-</g>
 <polyline class="ust0" points="183.8,149 183.8,329.4 141.3,329.4 141.3,347.4 "/>
 <line class="ust5" x1="182.1" y1="149" x2="182.7" y2="99.7"/>
 <polyline class="ust5" points="141,373.5 162.4,364.9 183.8,373.5 183.8,329.4 "/>
-<path class="ust5" d="M67.9,67.6"/>
-<polyline class="ust5" points="60.9,79.1 0,50.8 23.2,0 99.6,35.5 "/>
-<line class="ust5" x1="59.5" y1="16.9" x2="35.1" y2="67.1"/>
-<g>
-<rect x="12.9" y="11" transform="matrix(0.4254 -0.905 0.905 0.4254 -2.2001 30.7071)" class="ust6" width="20.3" height="12.1"/>
-<path class="ust1" d="M27.1,13.3c1.6,0.7,1.9,3.4,0.7,5.9c-1.2,2.5-3.4,3.9-5,3.2s-1.9-3.4-0.7-5.9S25.6,12.6,27.1,13.3z"/>
-<rect x="18.9" y="12.9" transform="matrix(0.4254 -0.905 0.905 0.4254 -2.5457 26.818)" class="ust6" width="1.8" height="5"/>
-<path class="ust1" d="M22.5,9.8c0.6,0.3,0.9,1,0.6,1.6s-1,0.9-1.6,0.6s-0.9-1-0.6-1.6C21.2,9.8,21.9,9.5,22.5,9.8z"/>
-<path class="ust1" d="M18.3,18.9c0.6,0.3,0.9,1,0.6,1.6s-1,0.9-1.6,0.6s-0.9-1-0.6-1.6C16.9,18.8,17.7,18.6,18.3,18.9z"/>
-</g>
-<rect x="1.3" y="39.1" transform="matrix(0.4254 -0.905 0.905 0.4254 -33.1999 30.4182)" class="ust6" width="12.2" height="4.5"/>
-<path class="ust1" d="M17.8,39.4c3.1,1.4,4.4,5.1,2.9,8.1c-1.4,3.1-5.1,4.4-8.1,2.9c-3.1-1.4-4.4-5.1-2.9-8.1 C11.1,39.2,14.7,37.9,17.8,39.4z"/>
-<path class="ust1" d="M16.5,42.1c1.6,0.7,2.2,2.6,1.5,4.2c-0.7,1.6-2.6,2.2-4.2,1.5s-2.2-2.6-1.5-4.2C13.1,42,15,41.3,16.5,42.1z"/>
 <circle class="ust1" cx="181.2" cy="176.5" r="1.6"/>
 <polyline class="ust0" points="141.4,377.2 141.4,485.4 145.7,485.4 145.7,476.7 179.5,476.7 "/>
 <polyline class="ust0" points="179.5,536.1 174,543.2 182.2,549.7 165.7,570.6 157.5,564.2 149.6,574.2 153.4,577.2 159.4,569.7  186.1,590.6 180,598.4 183.6,601.2 160.5,630.7 69.6,559.4 "/>
@@ -1515,43 +1519,17 @@ Vue.component('floor-preview', {
 <text transform="matrix(1 0 0 1 115.7494 183.9073)" class="ust18 ust12 ust13">NO PREVIEW!</text>
 </g>
 </g>
-<g id="Pallet">
-<rect id="color-01" x="-37" y="21.6" class="ust18" width="23" height="15.4"/>
-<rect id="color-02" x="-37" y="36.9" class="ust44" width="23" height="15.4"/>
-<rect id="color-03" x="-37" y="52.3" class="ust21" width="23" height="15.4"/>
-<rect id="color-04" x="-37" y="67.7" class="ust45" width="23" height="15.4"/>
-<rect id="color-05" x="-37" y="83.1" class="ust46" width="23" height="15.4"/>
-<rect id="color-06" x="-37" y="98.4" class="ust14" width="23" height="15.4"/>
-<rect id="color-07" x="-37" y="113.8" class="ust47" width="23" height="15.4"/>
-<rect id="color-08" x="-37" y="129.2" class="ust48" width="23" height="15.4"/>
-<rect id="color-09" x="-37" y="144.6" class="ust26" width="23" height="15.4"/>
-<rect id="color-10" x="-37" y="159.9" class="ust27" width="23" height="15.4"/>
-<rect id="color-11" x="-37" y="175.3" class="ust40" width="23" height="15.4"/>
-<rect id="color-12" x="-37" y="190.7" class="ust28" width="23" height="15.4"/>
-<rect id="color-13" x="-37" y="206.1" class="ust39" width="23" height="15.4"/>
-<rect id="color-14" x="-37" y="221.5" class="ust49" width="23" height="15.4"/>
-<rect id="color-15" x="-37" y="236.9" class="ust29" width="23" height="15.4"/>
-<rect id="color-16" x="-37" y="252.3" class="ust50" width="23" height="15.4"/>
-<rect id="color-17" x="-37" y="267.7" class="ust30" width="23" height="15.4"/>
-<rect id="color-18" x="-37" y="283.1" class="ust31" width="23" height="15.4"/>
-<rect id="color-19" x="-37" y="298.5" class="ust51" width="23" height="15.4"/>
-<rect id="color-20" x="-37" y="313.9" class="ust52" width="23" height="15.4"/>
-<rect id="color-21" x="-37" y="329.2" class="ust53" width="23" height="15.4"/>
-<rect id="color-22" x="-37" y="344.6" class="ust54" width="23" height="15.4"/>
-<rect id="color-23" x="-37" y="360" class="ust19" width="23" height="15.4"/>
-<rect x="-37" y="375.4" class="ust11" width="23" height="15.4"/>
-<rect x="-37" y="390.8" class="ust0" width="23" height="15.4"/>
-<rect x="-37" y="406.2" class="ust8" width="23" height="15.4"/>
-</g>
 </svg>
-    </div>
-    <div
-        v-if="floorName === 'down'"
-        id="downstairs svg"
-    >
-    <?xml version="1.0" encoding="utf-8"?>
-    <!-- Generator: Adobe Illustrator 24.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"  viewBox="0 0 197 547.5" style="enable-background:new 0 0 197 547.5;" xml:space="preserve">
+</g>
+<g
+    v-if="floorName === 'down'"
+    id="downstairs svg"
+>
+    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    :x="stringX"
+    :y="stringY"
+    :viewBox="canvasSizeString"
+    style="enable-background:new 0 0 197 547.5;" xml:space="preserve">
     <g id="Downstairs_Base">
     <polyline class="st0" points="145.7,39.1 144.3,41.1 142,39.1 140.1,41.1 138.2,39.1 136.2,41.1 133.9,39.1 132,41.1 130.4,39.1  128.6,41.1 126.6,39.1 "/>
     <polyline class="st0" points="69.9,39.1 68.5,41.1 66.3,39.1 64.3,41.1 62.4,39.1 60.4,41.1 58.1,39.1 56.2,41.1 54.6,39.1  52.8,41.1 50.8,39.1 "/>
@@ -1579,7 +1557,6 @@ Vue.component('floor-preview', {
     <polyline class="st0" points="175.7,320.1 175.7,366.8 175.7,441.7 "/>
     <polyline class="st0" points="76.7,392.6 135.8,392.6 135.8,343.7 139.4,343.7 139.4,436.9 "/>
     <path class="st0" d="M145.4,305.5c-9.6,0-19.4,10.9-19.4,21.6s5.6,16.5,13.3,16.5"/>
-    <rect x="51.2" y="392.6" class="st1" width="84.6" height="152.6"/>
     <rect x="146.2" y="110.8" class="st2" width="21.3" height="194.7"/>
     </g>
     <g id="show_if_slots_16_1_" v-if="slotCount === 16">
@@ -2903,36 +2880,8 @@ Vue.component('floor-preview', {
     <text transform="matrix(1 0 0 1 96.3279 149.2523)" class="st7 st5 st8">NO PREVIEW!</text>
     </g>
     </g>
-    <g id="Pallet">
-    <rect id="color-01" x="-37" y="21.6" class="st7" width="23" height="15.4"/>
-    <rect id="color-02" x="-37" y="36.9" class="st26" width="23" height="15.4"/>
-    <rect id="color-03" x="-37" y="52.3" class="st19" width="23" height="15.4"/>
-    <rect id="color-04" x="-37" y="67.7" class="st27" width="23" height="15.4"/>
-    <rect id="color-05" x="-37" y="83.1" class="st18" width="23" height="15.4"/>
-    <rect id="color-06" x="-37" y="98.4" class="st3" width="23" height="15.4"/>
-    <rect id="color-07" x="-37" y="113.8" class="st17" width="23" height="15.4"/>
-    <rect id="color-08" x="-37" y="129.2" class="st28" width="23" height="15.4"/>
-    <rect id="color-09" x="-37" y="144.6" class="st16" width="23" height="15.4"/>
-    <rect id="color-10" x="-37" y="159.9" class="st29" width="23" height="15.4"/>
-    <rect id="color-11" x="-37" y="175.3" class="st15" width="23" height="15.4"/>
-    <rect id="color-12" x="-37" y="190.7" class="st30" width="23" height="15.4"/>
-    <rect id="color-13" x="-37" y="206.1" class="st14" width="23" height="15.4"/>
-    <rect id="color-14" x="-37" y="221.5" class="st31" width="23" height="15.4"/>
-    <rect id="color-15" x="-37" y="236.9" class="st13" width="23" height="15.4"/>
-    <rect id="color-16" x="-37" y="252.3" class="st32" width="23" height="15.4"/>
-    <rect id="color-17" x="-37" y="267.7" class="st12" width="23" height="15.4"/>
-    <rect id="color-18" x="-37" y="283.1" class="st22" width="23" height="15.4"/>
-    <rect id="color-19" x="-37" y="298.5" class="st11" width="23" height="15.4"/>
-    <rect id="color-20" x="-37" y="313.9" class="st33" width="23" height="15.4"/>
-    <rect id="color-21" x="-37" y="329.2" class="st10" width="23" height="15.4"/>
-    <rect id="color-22" x="-37" y="344.6" class="st34" width="23" height="15.4"/>
-    <rect id="color-23" x="-37" y="360" class="st9" width="23" height="15.4"/>
-    <rect x="-37" y="375.4" class="st35" width="23" height="15.4"/>
-    <rect x="-37" y="390.8" class="st24" width="23" height="15.4"/>
-    <rect x="-37" y="406.2" class="st36" width="23" height="15.4"/>
-    </g>
     </svg>  
-    </div>
-</div>
+    </g>
+</g>
 `
 });

@@ -1,4 +1,6 @@
-/* This is probably awful. Instructions:
+/*
+
+This is probably awful. Instructions:
 
 1. Change the map template in Illustrator, then save the SVG right in place
 2. Copy the body of the SVG into the `data` variable below
@@ -6,6 +8,17 @@
 4. Paste awkwardly into the SVG preview Vue component
 5. Delete the `style` tag in there, too (copy the style tag into the svg styles if it changed at all)
 6. It should work now... don't break the Illustrator side too much!
+
+When you're all done:
+
+1. Remove the pallet group if it's still there
+2. Get the Vue stuff put back:
+	:x="stringX"
+	:y="stringY"
+	:viewBox="canvasSizeString"
+3. Make all of the `.st` styles on one of the floors into something else so the two floors don't clash.
+	a. I changed upstairs to `.ust` (though some `string` strings got caught up in that, so look for those afterward!)
+
 */
 
 var data = `<?xml version="1.0" encoding="utf-8"?>

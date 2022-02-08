@@ -21,7 +21,7 @@ var monthViewPage = Vue.component('month-view', {
             manage: {
                 'feat': false,
                 'up': false,
-                'down': true,
+                'down': false,
             },
             artists: {
                 'feat': [ // can be more than one! or zero!
@@ -52,7 +52,6 @@ var monthViewPage = Vue.component('month-view', {
                     'Mary',
                     'Jan',
                     'Jan',
-                    'asdf',
                     'Adam',
                 ],
             },
@@ -503,6 +502,11 @@ var monthViewPage = Vue.component('month-view', {
             :manage-up="manage.up"
             :manage-down="manage.down"
             :artists="artists"
+            :label="getLongLabel(
+                rotationLabel.year,
+                rotationLabel.month,
+                rotationLabel.version,
+            )"
         ></map-preview>
     </div>
 </div>
