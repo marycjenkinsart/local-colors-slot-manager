@@ -112,6 +112,108 @@ var mixins = {
             })
             return result;
         },
+        makeCompact: function (artistsObject) {
+            var self = this;
+            var getCompactFloor = function (array) {
+                var compactFloorArray = [];
+                var fancy = self.makeFancy(array);
+                fancy.forEach(function (item) {
+                    var entry = item.name
+                    var halfSlots = item.slotSize*2;
+                    if (halfSlots !== 2) {
+                        entry += '=' + halfSlots;
+                    }
+                    compactFloorArray.push(entry);
+                })
+                var compactFloor = compactFloorArray.join(',');
+                return compactFloor;
+            };
+            var interpretFeatured = function (featuredObject) {
+                var compactFeaturedArray = [];
+                featuredObject.forEach(function (item) {
+                    var parsedItemArray = [];
+                    if (item.type === '2D') {
+                        parsedItemArray.push(item.name);
+                        parsedItemArray.push(item.type);
+                        parsedItemArray.push(item.origSlotSize);
+                    } else {
+                        parsedItemArray.push(item.name);
+                        parsedItemArray.push(item.type);
+                    }
+                    var parsedItem = parsedItemArray.join('=');
+                    compactFeaturedArray.push(parsedItem);
+                })
+                var result = compactFeaturedArray.join(',');
+                return result;
+            };
+            var up = getCompactFloor(artistsObject.up);
+            var down = getCompactFloor(artistsObject.down);
+            var feat = interpretFeatured(artistsObject.feat);
+            var result = 'f|' + feat + '&' +
+                'u|' + up + '&' +
+                'd|' + down;
+            while (result.includes(' ')) { // replaceAll not compatible with iOS <13
+                result = result.replace(' ','_');
+            }
+            return result;
+        },
+        makeUncompact: function (compactString) {
+            var splits = compactString.split('&');
+            var fString = '';
+            var uString = '';
+            var dString = '';
+            while (splits.length > 0) {
+                var chunk = splits.shift();
+                var chunkCase = chunk[0];
+                if (chunkCase === 'f') {
+                    fString = chunk.replace('f|','');
+                } else if (chunkCase === 'u') {
+                    uString = chunk.replace('u|','');
+                } else if (chunkCase === 'd') {
+                    dString = chunk.replace('d|','');
+                }
+            }
+            var makeCompactFloorUnfancy = function (string) {
+                var stringSplits = string.split(',');
+                var result = [];
+                stringSplits.forEach(function (fancyItem) {
+                    var innermostSplits = fancyItem.split('=');
+                    var name = innermostSplits[0].replace('_',' ');
+                    var count = parseInt(innermostSplits[1],10) || 2;
+                    while (count > 0) {
+                        result.push(name);
+                        count -= 1;
+                    }
+                })
+                return result;
+            }
+            var makeCompactFeaturedUnfancy = function (string) {
+                var stringSplits = string.split(',');
+                var result = [];
+                stringSplits.forEach(function (fancyItem) {
+                    var innermostSplits = fancyItem.split('=');
+                    var name = innermostSplits[0].replace('_',' ');
+                    var type = innermostSplits[1];
+                    var artist = {
+                        name: name,
+                        type: type
+                    }
+                    if (innermostSplits[2]) {
+                        artist.origSlotSize = innermostSplits[2];
+                    }
+                    result.push(artist);
+                })
+                return result;
+            }
+            uFinal = makeCompactFloorUnfancy(uString);
+            dFinal = makeCompactFloorUnfancy(dString);
+            fFinal = makeCompactFeaturedUnfancy(fString);
+            return {
+                'feat': fFinal,
+                'up': uFinal,
+                'down': dFinal,
+            };
+        },
         // getItemCountInArray: function (array, itemToCheck) {
         //     var tally = 0;
         //     array.forEach(function (item) {

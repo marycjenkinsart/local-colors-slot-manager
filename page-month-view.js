@@ -46,6 +46,7 @@ var monthViewPage = Vue.component('month-view', {
                 'down': [
                     'Adam',
                     'Nuha',
+                    'Nuha',
                     'Pam',
                     'Pam',
                     'Mary',
@@ -475,7 +476,7 @@ var monthViewPage = Vue.component('month-view', {
         <button
             @click=""
             disabled
-        >Cancel</button>
+        >Save</button>
         <button
             @click=""
             disabled
@@ -483,17 +484,17 @@ var monthViewPage = Vue.component('month-view', {
         <button
             @click=""
             disabled
-        >Save</button>
+        >Quit</button>
     </p>
     <p>
         <button
             @click=""
             disabled
-        >Download Maps</button>
+        >Get Shareable Link</button>
         <button
             @click=""
             disabled
-        >Quit</button>
+        >Download Maps</button>
     </p>
     <div
         class="svg_preview"
