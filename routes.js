@@ -7,6 +7,10 @@ var routes = [
 		path: '/month',
 		component: monthViewPage
 	},
+	{
+		path: '/view',
+		component: previewPage
+	},
 ];
 
 var router = new VueRouter({

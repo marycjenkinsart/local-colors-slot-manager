@@ -5,11 +5,11 @@ Vue.component('map-preview', {
 	props: {
 		manageUp: {
 			type: Boolean,
-			require: true,
+			require: false,
 		},
 		manageDown: {
 			type: Boolean,
-			require: true,
+			require: false,
 		},
 		artists: {
 			type: Object,
@@ -154,8 +154,6 @@ Vue.component('map-preview', {
 <svg version="1.1" id="wrapping" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 	x="0px"
 	y="0px"
-	width=100%
-	height=100%
 	:viewBox="viewBoxString"
 >
 		<floor-preview
@@ -189,18 +187,19 @@ Vue.component('map-preview', {
 			</text>
 			<text>
 				<tspan
-					x="300"
+					x="320"
 					y="590"
 					class="jl ust11 ust12 ust13"
 				>{{featuredLabelString}}</tspan>
 				<tspan
-					x="300"
+					x="320"
 					dy="1.2em"
 					class="jl ust11 ust12 ust13"
 				>{{featuredBodyString}}</tspan>
 			</text>
 		</g>
 	</svg>
+	
 </div>
 `
 });

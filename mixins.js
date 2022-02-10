@@ -112,8 +112,47 @@ var mixins = {
             })
             return result;
         },
-        makeCompact: function (artistsObject) {
+        makeLabelCompact: function (obj) {
+            var custom = obj.custom;
+            while (custom.includes(' ')) {
+                custom = custom.replace(' ','_');
+            }
+            var result = obj.year + ',' + obj.month;
+            if (
+                obj.version !== 1
+                || custom
+            ) {
+                var version = obj.version || 1;
+                result += ',' + version;
+            }
+            if (custom) {
+                result += ',' + custom;
+            }
+            return result;
+        },
+        makeLabelUncompact: function (wholeCompactString) {
+            var splits = wholeCompactString.split('&');
+            var target = '';
+            splits.forEach(function (split) {
+                if(split.includes('l|')) {
+                    target = split.replace('l|','');
+                }
+            })
+            while (target.includes('_')) {
+                target = target.replace('_',' ');
+            }
+            var targetSplits = target.split(',')
+            result = {
+                year: targetSplits[0] || 1970,
+                month: targetSplits[1] || 1,
+                version: targetSplits[2] || 1,
+                custom: targetSplits[3] || '',
+            }
+            return result;
+        },
+        makeCompact: function (artistsObject, label) {
             var self = this;
+            var compactLabel = this.makeLabelCompact(label);
             var getCompactFloor = function (array) {
                 var compactFloorArray = [];
                 var fancy = self.makeFancy(array);
@@ -149,7 +188,8 @@ var mixins = {
             var up = getCompactFloor(artistsObject.up);
             var down = getCompactFloor(artistsObject.down);
             var feat = interpretFeatured(artistsObject.feat);
-            var result = 'f|' + feat + '&' +
+            var result = 'l|' + compactLabel + '&' +
+                'f|' + feat + '&' +
                 'u|' + up + '&' +
                 'd|' + down;
             while (result.includes(' ')) { // replaceAll not compatible with iOS <13
@@ -213,6 +253,23 @@ var mixins = {
                 'up': uFinal,
                 'down': dFinal,
             };
+        },
+        getLongLabel: function (year, month, version) {
+            var result = '';
+            if (this.rotationLabel.custom) {
+                result = this.rotationLabel.custom;
+            } else {
+                var monthMap = [
+                    'Jan', 'Feb', 'Mar', 'April', 'May', 'June',
+                    'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
+                ]
+                var monthName = monthMap[parseInt(month) - 1];
+                result = monthName + ' ' + year
+                if (version > 1) {
+                    result += ' v' + version;
+                }
+            }
+            return result;
         },
         // getItemCountInArray: function (array, itemToCheck) {
         //     var tally = 0;

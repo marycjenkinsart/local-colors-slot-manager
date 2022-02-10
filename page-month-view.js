@@ -94,25 +94,9 @@ var monthViewPage = Vue.component('month-view', {
                 return '½';
             }
         },
-        getLongLabel: function (year, month, version) {
-            var result = '';
-            if (this.rotationLabel.custom) {
-                result = this.rotationLabel.custom;
-            } else {
-                var monthMap = [
-                    'Jan', 'Feb', 'Mar', 'April', 'May', 'June',
-                    'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
-                ]
-                var monthName = monthMap[parseInt(month) - 1];
-                result = monthName + ' ' + year
-                if (version > 1) {
-                    result += ' v' + version;
-                }
-            }
-            return result;
-        },
         replaceFloor: function (floorName, event) {
             this.artists[floorName] = event;
+            console.log(this.makeCompact(this.artists, this.rotationLabel));
         },
         replaceArtists: function (event) {
             this.artists = event;
