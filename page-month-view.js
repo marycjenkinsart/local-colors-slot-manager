@@ -97,6 +97,9 @@ var monthViewPage = Vue.component('month-view', {
         replaceFloor: function (floorName, event) {
             this.artists[floorName] = event;
             console.log(this.makeCompact(this.artists, this.rotationLabel));
+            console.log(this.artists.feat);
+            console.log(this.makeFancy(this.artists.up));
+            console.log(this.makeFancy(this.artists.down));
         },
         replaceArtists: function (event) {
             this.artists = event;
@@ -244,11 +247,7 @@ var monthViewPage = Vue.component('month-view', {
     id="month-view"
 >
     <h2>
-        <span>Rotation: {{getLongLabel(
-                rotationLabel.year,
-                rotationLabel.month,
-                rotationLabel.version,
-            )}}</span>
+        <span>Rotation: {{getLongLabel(rotationLabel)}}</span>
     </h2>
     <p>
         <button
@@ -487,11 +486,7 @@ var monthViewPage = Vue.component('month-view', {
             :manage-up="manage.up"
             :manage-down="manage.down"
             :artists="artists"
-            :label="getLongLabel(
-                rotationLabel.year,
-                rotationLabel.month,
-                rotationLabel.version,
-            )"
+            :label="getLongLabel(rotationLabel)"
         ></map-preview>
     </div>
 </div>

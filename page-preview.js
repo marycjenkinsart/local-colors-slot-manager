@@ -4,28 +4,34 @@ var previewPage = Vue.component('preview', {
 	],
     data: function () {
         return {
-            test: 'l|2021,12&f|Teri=2D=1&u|GUEST=1,Adam,Nuha,Pam,Mary,Jan&d|Bill,J._Clay=1,Jeff_M.,Emily,Blaine',
+            test: {
+                l:'1970,1,1,"LABEL ERROR"',
+                f:'FEAT-2D-1',
+                u:'test1-1,test2,test3-1,test4',
+                d:'temp1-1,temp2,temp3,temp4-1,temp1-1',
+            }
         }
     },
     computed: {
-        upstairsSlotCount: function () {
-            return artists.up.length / 2;
+        queryData: function () {
+            var query = this.$route.query; // requires the vue router
+            return {
+                l: query && query.l || this.test.l,
+                f: query && query.f || this.test.f,
+                u: query && query.u || this.test.u,
+                d: query && query.d || this.test.d,
+            };
         },
-        downstairsSlotCount: function () {
-            return artists.down.length / 2;
-        },
-        uniqueUpstairs: function () {
-            return this.artists.up.filter(this.getUnique).sort();
-        },
-        uniqueDownstairs: function () {
-            return this.artists.down.filter(this.getUnique).sort();
+        labelData: function () {
+            return this.makeLabelUncompact(this.queryData.l);
         },
         artists: function () {
-            return this.makeUncompact(this.test);
+            return result = {
+                feat: this.makeCompactFeaturedUnfancy(this.queryData.f),
+                up: this.makeCompactFloorUnfancy(this.queryData.u),
+                down: this.makeCompactFloorUnfancy(this.queryData.d),
+            };
         },
-        rotationLabel: function () {
-            return this.makeLabelUncompact(this.test);
-        }
     },
     template: /*html*/`
 <div
@@ -36,11 +42,7 @@ var previewPage = Vue.component('preview', {
     >
         <map-preview
             :artists="artists"
-            :label="getLongLabel(
-                rotationLabel.year,
-                rotationLabel.month,
-                rotationLabel.version,
-            )"
+            :label="getLongLabel(labelData)"
         ></map-preview>
     </div>
 </div>

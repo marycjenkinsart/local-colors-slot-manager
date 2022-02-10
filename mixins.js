@@ -130,25 +130,29 @@ var mixins = {
             }
             return result;
         },
-        makeLabelUncompact: function (wholeCompactString) {
-            var splits = wholeCompactString.split('&');
-            var target = '';
-            splits.forEach(function (split) {
-                if(split.includes('l|')) {
-                    target = split.replace('l|','');
+        makeLabelUncompact: function (compactLabelString) {
+            var result = {
+                year: 1969,
+                month: 12,
+                version: 1337,
+                custom: 'LABEL ERROR'
+            };
+            if (compactLabelString) {
+                while (compactLabelString.includes('_')) {
+                    compactLabelString = compactLabelString.replace('_',' ');
                 }
-            })
-            while (target.includes('_')) {
-                target = target.replace('_',' ');
+                var targetSplits = compactLabelString.split(',')
+                result = {
+                    year: targetSplits[0] || 1970,
+                    month: targetSplits[1] || 1,
+                    version: targetSplits[2] || 1,
+                    custom: targetSplits[3] || '',
+                }
+                return result;
+            } else {
+                console.error('Label appears completely broken (or missing)!');
+                return result;
             }
-            var targetSplits = target.split(',')
-            result = {
-                year: targetSplits[0] || 1970,
-                month: targetSplits[1] || 1,
-                version: targetSplits[2] || 1,
-                custom: targetSplits[3] || '',
-            }
-            return result;
         },
         makeCompact: function (artistsObject, label) {
             var self = this;
@@ -160,7 +164,7 @@ var mixins = {
                     var entry = item.name
                     var halfSlots = item.slotSize*2;
                     if (halfSlots !== 2) {
-                        entry += '=' + halfSlots;
+                        entry += '-' + halfSlots;
                     }
                     compactFloorArray.push(entry);
                 })
@@ -179,7 +183,7 @@ var mixins = {
                         parsedItemArray.push(item.name);
                         parsedItemArray.push(item.type);
                     }
-                    var parsedItem = parsedItemArray.join('=');
+                    var parsedItem = parsedItemArray.join('-');
                     compactFeaturedArray.push(parsedItem);
                 })
                 var result = compactFeaturedArray.join(',');
@@ -188,82 +192,61 @@ var mixins = {
             var up = getCompactFloor(artistsObject.up);
             var down = getCompactFloor(artistsObject.down);
             var feat = interpretFeatured(artistsObject.feat);
-            var result = 'l|' + compactLabel + '&' +
-                'f|' + feat + '&' +
-                'u|' + up + '&' +
-                'd|' + down;
+            var result = 'l=' + compactLabel + '&' +
+                'f=' + feat + '&' +
+                'u=' + up + '&' +
+                'd=' + down;
             while (result.includes(' ')) { // replaceAll not compatible with iOS <13
                 result = result.replace(' ','_');
             }
             return result;
         },
-        makeUncompact: function (compactString) {
-            var splits = compactString.split('&');
-            var fString = '';
-            var uString = '';
-            var dString = '';
-            while (splits.length > 0) {
-                var chunk = splits.shift();
-                var chunkCase = chunk[0];
-                if (chunkCase === 'f') {
-                    fString = chunk.replace('f|','');
-                } else if (chunkCase === 'u') {
-                    uString = chunk.replace('u|','');
-                } else if (chunkCase === 'd') {
-                    dString = chunk.replace('d|','');
+        makeCompactFloorUnfancy: function (string) {
+            var stringSplits = string.split(',');
+            var result = [];
+            stringSplits.forEach(function (fancyItem) {
+                var innermostSplits = fancyItem.split('-');
+                var name = innermostSplits[0].replace('_',' ');
+                var count = parseInt(innermostSplits[1],10) || 2;
+                while (count > 0) {
+                    result.push(name);
+                    count -= 1;
                 }
-            }
-            var makeCompactFloorUnfancy = function (string) {
-                var stringSplits = string.split(',');
-                var result = [];
-                stringSplits.forEach(function (fancyItem) {
-                    var innermostSplits = fancyItem.split('=');
-                    var name = innermostSplits[0].replace('_',' ');
-                    var count = parseInt(innermostSplits[1],10) || 2;
-                    while (count > 0) {
-                        result.push(name);
-                        count -= 1;
-                    }
-                })
-                return result;
-            }
-            var makeCompactFeaturedUnfancy = function (string) {
-                var stringSplits = string.split(',');
-                var result = [];
-                stringSplits.forEach(function (fancyItem) {
-                    var innermostSplits = fancyItem.split('=');
-                    var name = innermostSplits[0].replace('_',' ');
-                    var type = innermostSplits[1];
-                    var artist = {
-                        name: name,
-                        type: type
-                    }
-                    if (innermostSplits[2]) {
-                        artist.origSlotSize = innermostSplits[2];
-                    }
-                    result.push(artist);
-                })
-                return result;
-            }
-            uFinal = makeCompactFloorUnfancy(uString);
-            dFinal = makeCompactFloorUnfancy(dString);
-            fFinal = makeCompactFeaturedUnfancy(fString);
-            return {
-                'feat': fFinal,
-                'up': uFinal,
-                'down': dFinal,
-            };
+            })
+            return result;
         },
-        getLongLabel: function (year, month, version) {
+        makeCompactFeaturedUnfancy: function (string) {
+            var stringSplits = string.split(',');
+            var result = [];
+            stringSplits.forEach(function (fancyItem) {
+                var innermostSplits = fancyItem.split('-');
+                var name = innermostSplits[0].replace('_',' ');
+                var type = innermostSplits[1];
+                var artist = {
+                    name: name,
+                    type: type
+                }
+                if (innermostSplits[2]) {
+                    artist.origSlotSize = innermostSplits[2];
+                }
+                result.push(artist);
+            })
+            return result;
+        },
+        getLongLabel: function (labelObject) {
+            var year = labelObject.year || 1970;
+            var month = labelObject.month || 13;
+            var version = labelObject.version || 1;
+            var custom = labelObject.custom || '';
             var result = '';
-            if (this.rotationLabel.custom) {
-                result = this.rotationLabel.custom;
+            if (custom.length) {
+                result = custom;
             } else {
                 var monthMap = [
                     'Jan', 'Feb', 'Mar', 'April', 'May', 'June',
                     'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
                 ]
-                var monthName = monthMap[parseInt(month) - 1];
+                var monthName = monthMap[parseInt(month) - 1] || 'ERROR';
                 result = monthName + ' ' + year
                 if (version > 1) {
                     result += ' v' + version;

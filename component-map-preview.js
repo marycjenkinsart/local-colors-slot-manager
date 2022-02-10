@@ -29,7 +29,7 @@ Vue.component('map-preview', {
 				},
 				down: {
 					x: 197,
-					y: 547.5
+					y: 480
 				},
 				combined: {
 					x: 612,

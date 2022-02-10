@@ -18,7 +18,7 @@ When you're all done:
 	:viewBox="canvasSizeString"
 3. Make all of the `.st` styles on one of the floors into something else so the two floors don't clash.
 	a. I changed upstairs to `.ust` (though some `string` strings got caught up in that, so look for those afterward!)
-
+4. Make all font-size 10px into 9px, and 12px into 11px, and genericized the font families
 */
 
 var data = `<?xml version="1.0" encoding="utf-8"?>
