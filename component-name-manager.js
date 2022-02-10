@@ -2,24 +2,6 @@ Vue.component('name-manager', {
 	mixins: [
 		mixins,
 	],
-    props: {
-        nameList: {
-            type: Array,
-            require: true,
-        },
-        floorName: {
-            type: String,
-            require: true,
-        },
-        manage: {
-            type: Boolean,
-            require: true,
-        },
-        guestNameString: {
-            type: String,
-            require: false,
-        },
-    },
     data: function () {
         return {
             lockGuest: true,
@@ -38,7 +20,37 @@ Vue.component('name-manager', {
             },
             guestName: this.guestNameString || 'GUEST',
             // shift: 0,
+            forbiddenChars: [
+                '-',
+                '_',
+                ',',
+                '&',
+                '=',
+                '?',
+                '#',
+                '"',
+                '~',
+                '\\',
+            ]
         };
+    },
+    props: {
+        nameList: {
+            type: Array,
+            require: true,
+        },
+        floorName: {
+            type: String,
+            require: true,
+        },
+        manage: {
+            type: Boolean,
+            require: true,
+        },
+        guestNameString: {
+            type: String,
+            require: false,
+        },
     },
     computed: {
         slotCount: function () {
@@ -72,7 +84,7 @@ Vue.component('name-manager', {
                 return false;
             }
         },
-        checkForbiddenEdit: function () {
+        checkForbiddenDouble: function () {
             if (
                 this.editName.oldName != this.editName.newName
                 && this.forbiddenNewNames.includes(this.editName.newName)
@@ -81,6 +93,17 @@ Vue.component('name-manager', {
             } else {
                 return false;
             }
+        },
+        checkForbiddenChar: function () {
+            var result = false;
+            var self = this;
+            console.log(this.forbiddenChars);
+            this.forbiddenChars.forEach(function (char) {
+                if (self.editName.newName.includes(char)) {
+                    result = true;
+                }
+            })
+            return result;
         },
         checkEmptyEdit: function () {
             if (!this.editName.newName) {
@@ -99,6 +122,15 @@ Vue.component('name-manager', {
         },
     },
     methods: {
+        identifyForbiddenChar: function (string) {
+            var char = '';
+            this.forbiddenChars.forEach(function (testChar) {
+                if (string.includes(testChar)) {
+                    char = testChar;
+                }
+            })
+            return char;
+        },
         getArtistColorByName: function (name) {
             var colorIndex = this.uniqueArtists.findIndex(function (uniqueName) {
                 return name === uniqueName;
@@ -388,19 +420,25 @@ Vue.component('name-manager', {
                 <button
                     :disabled="
                         editName.oldName === editName.newName
-                        || checkForbiddenEdit
+                        || checkForbiddenDouble
+                        || checkForbiddenChar
                         || checkEmptyEdit
                     "
                     type="submit"
                 >OK</button>
             </p>
-            <p v-if="!checkForbiddenEdit">
+            <p v-if="!checkForbiddenDouble && !checkForbiddenChar">
                 <span>TIP: keep the display name reasonably short!</span>
             </p>
-            <p v-if="checkForbiddenEdit">
+            <p v-if="checkForbiddenDouble">
                 <span
                     class="warning"
                 >"{{editName.newName}}" is the name of another artist! Please make the new name unique!</span>
+            </p>
+            <p v-if="checkForbiddenChar">
+                <span
+                    class="warning"
+                >"{{editName.newName}}" contains forbidden character: {{identifyForbiddenChar(editName.newName)}}</span>
             </p>
         </form>
     </div>
