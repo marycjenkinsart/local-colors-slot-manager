@@ -85,6 +85,9 @@ var monthViewPage = Vue.component('month-view', {
             var splits = this.move.name.split('-');
             return splits[1] || '';
         },
+        compactFloor: function () {
+            return this.makeCompact(this.artists, this.rotationLabel);
+        },
     },
     methods: {
         getDisplaySlotSize: function (slotSize) {
@@ -96,10 +99,7 @@ var monthViewPage = Vue.component('month-view', {
         },
         replaceFloor: function (floorName, event) {
             this.artists[floorName] = event;
-            console.log(this.makeCompact(this.artists, this.rotationLabel));
-            console.log(this.artists.feat);
-            console.log(this.makeFancy(this.artists.up));
-            console.log(this.makeFancy(this.artists.down));
+            // console.log(this.compactFloor);
         },
         replaceArtists: function (event) {
             this.artists = event;
@@ -240,6 +240,10 @@ var monthViewPage = Vue.component('month-view', {
             } else {
                 console.error(`You can't decrement ${variable}!`)
             }
+        },
+        copyLink: function () {
+            this.$refs.linkToCopy.select();
+            document.execCommand("copy");
         },
     },
     template: /*html*/`
@@ -468,16 +472,27 @@ var monthViewPage = Vue.component('month-view', {
             @click=""
             disabled
         >Quit</button>
+        <button
+            @click=""
+            :disabled="manage.up || manage.down"
+        >Download Maps</button>
+    </p>
+    <p>
+        <span>URL for this map:</span>
+    </p>
+    <p>
+        <textarea
+            cols="50"
+            rows="3"
+            class="position-absolute"
+            ref="linkToCopy"
+            readonly
+        >{{compactFloor}}</textarea>
     </p>
     <p>
         <button
-            @click=""
-            disabled
-        >Get Shareable Link</button>
-        <button
-            @click=""
-            disabled
-        >Download Maps</button>
+            @click="copyLink"
+        >Copy Link</button>
     </p>
     <div
         class="svg_preview"

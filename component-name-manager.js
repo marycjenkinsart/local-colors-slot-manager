@@ -97,7 +97,6 @@ Vue.component('name-manager', {
         checkForbiddenChar: function () {
             var result = false;
             var self = this;
-            console.log(this.forbiddenChars);
             this.forbiddenChars.forEach(function (char) {
                 if (self.editName.newName.includes(char)) {
                     result = true;
