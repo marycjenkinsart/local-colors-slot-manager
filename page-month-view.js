@@ -88,6 +88,10 @@ var monthViewPage = Vue.component('month-view', {
 		compactFloor: function () {
 			return this.makeCompact(this.artists, this.rotationLabel);
 		},
+		compactFloorURL: function () {
+			var viewURL = "https://marycjenkinsart.github.io/local-colors-slot-manager/#/view?";
+			return viewURL + this.compactFloor;
+		},
 		checkForbiddenLabel: function () {
 			var result = false;
 			var custom = this.rotationLabel.custom || '';
@@ -492,16 +496,16 @@ var monthViewPage = Vue.component('month-view', {
 	<p>
 		<textarea
 			cols="50"
-			rows="3"
+			rows="4"
 			class="position-absolute"
 			ref="linkToCopy"
 			readonly
-		>{{compactFloor}}</textarea>
+		>{{compactFloorURL}}</textarea>
 	</p>
 	<p>
 		<button
 			@click="copyLink"
-		>Copy Link</button>
+		>Copy Shareable Link</button>
 	</p>
 	<div
 		class="svg_preview"
