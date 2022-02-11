@@ -20,7 +20,7 @@ Vue.component('map-preview', {
 			require: true,
 		}
 	},
-    data: function () {
+	data: function () {
 		return {
 			svgSizes: {
 				up: {
@@ -49,7 +49,7 @@ Vue.component('map-preview', {
 		
 		}
 	},
-    computed: {
+	computed: {
 		managing: function () {
 			var result = 'combined';
 			if (this.manageUp && !this.manageDown) {
@@ -81,17 +81,17 @@ Vue.component('map-preview', {
 		},
 		unwrappedFeatureds: function () {
 			var threeDee = [];
-            var twoDee = [];
-            var themes = [];
-            this.artists.feat.forEach(function (item) {
-                if (item.type === '2D') {
-                    twoDee.push(item.name);
-                } else if (item.type === '3D') {
-                    threeDee.push(item.name);
-                } else if (item.type === 'group') {
-                    themes.push(item.name);
-                }
-            })
+			var twoDee = [];
+			var themes = [];
+			this.artists.feat.forEach(function (item) {
+				if (item.type === '2D') {
+					twoDee.push(item.name);
+				} else if (item.type === '3D') {
+					threeDee.push(item.name);
+				} else if (item.type === 'group') {
+					themes.push(item.name);
+				}
+			})
 			return {
 				threeDee: threeDee,
 				twoDee: twoDee,
@@ -105,39 +105,39 @@ Vue.component('map-preview', {
 			var string = '';
 			var artistCount = twoDee.length + threeDee.length;
 			if (artistCount) {
-                if (artistCount === 1) {
+				if (artistCount === 1) {
 					string = 'Featured artist:';
 				} else if (artistCount > 1) {
 					string = 'Featured artists:';
 				}
-            } else if (themes.length) {
-                if (themes.length === 1) {
-                    string = 'Featured theme:';
-                } else if (themes.length > 1) {
-                    string = 'Featured themes:';
-                    }
-                } else {
-                string = 'Featured:';
-            }
-            return string;
+			} else if (themes.length) {
+				if (themes.length === 1) {
+					string = 'Featured theme:';
+				} else if (themes.length > 1) {
+					string = 'Featured themes:';
+					}
+				} else {
+				string = 'Featured:';
+			}
+			return string;
 		},
-        featuredBodyString: function () {
+		featuredBodyString: function () {
 			var twoDee = this.unwrappedFeatureds.twoDee;
 			var threeDee = this.unwrappedFeatureds.threeDee;
 			var themes = this.unwrappedFeatureds.themes;
 			var string = '';
 			if (twoDee.length || threeDee.length) {
-                var artists = twoDee.concat(threeDee);
-                string = artists.join(', ');
-            } else if (themes.length) {
+				var artists = twoDee.concat(threeDee);
+				string = artists.join(', ');
+			} else if (themes.length) {
 				string = themes.join(', ');
-            } else {
-                string = 'ERROR: no feat. items found';
-            }
-            return string;
-        },
+			} else {
+				string = 'ERROR: no feat. items found';
+			}
+			return string;
+		},
 	},
-    methods: {
+	methods: {
 		origins: function (floor) {
 			var result = this.offsets[floor]
 			if (this.managing === floor) {
@@ -149,7 +149,7 @@ Vue.component('map-preview', {
 			return result;
 		},
 	},
-    template: /*html*/`
+	template: /*html*/`
 <div class="map-preview">
 <svg version="1.1" id="wrapping" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 	x="0px"
