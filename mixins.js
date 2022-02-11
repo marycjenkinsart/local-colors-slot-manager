@@ -162,7 +162,7 @@ var mixins = {
                 var fancy = self.makeFancy(array);
                 fancy.forEach(function (item) {
                     var entry = item.name
-                    var halfSlots = item.slotSize*2;
+                    var halfSlots = item.slotSize * 2;
                     if (halfSlots !== 2) {
                         entry += '-' + halfSlots;
                     }
@@ -178,7 +178,7 @@ var mixins = {
                     if (item.type === '2D') {
                         parsedItemArray.push(item.name);
                         parsedItemArray.push(item.type);
-                        parsedItemArray.push(item.origSlotSize);
+                        parsedItemArray.push(item.origSlotSize * 2);
                     } else {
                         parsedItemArray.push(item.name);
                         parsedItemArray.push(item.type);
@@ -227,7 +227,7 @@ var mixins = {
                     type: type
                 }
                 if (innermostSplits[2]) {
-                    artist.origSlotSize = innermostSplits[2];
+                    artist.origSlotSize = innermostSplits[2] / 2;
                 }
                 result.push(artist);
             })
