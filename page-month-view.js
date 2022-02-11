@@ -88,6 +88,26 @@ var monthViewPage = Vue.component('month-view', {
 		compactFloor: function () {
 			return this.makeCompact(this.artists, this.rotationLabel);
 		},
+		checkForbiddenLabel: function () {
+			var result = false;
+			var custom = this.rotationLabel.custom || '';
+			this.forbiddenChars.forEach(function (char) {
+				if (custom.includes(char)) {
+					result = true;
+				}
+			})
+			return result;
+		},
+		checkForbiddenLabel: function () {
+			var result = false;
+			var custom = this.rotationLabel.custom || '';
+			this.forbiddenChars.forEach(function (char) {
+				if (custom.includes(char)) {
+					result = true;
+				}
+			})
+			return result;
+		}
 	},
 	methods: {
 		getDisplaySlotSize: function (slotSize) {
@@ -309,7 +329,13 @@ var monthViewPage = Vue.component('month-view', {
 			<p>
 				<button
 					@click="editRotationNameEnd"
+					:disabled="checkForbiddenLabel"
 				>DONE</button>
+			</p>
+			<p v-if="checkForbiddenLabel">
+				<span
+					class="warning"
+				>"{{rotationLabel.custom}}" contains forbidden character: {{identifyForbiddenChar(rotationLabel.custom)}}</span>
 			</p>
 		</div>
 	</div>
@@ -459,24 +485,6 @@ var monthViewPage = Vue.component('month-view', {
 			@replace-floor="replaceFloor('down',$event)"
 		></name-manager>
 	</div>
-	<p>
-		<button
-			@click=""
-			disabled
-		>Save</button>
-		<button
-			@click=""
-			disabled
-		>Revert</button>
-		<button
-			@click=""
-			disabled
-		>Quit</button>
-		<button
-			@click=""
-			:disabled="manage.up || manage.down"
-		>Download Maps</button>
-	</p>
 	<p>
 		<span>URL for this map:</span>
 	</p>

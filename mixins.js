@@ -58,10 +58,31 @@ var mixins = {
 					'color-21', // red-purple
 					'color-23', // magenta 
 				],
-			}
+			},
+			forbiddenChars: [
+				'-',
+				'_',
+				',',
+				'&',
+				'=',
+				'?',
+				'#',
+				'"',
+				'~',
+				'\\',
+			],
 		};
 	},
 	methods: {
+		identifyForbiddenChar: function (string) {
+			var char = '';
+			this.forbiddenChars.forEach(function (testChar) {
+				if (string.includes(testChar)) {
+					char = testChar;
+				}
+			})
+			return char;
+		},
 		getUnique: function (value, index, self) {
 			return self.indexOf(value) === index; // thanks, stackOverflow
 		},

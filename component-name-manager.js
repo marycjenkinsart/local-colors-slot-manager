@@ -20,18 +20,6 @@ Vue.component('name-manager', {
 			},
 			guestName: this.guestNameString || 'GUEST',
 			// shift: 0,
-			forbiddenChars: [
-				'-',
-				'_',
-				',',
-				'&',
-				'=',
-				'?',
-				'#',
-				'"',
-				'~',
-				'\\',
-			]
 		};
 	},
 	props: {
@@ -96,9 +84,9 @@ Vue.component('name-manager', {
 		},
 		checkForbiddenChar: function () {
 			var result = false;
-			var self = this;
+			var newName = this.editName.newName || '';
 			this.forbiddenChars.forEach(function (char) {
-				if (self.editName.newName.includes(char)) {
+				if (newName.includes(char)) {
 					result = true;
 				}
 			})
@@ -121,15 +109,6 @@ Vue.component('name-manager', {
 		},
 	},
 	methods: {
-		identifyForbiddenChar: function (string) {
-			var char = '';
-			this.forbiddenChars.forEach(function (testChar) {
-				if (string.includes(testChar)) {
-					char = testChar;
-				}
-			})
-			return char;
-		},
 		getArtistColorByName: function (name) {
 			var colorIndex = this.uniqueArtists.findIndex(function (uniqueName) {
 				return name === uniqueName;
