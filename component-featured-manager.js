@@ -74,6 +74,18 @@ Vue.component('featured-manager', {
 		moveName: function () {
 			var splits = this.move2D.split('-');
 			return splits[1] || '';
+		},
+		showGroupShowWarning: function () {
+			var artistExists = false;
+			var themeExists = false;
+			this.artists.feat.forEach(function (item) {
+				if (item.type === '2D' || item.type === '3D') {
+					artistExists = true;
+				} else if (item.type === 'group') {
+					themeExists = true;
+				}
+			})
+			return artistExists && themeExists;
 		}
 		// displayFeatured: function () {
 		//	 var result = 'No featured artists found!'
@@ -339,6 +351,10 @@ Vue.component('featured-manager', {
 				</tr>
 			</tbody>
 		</table>
+		<p
+			v-if="showGroupShowWarning"
+			class="warning"
+		>WARNING: Group show themes will not be listed on the map preview while there are artists designated to be featured.</p>
 	</div>
 	<p
 		v-if="warning"
