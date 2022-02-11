@@ -4,7 +4,7 @@ var routes = [
 		component: overallViewPage
 	},
 	{
-		path: '/month',
+		path: '/edit',
 		component: monthViewPage
 	},
 	{
