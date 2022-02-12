@@ -84,6 +84,26 @@ table, th, td {
 	padding: 4px;
 }
 
+.zebra:nth-child(odd) {
+	background-color: #ddd;
+}
+.zebra:nth-child(even) {
+	background-color: #fff;
+}
+.zebra {
+	padding: 4px;
+}
+
+.table_first {
+	width: 20%;
+}
+.table_second {
+	width: 50%;
+}
+.table_third {
+	width: 30%;
+}
+
 /* *-*-*-*   GENERICS   *-*-*-*  */
 
 .quarter {
@@ -138,10 +158,6 @@ table, th, td {
 
 .white-bg {
 	background-color: #fff;
-}
-
-.gray-bg {
-	background-color: #ddd;
 }
 
 .warning {

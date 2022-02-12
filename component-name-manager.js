@@ -523,25 +523,27 @@ Vue.component('name-manager', {
 					<template
 					v-for="(artist, index) in fancyNameList"
 					>
-						<tr class="gray-bg">
-							<td class="third">
+						<tr class="zebra">
+							<td class="table_first">
+								<button
+									@click="rotateArtistUp(findDownNeighbor(index))"
+								>↓</button>
+								<button
+									@click="rotateArtistUp(artist.slotIndex)"
+								>↑</button>
+							</td>
+							<td class="table_second">
 								<span
 									class="artist-name"
 									:class="getArtistColorByName(artist.name)"
 								>{{artist.name}}</span>
-							</td>
-							<td class="third">
 								<button
 									:disabled="artist.name === guestName"
 									@click="editNameStart(artist.name)"
 									title="change the artist's name"
-								>name</button>
-								<button
-									@click="attemptArtistMove(artist.name)"
-									title="move artist to the other floor"
-								>transfer</button>
+								>edit</button>
 							</td>
-							<td class="third">
+							<td class="table_third">
 								<button
 									title="Reduce artist slot size"
 									@click="reduceArtist(artist.slotIndex)"
@@ -557,13 +559,6 @@ Vue.component('name-manager', {
 									class="medium-mini"
 								>s</span>
 							</td>
-						</tr>
-						<tr>
-							<td><button
-									class="mini"
-									:title="getSwapMessage(index)"
-									@click="rotateArtistUp(findDownNeighbor(index))"
-								>Swap ↑↓</button></td>
 						</tr>
 					</template>
 				</tbody>
