@@ -15,7 +15,6 @@ var monthViewPage = Vue.component('month-view', {
 			guestName: guestNameString,
 			lockGuest: true,
 			move: {
-				inProgress: false,
 				name: '',
 			},
 			manage: {
@@ -164,9 +163,6 @@ var monthViewPage = Vue.component('month-view', {
 			})
 			this.artists = newArtists;
 		},
-		moveArtistToOtherFloorStart: function () {
-			this.move.inProgress = true;
-		},
 		moveArtistToOtherFloorAttempt: function () {
 			var targetFloor = this.moveFloor;
 			var otherFloor = '';
@@ -213,7 +209,6 @@ var monthViewPage = Vue.component('month-view', {
 		moveArtistToOtherFloorCancel: function () {
 			this.move.name = '';
 			this.move.message = '';
-			this.move.inProgress = false;
 		},
 		editRotationNameStart: function () {
 			this.rotationLabel.editing = true;
@@ -275,6 +270,24 @@ var monthViewPage = Vue.component('month-view', {
 			@click="editRotationNameStart"
 		>edit rotation name</button>
 	</p>
+	<p class="flat">
+		<button
+			title="Move all upstairs artists downstairs and vice versa"
+			:disabled="!!move.name.length"
+			@click="swapFloorsButton"
+		>swap floors</button>
+		<label
+			v-if="uniqueUpstairs.includes(guestName) || uniqueDownstairs.includes(guestName)"
+		>
+			<input
+			v-model="lockGuest"
+			type="checkbox"
+		/>
+			<span
+				title="Keeps the guest in place during a floor swap."
+			>Lock guest position</span>
+		</label>
+	</p>
 	<div
 		v-if="rotationLabel.editing"
 		class="manager-box"
@@ -334,63 +347,33 @@ var monthViewPage = Vue.component('month-view', {
 			</p>
 		</div>
 	</div>
-	<p class="flat">
-		<button
-			title="Choose an artist to move to the opposite floor"
-			:disabled="move.inProgress"
-			@click="moveArtistToOtherFloorStart"
-		>move artist to opposite floor</button>
-	</p>
-	<p class="flat">
-		<button
-			title="Move all upstairs artists downstairs and vice versa"
-			:disabled="move.inProgress"
-			@click="swapFloorsButton"
-		>swap floors</button>
-		<label
-			v-if="uniqueUpstairs.includes(guestName) || uniqueDownstairs.includes(guestName)"
+	<p>
+		<span>move artist to opposite floor:</span>
+		<select
+			v-model="move.name"
 		>
-			<input
-			v-model="lockGuest"
-			type="checkbox"
-		/>
-			<span
-				title="Keeps the guest in place during a floor swap."
-			>Lock guest position</span>
-		</label>
+			<optgroup label="Upstairs">
+				<option
+					v-for="name in uniqueUpstairs"
+					:value="'up-' + name"
+				>{{name}}</option>
+			</optgroup>
+			<optgroup label="Downstairs">
+				<option
+					v-for="name in uniqueDownstairs"
+					:value="'down-' + name"
+				>{{name}}</option>
+			</optgroup>
+		</select>
 	</p>
 	<div
-		v-if="move.inProgress"
+		v-if="move.name"
 		class="manager-box"
 	>
 		<div
 			class="manager-inner round-and-shadow"
 		>
 			<div v-if="!move.message">
-				<p>Move which artist to the other floor?</p>
-				<p>
-					<select
-						v-model="move.name"
-					>
-						<optgroup label="Upstairs">
-							<option
-								v-for="name in uniqueUpstairs"
-								:value="'up-' + name"
-							>{{name}}</option>
-						</optgroup>
-						<optgroup label="Downstairs">
-							<option
-								v-for="name in uniqueDownstairs"
-								:value="'down-' + name"
-							>{{name}}</option>
-						</optgroup>
-					</select>
-					<div v-if="!moveName">
-						<button
-							@click="moveArtistToOtherFloorCancel"
-						>Cancel</button>
-					</div>
-				</p>
 				<div v-if="move.name">
 					<p>Move <strong>{{moveName}}</strong> {{moveFloor}}stairs?</p>
 					<p>

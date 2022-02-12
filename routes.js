@@ -1,10 +1,6 @@
 var routes = [
 	{
 		path: '/',
-		component: overallViewPage
-	},
-	{
-		path: '/edit',
 		component: monthViewPage
 	},
 	{
