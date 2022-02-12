@@ -164,9 +164,9 @@ var mixins = {
 				}
 				var targetSplits = compactLabelString.split(',')
 				result = {
-					year: targetSplits[0] || 1970,
-					month: targetSplits[1] || 1,
-					version: targetSplits[2] || 1,
+					year: parseInt(targetSplits[0],10) || 1970,
+					month: parseInt(targetSplits[1],10) || 1,
+					version: parseInt(targetSplits[2],10) || 1,
 					custom: targetSplits[3] || '',
 				}
 				return result;

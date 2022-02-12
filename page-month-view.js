@@ -4,15 +4,14 @@ var monthViewPage = Vue.component('month-view', {
 	],
 	data: function () {
 		var guestNameString = 'GUEST';
+		var query = this.$route.query; // requires the vue router
+		var origData = {
+			l: query && query.l || '1970,1,1,"LABEL ERROR"',
+			f: query && query.f || 'FEAT-2D-1',
+			u: query && query.u || 'test1-1,test2,test3-1,test4',
+			d: query && query.d || 'temp1-1,temp2,temp3,temp4-1,temp1-1',
+		};
 		return {
-			rotationLabel: {
-				year: 2021,
-				month: 12,
-				version: 1,
-				custom: '',
-				editing: false,
-			},
-			guestName: guestNameString,
 			lockGuest: true,
 			move: {
 				name: '',
@@ -21,40 +20,55 @@ var monthViewPage = Vue.component('month-view', {
 				'feat': false,
 				'up': false,
 				'down': false,
+				'label': false,
 			},
+			guestName: guestNameString,
+			rotationLabel: this.makeLabelUncompact(origData.l),
 			artists: {
-				'feat': [ // can be more than one! or zero!
-					{
-						name:'Teri',
-						type: '2D',
-						origSlotSize: 1,
-					},
-				],
-				'up': [
-					guestNameString,
-					'Bill',
-					'Bill',
-					'J. Clay',
-					'Jeff M.',
-					'Jeff M.',
-					'Emily',
-					'Emily',
-					'Blaine',
-					'Blaine',
-				],
-				'down': [
-					'Adam',
-					'Nuha',
-					'Nuha',
-					'Pam',
-					'Pam',
-					'Mary',
-					'Mary',
-					'Jan',
-					'Jan',
-					'Adam',
-				],
+				feat: this.makeCompactFeaturedUnfancy(origData.f),
+				up: this.makeCompactFloorUnfancy(origData.u),
+				down: this.makeCompactFloorUnfancy(origData.d),
 			},
+			// rotationLabel: {
+			// 	year: 2021,
+			// 	month: 12,
+			// 	version: 1,
+			// 	custom: '',
+			// 	editing: false,
+			// },
+			// artists: {
+			// 	'feat': [ // can be more than one! or zero!
+			// 		{
+			// 			name:'Teri',
+			// 			type: '2D',
+			// 			origSlotSize: 1,
+			// 		},
+			// 	],
+			// 	'up': [
+			// 		guestNameString,
+			// 		'Bill',
+			// 		'Bill',
+			// 		'J. Clay',
+			// 		'Jeff M.',
+			// 		'Jeff M.',
+			// 		'Emily',
+			// 		'Emily',
+			// 		'Blaine',
+			// 		'Blaine',
+			// 	],
+			// 	'down': [
+			// 		'Adam',
+			// 		'Nuha',
+			// 		'Nuha',
+			// 		'Pam',
+			// 		'Pam',
+			// 		'Mary',
+			// 		'Mary',
+			// 		'Jan',
+			// 		'Jan',
+			// 		'Adam',
+			// 	],
+			// },
 		}
 	},
 	computed: {
@@ -211,10 +225,10 @@ var monthViewPage = Vue.component('month-view', {
 			this.move.message = '';
 		},
 		editRotationNameStart: function () {
-			this.rotationLabel.editing = true;
+			this.manage.label = true;
 		},
 		editRotationNameEnd: function () {
-			this.rotationLabel.editing = false;
+			this.manage.label = false;
 		},
 		incrementLabel: function (variable) {
 			if (variable === 'year') {
@@ -265,31 +279,13 @@ var monthViewPage = Vue.component('month-view', {
 	</h2>
 	<p>
 		<button
-			:disabled="rotationLabel.editing"
+			:disabled="manage.label"
 			title="Change the label for this rotation"
 			@click="editRotationNameStart"
 		>edit rotation name</button>
 	</p>
-	<p class="flat">
-		<button
-			title="Move all upstairs artists downstairs and vice versa"
-			:disabled="!!move.name.length"
-			@click="swapFloorsButton"
-		>swap floors</button>
-		<label
-			v-if="uniqueUpstairs.includes(guestName) || uniqueDownstairs.includes(guestName)"
-		>
-			<input
-			v-model="lockGuest"
-			type="checkbox"
-		/>
-			<span
-				title="Keeps the guest in place during a floor swap."
-			>Lock guest position</span>
-		</label>
-	</p>
 	<div
-		v-if="rotationLabel.editing"
+		v-if="manage.label"
 		class="manager-box"
 	>
 		<div
@@ -347,6 +343,24 @@ var monthViewPage = Vue.component('month-view', {
 			</p>
 		</div>
 	</div>
+		<p class="flat">
+		<button
+			title="Move all upstairs artists downstairs and vice versa"
+			:disabled="!!move.name.length"
+			@click="swapFloorsButton"
+		>swap floors</button>
+		<label
+			v-if="uniqueUpstairs.includes(guestName) || uniqueDownstairs.includes(guestName)"
+		>
+			<input
+			v-model="lockGuest"
+			type="checkbox"
+		/>
+			<span
+				title="Keeps the guest in place during a floor swap."
+			>Lock guest position</span>
+		</label>
+	</p>
 	<p>
 		<span>move artist to opposite floor:</span>
 		<select
