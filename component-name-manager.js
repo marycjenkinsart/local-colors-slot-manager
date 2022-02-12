@@ -92,6 +92,16 @@ Vue.component('name-manager', {
 			})
 			return result;
 		},
+		checkForbiddenCharNewName: function () {
+			var result = false;
+			var newName = this.newName.newName || '';
+			this.forbiddenChars.forEach(function (char) {
+				if (newName.includes(char)) {
+					result = true;
+				}
+			})
+			return result;
+		},
 		checkEmptyEdit: function () {
 			if (!this.editName.newName) {
 				return true;
@@ -460,18 +470,24 @@ Vue.component('name-manager', {
 				<button
 					:disabled="
 						checkForbiddenNew
+						|| checkForbiddenCharNewName
 						|| checkEmptyNew
 					"
 					type="submit"
 				>OK</button>
 			</p>
-			<p v-if="!checkForbiddenNew">
+			<p v-if="!checkForbiddenNew && !checkForbiddenCharNewName">
 				<span>TIP: keep the display name reasonably short!</span>
 			</p>
 			<p v-if="checkForbiddenNew">
 				<span
 					class="warning"
 				>"{{newName.newName}}" is the name of another artist! Please make the new name unique!</span>
+			</p>
+			<p v-if="checkForbiddenCharNewName">
+				<span
+					class="warning"
+				>"{{newName.newName}}" contains forbidden character: {{identifyForbiddenChar(newName.newName)}}</span>
 			</p>
 		</form>
 	</div>
