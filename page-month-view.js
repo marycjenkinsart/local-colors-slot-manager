@@ -102,16 +102,6 @@ var monthViewPage = Vue.component('month-view', {
 			})
 			return result;
 		},
-		checkForbiddenLabel: function () {
-			var result = false;
-			var custom = this.rotationLabel.custom || '';
-			this.forbiddenChars.forEach(function (char) {
-				if (custom.includes(char)) {
-					result = true;
-				}
-			})
-			return result;
-		}
 	},
 	methods: {
 		getDisplaySlotSize: function (slotSize) {

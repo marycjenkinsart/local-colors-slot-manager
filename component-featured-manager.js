@@ -86,7 +86,17 @@ Vue.component('featured-manager', {
 				}
 			})
 			return artistExists && themeExists;
-		}
+		},
+		checkForbiddenCustomName: function () {
+			var result = false;
+			var custom = this.customName || '';
+			this.forbiddenChars.forEach(function (char) {
+				if (custom.includes(char)) {
+					result = true;
+				}
+			})
+			return result;
+		},
 		// displayFeatured: function () {
 		//	 var result = 'No featured artists found!'
 		//	 var featureds = this.artists.feat
@@ -241,11 +251,16 @@ Vue.component('featured-manager', {
 						type="button"
 					>Cancel</button>
 					<button
-						:disabled="checkEmptyCustomName"
+						:disabled="checkEmptyCustomName || checkForbiddenCustomName"
 						type="submit"
 					>Ok</button>
 				</p>
 			</form>
+			<p v-if="checkForbiddenCustomName">
+				<span
+					class="warning"
+				>"{{customName}}" contains forbidden character: {{identifyForbiddenChar(customName)}}</span>
+			</p>
 		</div>
 		<div v-if="adding2D">
 			<p>Move which artist to the featured show?</p>
