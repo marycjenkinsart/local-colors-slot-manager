@@ -44,6 +44,7 @@ button {
 	border-width: 1px;
 	border-style: solid;
 	background-color: #eee;
+	color: #000;
 }
 button:hover:enabled {
 	color: #910000;
@@ -52,6 +53,7 @@ button:hover:enabled {
 }
 button:disabled {
 	cursor: default;
+	color: rgba(0,0,0,0.3);
 }
 
 a {
