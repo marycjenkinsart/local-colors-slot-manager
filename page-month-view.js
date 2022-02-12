@@ -15,6 +15,7 @@ var monthViewPage = Vue.component('month-view', {
 			lockGuest: true,
 			move: {
 				name: '',
+				message: '',
 			},
 			manage: {
 				'feat': false,
@@ -381,7 +382,7 @@ var monthViewPage = Vue.component('month-view', {
 		</select>
 	</p>
 	<div
-		v-if="move.name"
+		v-if="move.name || move.message"
 		class="manager-box"
 	>
 		<div

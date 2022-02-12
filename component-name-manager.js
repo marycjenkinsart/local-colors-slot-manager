@@ -58,7 +58,7 @@ Vue.component('name-manager', {
 		},
 		checkForbiddenNew: function () {
 			if (
-				this.forbiddenNewNames.includes(this.newName.newName)
+				this.uniqueArtists.includes(this.newName.newName)
 			) {
 				return true;
 			} else {
@@ -111,6 +111,7 @@ Vue.component('name-manager', {
 		},
 		uniqueArtists: function () {
 			var result = this.nameList.filter(this.getUnique);
+			console.log(result);
 			return result;
 		},
 		slotColors: function () {
