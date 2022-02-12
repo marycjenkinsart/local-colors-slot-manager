@@ -133,6 +133,10 @@ table, th, td {
 	padding-top: 0px;
 }
 
+.nowrap {
+	white-space: nowrap;
+}
+
 /* *-*-*-*   SPECIFICS   *-*-*-*  */
 
 .artist-name {

@@ -314,9 +314,12 @@ Vue.component('featured-manager', {
 		<h3 v-if="only2D.length">2D / Hybrid Artists</h3>
 		<table>
 			<tbody>
-				<tr v-for="artist in only2D">
+				<tr
+					v-for="artist in only2D"
+					class="zebra"
+				>
 					<td>
-						<span class="artist-name">{{artist.name}}</span>
+						<span class="artist-name nowrap">{{artist.name}}</span>
 					</td>
 					<td>
 						<button
@@ -343,8 +346,11 @@ Vue.component('featured-manager', {
 		<h3 v-if="only3D.length">3D Artists</h3>
 		<table>
 			<tbody>
-				<tr v-for="artist in only3D">
-					<td><span class="artist-name">{{artist.name}}</span></td>
+				<tr
+					v-for="artist in only3D"
+					class="zebra"
+				>
+					<td><span class="artist-name nowrap">{{artist.name}}</span></td>
 					<td>
 						<button
 							:title="'Remove ' + artist.name + ' from the featured show'"
@@ -358,7 +364,10 @@ Vue.component('featured-manager', {
 		<h3 v-if="onlyGroup.length">Group Show</h3>
 		<table>
 			<tbody>
-				<tr v-for="artist in onlyGroup">
+				<tr
+					v-for="artist in onlyGroup"
+					class="zebra"
+				>
 					<td><span class="artist-name">{{artist.name}}</span></td>
 					<td>
 						<button @click="removeArtist(artist.name)">remove group show theme</button>

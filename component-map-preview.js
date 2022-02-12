@@ -112,9 +112,9 @@ Vue.component('map-preview', {
 				}
 			} else if (themes.length) {
 				if (themes.length === 1) {
-					string = 'Featured theme:';
+					string = 'Featured group show theme:';
 				} else if (themes.length > 1) {
-					string = 'Featured themes:';
+					string = 'Featured group show themes:';
 					}
 				} else {
 				string = 'Featured:';
