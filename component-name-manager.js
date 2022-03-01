@@ -2,6 +2,28 @@ Vue.component('name-manager', {
 	mixins: [
 		mixins,
 	],
+	props: {
+		nameList: {
+			type: Array,
+			require: true,
+		},
+		floorName: {
+			type: String,
+			require: true,
+		},
+		manage: {
+			type: Boolean,
+			require: true,
+		},
+		guestNameString: {
+			type: String,
+			require: false,
+		},
+		templateFloorInfo: {
+			type: Object,
+			require: false
+		},
+	},
 	data: function () {
 		return {
 			lockGuest: true,
@@ -20,24 +42,6 @@ Vue.component('name-manager', {
 			},
 			guestName: this.guestNameString || 'GUEST',
 		};
-	},
-	props: {
-		nameList: {
-			type: Array,
-			require: true,
-		},
-		floorName: {
-			type: String,
-			require: true,
-		},
-		manage: {
-			type: Boolean,
-			require: true,
-		},
-		guestNameString: {
-			type: String,
-			require: false,
-		},
 	},
 	computed: {
 		slotCount: function () {
@@ -366,6 +370,17 @@ Vue.component('name-manager', {
 		attemptArtistMove: function (artistName) {
 			this.artistTransfer.attempt = true;
 		},
+		handleInput: function (propertyName,value) {
+			console.log(`propertyName: ${propertyName}, value: ${value}`)
+			var result = Object.assign(
+				{},
+				this.templateFloorInfo,
+				{
+					[propertyName]: value
+				}
+			);
+			this.$emit('update:templateFloorInfo',result);
+		},
 	},
 	template: /*html*/`
 <div class="name-manager">
@@ -519,6 +534,28 @@ Vue.component('name-manager', {
 					<input
 						v-model="lockGuest"
 						type="checkbox"
+					/>
+				</label>
+			</p>
+			<p>
+				<label>
+					<span
+						title="Toggle corner snapping"
+					>Snap: </span>
+					<input
+						type="checkbox"
+						:checked="templateFloorInfo.snapOn"
+						@input="handleInput('snapOn',$event.target.checked)"
+					/>
+				</label>
+			</p>
+			<p>
+				<label>
+					<span>Snap inches: </span>
+					<input
+						type="number"
+						:value="templateFloorInfo.snapInches"
+						@input="handleInput('snapInches',$event.target.value)"
 					/>
 				</label>
 			</p>

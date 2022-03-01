@@ -12,6 +12,16 @@ var monthViewPage = Vue.component('month-view', {
 			d: query && query.d || 'temp1-1,temp2,temp3,temp4-1,temp1-1',
 		};
 		return {
+			templateInfo: {
+				up: {
+					snapInches: 12,
+					snapOn: false,
+				},
+				down: {
+					snapInches: 12,
+					snapOn: true,
+				},
+			},
 			lockGuest: true,
 			move: {
 				name: '',
@@ -447,7 +457,9 @@ var monthViewPage = Vue.component('month-view', {
 			:guest-name-string="guestName"
 			:floor-name="'up'"
 			:manage="manage.up"
+			:template-floor-info="templateInfo.up"
 			@replace-floor="replaceFloor('up',$event)"
+			@update:templateFloorInfo="templateInfo.up = $event"
 		></name-manager>
 	</div>
 	<div class="manager-box">
@@ -469,7 +481,9 @@ var monthViewPage = Vue.component('month-view', {
 			:guest-name-string="guestName"
 			:floor-name="'down'"
 			:manage="manage.down"
+			:template-floor-info="templateInfo.down"
 			@replace-floor="replaceFloor('down',$event)"
+			@update:templateFloorInfo="templateInfo.down = $event"
 		></name-manager>
 	</div>
 	<p>
@@ -497,6 +511,7 @@ var monthViewPage = Vue.component('month-view', {
 			:manage-down="manage.down"
 			:artists="artists"
 			:label="getLongLabel(rotationLabel)"
+			:template-info="templateInfo"
 		></map-preview>
 	</div>
 </div>

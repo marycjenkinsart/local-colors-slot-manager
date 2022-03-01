@@ -18,6 +18,10 @@ Vue.component('map-preview', {
 		label: {
 			type: String,
 			require: true,
+		},
+		templateInfo: {
+			type: Object,
+			require: true,
 		}
 	},
 	data: function () {
@@ -163,7 +167,8 @@ Vue.component('map-preview', {
 			:floor-name="'down'"
 			:origin="origins('down')"
 			:canvas-size="wrapperSize"
-			:new-view="false"
+			:new-view="true"
+			:template-floor-info="templateInfo.down"
 		>
 		</floor-preview>
 		<floor-preview
@@ -173,7 +178,8 @@ Vue.component('map-preview', {
 			:floor-name="'up'"
 			:origin="origins('up')"
 			:canvas-size="wrapperSize"
-			:new-view="false"
+			:new-view="true"
+			:template-floor-info="templateInfo.up"
 		>
 		</floor-preview>
 		<g

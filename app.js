@@ -2,7 +2,7 @@ var templates = {
 	// note these are not in inches @1% scale, but points (@72 DPI)
 	// also, you might want more precision than this...
 	up: {
-		'0': [
+		'00': [
 			{ x1: 50.1, y1: 113.2, x2: 68.1, y2: 73.5 },
 			{ x1: 122.6, y1: 26.6, x2: 182.7, y2: 26.6 },
 			{ x1: 182.7, y1: 27, x2: 182.7, y2: 98.3 },
@@ -16,7 +16,7 @@ var templates = {
 			{ x1: 179.6, y1: 489.5, x2: 179.6, y2: 532 },
 			{ x1: 146.4, y1: 359.2, x2: 178.6, y2: 359.2 }
 		],
-		'1': [
+		'01': [
 			{ x1: 122.6, y1: 26.6, x2: 182.7, y2: 26.6 },
 			{ x1: 50.1, y1: 113.2, x2: 68.1, y2: 73.5 },
 			{ x1: 182.7, y1: 27, x2: 182.7, y2: 98.3 },
@@ -32,7 +32,7 @@ var templates = {
 		],
 	},
 	down: {
-		'0': [
+		'00': [
 			{ x1: 135.8, y1: 351.9, x2: 135.8, y2: 392.6 },
 			{ x1: 121.2, y1: 392.6, x2: 80.8, y2: 392.6 },
 			{ x1: 51.2, y1: 392.6, x2: 51.2, y2: 369.6 },
@@ -55,7 +55,10 @@ var getLengthFromLineCoords = function (coords) {
 	return result;
 };
 var templateNumberToInches = function (number) {
-	return number * 100 / 72
+	return number * 100 / 72;
+};
+var inchesToTemplateNumber = function (number) {
+	return number * 72 / 100;
 };
 
 var getNormalizedTangent = function (lineCoords) {

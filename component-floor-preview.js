@@ -26,12 +26,17 @@ Vue.component('floor-preview', {
 		newView: {
 			type: Boolean,
 			require: false,
+		},
+		templateFloorInfo: {
+			type: Object,
+			require: true,
 		}
 	},
 	data: function () {
 		return {
 			rectWidth: 4,
 			dottedLineLength: 16,
+			snapOn: true,
 			snapThreshold: 0.12 * 72, // one foot IRL
 		}
 	},
@@ -105,7 +110,7 @@ Vue.component('floor-preview', {
 			return this.makeFancy(this.artists);
 		},
 		rawLineSegments: function () {
-			var lineSegments = templates[this.floorName]['0'];
+			var lineSegments = templates[this.floorName]['00'];
 			return lineSegments;
 		},
 		rawLineSegmentLengths: function () {
@@ -138,18 +143,28 @@ Vue.component('floor-preview', {
 			})
 			return result;
 		},
-		processedSlotBorders: function () {
+		processedArtistSlots2: function () {
 			var totalLength = this.rawLineSegmentLengths.reduce(function (prev, cur) {
 				return prev + cur;
 			});
 			var totalHalfSlots = this.artists.length;
 			var halfSlotSize = totalLength / totalHalfSlots;
+			//
 			var result = [];
-			var magic = 0;
+			var beginning = 0;
+			var end = 0;
 			this.fancyArtists.forEach(function (artist) {
 				var artistWidth = artist.slotSize * 2 * halfSlotSize;
-				magic += artistWidth;
-				result.push(magic);
+				end += artistWidth;
+				var practicalSlot = {
+					name: artist.name,
+					beginning: beginning,
+					end: end,
+					size: end - beginning,
+					inches: templateNumberToInches(end - beginning),
+				}
+				result.push(practicalSlot);
+				beginning = end;
 			})
 			return result;
 		},
@@ -158,7 +173,12 @@ Vue.component('floor-preview', {
 			lines.forEach(function (line, index) {
 				line.index = index;
 			})
-			var artists = JSON.parse(JSON.stringify(this.processedArtistSlots));
+			var artists;
+			if (this.snapOn === true) {
+				artists = JSON.parse(JSON.stringify(this.processedArtistSlots2));
+			} else {
+				artists = JSON.parse(JSON.stringify(this.processedArtistSlots));
+			}
 			var processedLines = [];
 			var insertName = artists[0].name;
 			while (artists.length > 1) {
@@ -219,7 +239,6 @@ Vue.component('floor-preview', {
 			var lineLength = this.dottedLineLength;
 			this.slotBordersToDraw.forEach(function (line) {
 				var extension = lineToRightLineAtOrigin(line.line, lineLength, line.x, line.y);
-				console.log(`extension: ${JSON.stringify(extension)}`);
 				var insert = {
 					x1: line.x,
 					y1: line.y,
