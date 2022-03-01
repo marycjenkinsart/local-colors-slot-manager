@@ -25,11 +25,6 @@ var monthViewPage = Vue.component('month-view', {
 			},
 			guestName: guestNameString,
 			rotationLabel: this.makeLabelUncompact(origData.l),
-			artists: {
-				feat: this.makeCompactFeaturedUnfancy(origData.f),
-				up: this.makeCompactFloorUnfancy(origData.u),
-				down: this.makeCompactFloorUnfancy(origData.d),
-			},
 			// rotationLabel: {
 			// 	year: 2021,
 			// 	month: 12,
@@ -37,6 +32,11 @@ var monthViewPage = Vue.component('month-view', {
 			// 	custom: '',
 			// 	editing: false,
 			// },
+			artists: {
+				feat: this.makeCompactFeaturedUnfancy(origData.f),
+				up: this.makeCompactFloorUnfancy(origData.u),
+				down: this.makeCompactFloorUnfancy(origData.d),
+			},
 			// artists: {
 			// 	'feat': [ // can be more than one! or zero!
 			// 		{
@@ -73,12 +73,6 @@ var monthViewPage = Vue.component('month-view', {
 		}
 	},
 	computed: {
-		upstairsSlotCount: function () {
-			return artists.up.length / 2;
-		},
-		downstairsSlotCount: function () {
-			return artists.down.length / 2;
-		},
 		uniqueUpstairs: function () {
 			return this.artists.up.filter(this.getUnique).sort();
 		},

@@ -19,7 +19,6 @@ Vue.component('name-manager', {
 				attempt: false,
 			},
 			guestName: this.guestNameString || 'GUEST',
-			// shift: 0,
 		};
 	},
 	props: {
@@ -111,7 +110,6 @@ Vue.component('name-manager', {
 		},
 		uniqueArtists: function () {
 			var result = this.nameList.filter(this.getUnique);
-			console.log(result);
 			return result;
 		},
 		slotColors: function () {

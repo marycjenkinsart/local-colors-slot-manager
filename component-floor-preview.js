@@ -22,6 +22,17 @@ Vue.component('floor-preview', {
 		canvasSize: {
 			type: Object,
 			require: true,
+		},
+		newView: {
+			type: Boolean,
+			require: false,
+		}
+	},
+	data: function () {
+		return {
+			rectWidth: 4,
+			dottedLineLength: 16,
+			snapThreshold: 0.12 * 72, // one foot IRL
 		}
 	},
 	computed: {
@@ -90,12 +101,164 @@ Vue.component('floor-preview', {
 			result += x + ' ' + y;
 			return result;
 		},
+		fancyArtists: function () {
+			return this.makeFancy(this.artists);
+		},
+		rawLineSegments: function () {
+			var lineSegments = templates[this.floorName]['0'];
+			return lineSegments;
+		},
+		rawLineSegmentLengths: function () {
+			var lengths = this.rawLineSegments.map(function (line) {
+				return getLengthFromLineCoords(line);
+			});
+			return lengths;
+		},
+		processedArtistSlots: function () {
+			var totalLength = this.rawLineSegmentLengths.reduce(function (prev, cur) {
+				return prev + cur;
+			});
+			var totalHalfSlots = this.artists.length;
+			var halfSlotSize = totalLength / totalHalfSlots;
+			var result = [];
+			var beginning = 0;
+			var end = 0;
+			this.fancyArtists.forEach(function (artist) {
+				var artistWidth = artist.slotSize * 2 * halfSlotSize;
+				end += artistWidth;
+				var practicalSlot = {
+					name: artist.name,
+					beginning: beginning,
+					end: end,
+					size: end - beginning,
+					inches: templateNumberToInches(end - beginning),
+				}
+				result.push(practicalSlot);
+				beginning = end;
+			})
+			return result;
+		},
+		processedSlotBorders: function () {
+			var totalLength = this.rawLineSegmentLengths.reduce(function (prev, cur) {
+				return prev + cur;
+			});
+			var totalHalfSlots = this.artists.length;
+			var halfSlotSize = totalLength / totalHalfSlots;
+			var result = [];
+			var magic = 0;
+			this.fancyArtists.forEach(function (artist) {
+				var artistWidth = artist.slotSize * 2 * halfSlotSize;
+				magic += artistWidth;
+				result.push(magic);
+			})
+			return result;
+		},
+		processedLineSegments: function () {
+			var lines = JSON.parse(JSON.stringify(this.rawLineSegments));
+			lines.forEach(function (line, index) {
+				line.index = index;
+			})
+			var artists = JSON.parse(JSON.stringify(this.processedArtistSlots));
+			var processedLines = [];
+			var insertName = artists[0].name;
+			while (artists.length > 1) {
+				if (artists[0].size > getLengthFromLineCoords(lines[0])) {
+					artists[0].size -= getLengthFromLineCoords(lines[0]);
+					var insert = lines.shift();
+					insert.name = insertName;
+					processedLines.push(insert);
+				} else {
+					var workingLine = lines.shift();
+					var splits = cutLineAtDistance(workingLine, artists[0].size);
+					var insert = splits[0];
+					insert.name = insertName;
+					processedLines.push(insert);
+					lines.unshift(splits[1]);
+					artists.shift();
+					insertName = artists[0] && artists[0].name || insertName;
+				}
+			}
+			lines.forEach(function (line) {
+				var insert = line;
+				insert.name = insertName;
+				processedLines.push(insert);
+			})
+			return processedLines;
+		},
+		slotBordersToDraw: function () {
+			var result = [];
+			var workingLines = this.processedLineSegments;
+			for (var index = 1; index < workingLines.length; index++) {
+				var first = workingLines[index - 1];
+				var second = workingLines[index];
+				if (
+					first.name !== second.name
+					&& first.x2 === second.x1
+					&& first.y2 === second.y1
+					&& getNormalizedTangent(first).x - getNormalizedTangent(second).x < 0.0001
+					&& getNormalizedTangent(first).y - getNormalizedTangent(second).y < 0.0001
+				) {
+					var shorterLine;
+					if (getLengthFromLineCoords(first) > getLengthFromLineCoords(second)) {
+						shorterLine = second;
+					} else {
+						shorterLine = first;
+					}
+					var insert = {
+						x: second.x1,
+						y: second.y1,
+						line: shorterLine,
+					}
+					result.push(insert);
+				}
+			}
+			return result;
+		},
+		processedDottedLines: function () {
+			var result = [];
+			var lineLength = this.dottedLineLength;
+			this.slotBordersToDraw.forEach(function (line) {
+				var extension = lineToRightLineAtOrigin(line.line, lineLength, line.x, line.y);
+				console.log(`extension: ${JSON.stringify(extension)}`);
+				var insert = {
+					x1: line.x,
+					y1: line.y,
+					x2: extension.x,
+					y2: extension.y,
+				}
+				result.push(insert);
+			})
+			return result;
+		},
+		processedRectangles: function () {
+			var result = [];
+			var rectWidth = this.rectWidth
+			this.processedLineSegments.forEach(function (line) {
+				var rect = lineToLeftRectangle(line, rectWidth);
+				var rectPoints = rect.x1 + ',' + rect.y1 + ' ' +
+					rect.x2 + ',' + rect.y2 + ' ' +
+					rect.x3 + ',' + rect.y3 + ' ' +
+					rect.x4 + ',' + rect.y4;
+				var insert = {
+					points: rectPoints,
+					artist: line.name
+				};
+				result.push(insert);
+			})
+			return result;
+		}
 	},
 	methods: {
 		getArtistColorByIndex: function (index) {
 			var slotName = this.artists[index - 1];
 			var colorIndex = this.uniqueArtists.findIndex(function (item) {
 				return item === slotName;
+			});
+			return this.slotColors[colorIndex];
+		},
+		getArtistColorByName: function (name) {
+			var colorIndex = this.uniqueArtists.findIndex(function (item) {
+				return item === name;
 			});
 			return this.slotColors[colorIndex];
 		},
@@ -172,6 +335,7 @@ Vue.component('floor-preview', {
 <text transform="matrix(0 -1 1 0 47.4059 429.6504)" class="ust11 ust12 ust13">JEWELRY</text>
 </g>
 </g>
+<g v-if="newView === false">
 <g id="show_if_slots_16_1_" v-if="slotCount === 16">
 <rect x="71.1" y="166.3" class="ust14" width="87.4" height="108.9"/>
 <rect x="116.1" y="196.5" class="ust15" width="64.3" height="71.5"/>
@@ -1519,6 +1683,22 @@ Vue.component('floor-preview', {
 <text transform="matrix(1 0 0 1 115.7494 183.9073)" class="ust18 ust12 ust13">NO PREVIEW!</text>
 </g>
 </g>
+</g>
+<g v-if="newView === true">
+<line
+	v-for="line in processedDottedLines"
+	:x1="line.x1"
+	:x2="line.x2"
+	:y1="line.y1"
+	:y2="line.y2"
+	class="dotted-line"
+/>
+<polyline
+	v-for="rect in processedRectangles"
+	:class="getArtistColorByName(rect.artist)"
+	:points="rect.points"
+/>
+</g>
 </svg>
 </g>
 <g
@@ -1595,6 +1775,7 @@ Vue.component('floor-preview', {
 	<text transform="matrix(1 0 0 1 96.3279 149.2523)" class="st7 st5 st8">NO PREVIEW!</text>
 	</g>
 	</g>
+	<g v-if="newView === false">
 	<g id="show_if_slots_13" v-if="slotCount === 13">
 	<g id="Slots_13">
 	<g id="_x31_3s-s-1">
@@ -2880,8 +3061,25 @@ Vue.component('floor-preview', {
 	<text transform="matrix(1 0 0 1 96.3279 149.2523)" class="st7 st5 st8">NO PREVIEW!</text>
 	</g>
 	</g>
+	</g>
+<g v-if="newView === true">
+<line
+	v-for="line in processedDottedLines"
+	:x1="line.x1"
+	:x2="line.x2"
+	:y1="line.y1"
+	:y2="line.y2"
+	class="dotted-line"
+/>
+<polyline
+	v-for="rect in processedRectangles"
+	:class="getArtistColorByName(rect.artist)"
+	:points="rect.points"
+/>
+</g>
 	</svg>  
 	</g>
+
 </g>
 `
 });

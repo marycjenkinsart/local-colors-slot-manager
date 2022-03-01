@@ -163,6 +163,7 @@ Vue.component('map-preview', {
 			:floor-name="'down'"
 			:origin="origins('down')"
 			:canvas-size="wrapperSize"
+			:new-view="false"
 		>
 		</floor-preview>
 		<floor-preview
@@ -172,6 +173,7 @@ Vue.component('map-preview', {
 			:floor-name="'up'"
 			:origin="origins('up')"
 			:canvas-size="wrapperSize"
+			:new-view="false"
 		>
 		</floor-preview>
 		<g

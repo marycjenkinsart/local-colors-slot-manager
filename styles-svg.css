@@ -8,6 +8,13 @@ text.jl, tspan.jl {
 	text-anchor:start;
 }
 
+.dotted-line {
+	fill: none;
+	stroke: #2E3191;
+	stroke-miterlimit: 10;
+	stroke-dasharray: 3 1;
+}
+
 .bigfont{font-size:24px;}
 
 /* Auto (from illustrator) */
