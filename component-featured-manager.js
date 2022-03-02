@@ -7,10 +7,6 @@ Vue.component('featured-manager', {
 			type: Object,
 			require: true,
 		},
-		manage: {
-			type: Boolean,
-			require: true,
-		},
 		uniqueUpstairs: {
 			type: Array,
 			require: true,
@@ -32,6 +28,9 @@ Vue.component('featured-manager', {
 		};
 	},
 	computed: {
+		manage: function () {
+			return this.$store.state.manage === 'feat';
+		},
 		checkEmptyCustomName: function () {
 			if (this.customName.length > 1) {
 				return false;

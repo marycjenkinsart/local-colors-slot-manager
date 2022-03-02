@@ -5,7 +5,7 @@ var previewPage = Vue.component('preview', {
 	data: function () {
 		return {
 			test: {
-				l:'1970,1,1,"LABEL ERROR"',
+				l:'1970,1,1,LABEL_ERROR',
 				f:'FEAT-2D-1',
 				u:'test1-1,test2,test3-1,test4',
 				d:'temp1-1,temp2,temp3,temp4-1,temp1-1',

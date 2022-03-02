@@ -3,10 +3,6 @@ Vue.component('floor-preview', {
 		mixins,
 	],
 	props: {
-		manage: {
-			type: Boolean,
-			require: true,
-		},
 		artists: {
 			type: Array,
 			require: true,
@@ -23,24 +19,17 @@ Vue.component('floor-preview', {
 			type: Object,
 			require: true,
 		},
-		newView: {
-			type: Boolean,
-			require: false,
-		},
-		templateFloorInfo: {
-			type: Object,
-			require: true,
-		}
 	},
 	data: function () {
 		return {
 			rectWidth: 4,
 			dottedLineLength: 16,
-			snapOn: true,
-			snapThreshold: 0.12 * 72, // one foot IRL
 		}
 	},
 	computed: {
+		rigidView: function () {
+			return this.$store.state.rigidView;
+		},
 		slot01: function () {
 			return this.artists[0] || 'ERROR';
 		},
@@ -143,42 +132,13 @@ Vue.component('floor-preview', {
 			})
 			return result;
 		},
-		processedArtistSlots2: function () {
-			var totalLength = this.rawLineSegmentLengths.reduce(function (prev, cur) {
-				return prev + cur;
-			});
-			var totalHalfSlots = this.artists.length;
-			var halfSlotSize = totalLength / totalHalfSlots;
-			//
-			var result = [];
-			var beginning = 0;
-			var end = 0;
-			this.fancyArtists.forEach(function (artist) {
-				var artistWidth = artist.slotSize * 2 * halfSlotSize;
-				end += artistWidth;
-				var practicalSlot = {
-					name: artist.name,
-					beginning: beginning,
-					end: end,
-					size: end - beginning,
-					inches: templateNumberToInches(end - beginning),
-				}
-				result.push(practicalSlot);
-				beginning = end;
-			})
-			return result;
-		},
 		processedLineSegments: function () {
 			var lines = JSON.parse(JSON.stringify(this.rawLineSegments));
 			lines.forEach(function (line, index) {
 				line.index = index;
 			})
 			var artists;
-			if (this.snapOn === true) {
-				artists = JSON.parse(JSON.stringify(this.processedArtistSlots2));
-			} else {
-				artists = JSON.parse(JSON.stringify(this.processedArtistSlots));
-			}
+			artists = JSON.parse(JSON.stringify(this.processedArtistSlots));
 			var processedLines = [];
 			var insertName = artists[0].name;
 			while (artists.length > 1) {
@@ -354,7 +314,7 @@ Vue.component('floor-preview', {
 <text transform="matrix(0 -1 1 0 47.4059 429.6504)" class="ust11 ust12 ust13">JEWELRY</text>
 </g>
 </g>
-<g v-if="newView === false">
+<g v-if="rigidView === true">
 <g id="show_if_slots_16_1_" v-if="slotCount === 16">
 <rect x="71.1" y="166.3" class="ust14" width="87.4" height="108.9"/>
 <rect x="116.1" y="196.5" class="ust15" width="64.3" height="71.5"/>
@@ -1703,7 +1663,7 @@ Vue.component('floor-preview', {
 </g>
 </g>
 </g>
-<g v-if="newView === true">
+<g v-if="rigidView === false">
 <line
 	v-for="line in processedDottedLines"
 	:x1="line.x1"
@@ -1794,7 +1754,7 @@ Vue.component('floor-preview', {
 	<text transform="matrix(1 0 0 1 96.3279 149.2523)" class="st7 st5 st8">NO PREVIEW!</text>
 	</g>
 	</g>
-	<g v-if="newView === false">
+	<g v-if="rigidView === true">
 	<g id="show_if_slots_13" v-if="slotCount === 13">
 	<g id="Slots_13">
 	<g id="_x31_3s-s-1">
@@ -3081,7 +3041,7 @@ Vue.component('floor-preview', {
 	</g>
 	</g>
 	</g>
-<g v-if="newView === true">
+<g v-if="rigidView === false">
 <line
 	v-for="line in processedDottedLines"
 	:x1="line.x1"

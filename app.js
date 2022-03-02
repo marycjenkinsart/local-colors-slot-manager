@@ -1,6 +1,6 @@
 var templates = {
-	// note these are not in inches @1% scale, but points (@72 DPI)
-	// also, you might want more precision than this...
+	// the line segments that drive the maps
+	// note these are in inches @ 1% scale, but also in points (@ 72 DPI)
 	up: {
 		'00': [
 			{ x1: 50.1, y1: 113.2, x2: 68.1, y2: 73.5 },
@@ -118,10 +118,10 @@ var lineToRightLineAtOrigin = function (coords, length, originX, originY) {
 
 var app = new Vue({
 	el:' #app',
+	store: store, // available to all children as this.$store(.state.etc)
 	router: router,
 	template: /*html*/`
 <div id="app">
-	<router-view></router-view>
+<router-view></router-view>
 </div>
 `});
-

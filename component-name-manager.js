@@ -11,17 +11,9 @@ Vue.component('name-manager', {
 			type: String,
 			require: true,
 		},
-		manage: {
-			type: Boolean,
-			require: true,
-		},
 		guestNameString: {
 			type: String,
 			require: false,
-		},
-		templateFloorInfo: {
-			type: Object,
-			require: false
 		},
 	},
 	data: function () {
@@ -44,6 +36,12 @@ Vue.component('name-manager', {
 		};
 	},
 	computed: {
+		manage: function () {
+			return this.$store.state.manage === this.floorName;
+		},
+		templateFloorInfo: function () {
+			return this.$store.state.templateInfo[this.floorName];
+		},
 		slotCount: function () {
 			return this.nameList.length / 2;
 		},
@@ -370,16 +368,14 @@ Vue.component('name-manager', {
 		attemptArtistMove: function (artistName) {
 			this.artistTransfer.attempt = true;
 		},
-		handleInput: function (propertyName,value) {
-			console.log(`propertyName: ${propertyName}, value: ${value}`)
-			var result = Object.assign(
-				{},
-				this.templateFloorInfo,
-				{
-					[propertyName]: value
-				}
-			);
-			this.$emit('update:templateFloorInfo',result);
+		toggleCornerSnap: function () {
+			this.$store.dispatch('toggleCornerSnap',this.floorName);
+		},
+		changeCornerSnapThreshold: function (value) {
+			this.$store.dispatch('changeCornerSnapThreshold',{
+				floorName: this.floorName,
+				value: value,
+			});
 		},
 	},
 	template: /*html*/`
@@ -545,7 +541,7 @@ Vue.component('name-manager', {
 					<input
 						type="checkbox"
 						:checked="templateFloorInfo.snapOn"
-						@input="handleInput('snapOn',$event.target.checked)"
+						@input="toggleCornerSnap"
 					/>
 				</label>
 			</p>
@@ -555,7 +551,7 @@ Vue.component('name-manager', {
 					<input
 						type="number"
 						:value="templateFloorInfo.snapInches"
-						@input="handleInput('snapInches',$event.target.value)"
+						@input="changeCornerSnapThreshold($event.target.value)"
 					/>
 				</label>
 			</p>

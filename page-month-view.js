@@ -6,22 +6,12 @@ var monthViewPage = Vue.component('month-view', {
 		var guestNameString = 'GUEST';
 		var query = this.$route.query; // requires the vue router
 		var origData = {
-			l: query && query.l || '1970,1,1,"LABEL ERROR"',
+			l: query && query.l || '1970,1,1,LABEL_ERROR',
 			f: query && query.f || 'FEAT-2D-1',
 			u: query && query.u || 'test1-1,test2,test3-1,test4',
 			d: query && query.d || 'temp1-1,temp2,temp3,temp4-1,temp1-1',
 		};
 		return {
-			templateInfo: {
-				up: {
-					snapInches: 12,
-					snapOn: false,
-				},
-				down: {
-					snapInches: 12,
-					snapOn: true,
-				},
-			},
 			lockGuest: true,
 			move: {
 				name: '',
@@ -31,7 +21,6 @@ var monthViewPage = Vue.component('month-view', {
 				'feat': false,
 				'up': false,
 				'down': false,
-				'label': false,
 			},
 			guestName: guestNameString,
 			rotationLabel: this.makeLabelUncompact(origData.l),
@@ -83,6 +72,12 @@ var monthViewPage = Vue.component('month-view', {
 		}
 	},
 	computed: {
+		manageLabel: function () {
+			return this.$store.state.manageLabel;
+		},
+		manageWhich: function () {
+			return this.$store.state.manage;
+		},
 		uniqueUpstairs: function () {
 			return this.artists.up.filter(this.getUnique).sort();
 		},
@@ -230,10 +225,10 @@ var monthViewPage = Vue.component('month-view', {
 			this.move.message = '';
 		},
 		editRotationNameStart: function () {
-			this.manage.label = true;
+			this.$store.dispatch('setManageLabel',true);
 		},
 		editRotationNameEnd: function () {
-			this.manage.label = false;
+			this.$store.dispatch('setManageLabel',false);
 		},
 		incrementLabel: function (variable) {
 			if (variable === 'year') {
@@ -273,6 +268,9 @@ var monthViewPage = Vue.component('month-view', {
 			this.$refs.linkToCopy.select();
 			document.execCommand("copy");
 		},
+		manageThis: function (value) {
+			this.$store.dispatch('manageThis',value);
+		},
 	},
 	template: /*html*/`
 <div
@@ -284,13 +282,13 @@ var monthViewPage = Vue.component('month-view', {
 	</h2>
 	<p>
 		<button
-			:disabled="manage.label"
+			:disabled="manageLabel"
 			title="Change the label for this rotation"
 			@click="editRotationNameStart"
 		>edit rotation name</button>
 	</p>
 	<div
-		v-if="manage.label"
+		v-if="manageLabel"
 		class="manager-box"
 	>
 		<div
@@ -421,12 +419,12 @@ var monthViewPage = Vue.component('month-view', {
 				Featured
 			</span>
 			<button
-				v-show="!manage.feat"
-				@click="manage.feat=true"
+				v-show="manageWhich !== 'feat'"
+				@click="manageThis('feat')"
 			>Manage</button>
 			<button
-				v-show="manage.feat"
-				@click="manage.feat=false"
+				v-show="manageWhich === 'feat'"
+				@click="manageThis('')"
 			>DONE</button>
 		</h3>
 		<featured-manager
@@ -444,22 +442,20 @@ var monthViewPage = Vue.component('month-view', {
 				{{displayFloor('up')}} ({{artists.up.length / 2}})
 			</span>
 			<button
-				v-show="!manage.up"
-				@click="manage.up=true; manage.down=false;"
+				v-show="manageWhich !== 'up'"
+				@click="manageThis('up')"
 			>Manage</button>
 			<button
-				v-show="manage.up"
-				@click="manage.up=false"
+				v-show="manageWhich === 'up'"
+				@click="manageThis('')"
 			>DONE</button>
 		</h3>
 		<name-manager
+			floor-name="up"
 			:name-list="artists.up"
 			:guest-name-string="guestName"
-			:floor-name="'up'"
 			:manage="manage.up"
-			:template-floor-info="templateInfo.up"
 			@replace-floor="replaceFloor('up',$event)"
-			@update:templateFloorInfo="templateInfo.up = $event"
 		></name-manager>
 	</div>
 	<div class="manager-box">
@@ -468,22 +464,20 @@ var monthViewPage = Vue.component('month-view', {
 			{{displayFloor('down')}} ({{artists.down.length / 2}})
 		</span>
 		<button
-			v-show="!manage.down"
-			@click="manage.down=true; manage.up=false;"
+			v-show="manageWhich !== 'down'"
+			@click="manageThis('down')"
 		>Manage</button>
 		<button
-			v-show="manage.down"
-			@click="manage.down=false"
+			v-show="manageWhich === 'down'"
+			@click="manageThis('')"
 		>DONE</button>
 	</h3>
 		<name-manager
+			floor-name="down"
 			:name-list="artists.down"
 			:guest-name-string="guestName"
-			:floor-name="'down'"
 			:manage="manage.down"
-			:template-floor-info="templateInfo.down"
 			@replace-floor="replaceFloor('down',$event)"
-			@update:templateFloorInfo="templateInfo.down = $event"
 		></name-manager>
 	</div>
 	<p>
@@ -511,7 +505,6 @@ var monthViewPage = Vue.component('month-view', {
 			:manage-down="manage.down"
 			:artists="artists"
 			:label="getLongLabel(rotationLabel)"
-			:template-info="templateInfo"
 		></map-preview>
 	</div>
 </div>

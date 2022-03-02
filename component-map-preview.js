@@ -1,16 +1,19 @@
+var svgSizes = {
+	up: { x: 218.4, y: 630.7 },
+	down: { x: 197, y: 480 },
+	combined: { x: 612, y: 792 }
+};
+
+var offsets = {
+	up: { x: 63.9, y: 103.1 },
+	down: { x: 324.97, y: 120.19 }
+};
+
 Vue.component('map-preview', {
 	mixins: [
 		mixins,
 	],
 	props: {
-		manageUp: {
-			type: Boolean,
-			require: false,
-		},
-		manageDown: {
-			type: Boolean,
-			require: false,
-		},
 		artists: {
 			type: Object,
 			require: true,
@@ -19,67 +22,25 @@ Vue.component('map-preview', {
 			type: String,
 			require: true,
 		},
-		templateInfo: {
-			type: Object,
-			require: true,
-		}
-	},
-	data: function () {
-		return {
-			svgSizes: {
-				up: {
-					x: 218.4,
-					y: 630.7
-				},
-				down: {
-					x: 197,
-					y: 480
-				},
-				combined: {
-					x: 612,
-					y: 792
-				}
-			},
-			offsets: {
-				up: {
-					x: 63.9,
-					y: 103.1
-				},
-				down: {
-					x: 324.97,
-					y: 120.19
-				}
-			}
-		
-		}
 	},
 	computed: {
-		managing: function () {
-			var result = 'combined';
-			if (this.manageUp && !this.manageDown) {
-				result = 'up';
-			} else if (this.manageDown && !this.manageUp) {
-				result = 'down'
-			}
-			return result;
+		manageWhich: function () {
+			return this.$store.state.manage;
+		},
+		overallView: function () {
+			return !(this.manageWhich === 'up' || this.manageWhich === 'down');
 		},
 		wrapperSize: function () {
-			var result = {
-				x: this.svgSizes.combined.x,
-				y: this.svgSizes.combined.y,
-			}
-			if (this.managing === 'up') {
-				result = this.svgSizes.up;
-			} else if (this.managing === 'down') {
-				result = this.svgSizes.down;
-			}
-			return result;
+			var lookup = svgSizes[this.manageWhich] || svgSizes.combined;
+			return {
+				x: lookup.x,
+				y: lookup.y,
+			};
 		},
 		viewBoxString: function () {
-			result = "0 0 "
-			var whichOne = this.managing;
-			x = this.svgSizes[whichOne].x;
-			y = this.svgSizes[whichOne].y;
+			result = "0 0 ";
+			x = this.wrapperSize.x;
+			y = this.wrapperSize.y;
 			result += x + ' ' + y;
 			return result;
 		},
@@ -143,8 +104,8 @@ Vue.component('map-preview', {
 	},
 	methods: {
 		origins: function (floor) {
-			var result = this.offsets[floor]
-			if (this.managing === floor) {
+			var result = offsets[floor]
+			if (this.manageWhich === floor) {
 				result = {
 					x: 0,
 					y: 0,
@@ -161,29 +122,23 @@ Vue.component('map-preview', {
 	:viewBox="viewBoxString"
 >
 		<floor-preview
-			v-if="managing !== 'up'"
-			:manage="manageDown"
+			v-if="manageWhich !== 'up'"
 			:artists="artists.down"
-			:floor-name="'down'"
+			floor-name="down"
 			:origin="origins('down')"
 			:canvas-size="wrapperSize"
-			:new-view="true"
-			:template-floor-info="templateInfo.down"
 		>
 		</floor-preview>
 		<floor-preview
-			v-if="managing !== 'down'"
-			:manage="manageUp"
+			v-if="manageWhich !== 'down'"
 			:artists="artists.up"
-			:floor-name="'up'"
+			floor-name="up"
 			:origin="origins('up')"
 			:canvas-size="wrapperSize"
-			:new-view="true"
-			:template-floor-info="templateInfo.up"
 		>
 		</floor-preview>
 		<g
-			v-if="manageUp === manageDown"
+			v-if="overallView"
 		>
 			<text
 				x="305.9999"
