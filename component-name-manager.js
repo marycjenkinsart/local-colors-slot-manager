@@ -40,7 +40,7 @@ Vue.component('name-manager', {
 			return this.$store.state.showCircles;
 		},
 		manage: function () {
-			return this.$store.state.manage === this.floorName;
+			return this.$store.state.manageWhich === this.floorName;
 		},
 		templateFloorInfo: function () {
 			return this.$store.state.templateInfo[this.floorName];
@@ -535,19 +535,6 @@ Vue.component('name-manager', {
 					@click="newNameStart"
 				>Add Artist</button>
 			</p>
-			<p
-				v-if="hasGuestArtist"
-			>
-				<label>
-					<span
-						title="Keeps the guest in place during a rotation"
-					>Lock guest position: </span>
-					<input
-						v-model="lockGuest"
-						type="checkbox"
-					/>
-				</label>
-			</p>
 			<p>
 				<label>
 					<span
@@ -596,6 +583,19 @@ Vue.component('name-manager', {
 						type="checkbox"
 						:checked="showCircles"
 						@input="toggleSnapCircles"
+					/>
+				</label>
+			</p>
+			<p
+				v-if="hasGuestArtist"
+			>
+				<label>
+					<span
+						title="Keeps the guest in place during a rotation"
+					>Lock guest position: </span>
+					<input
+						v-model="lockGuest"
+						type="checkbox"
 					/>
 				</label>
 			</p>

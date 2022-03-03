@@ -25,7 +25,7 @@ Vue.component('map-preview', {
 	},
 	computed: {
 		manageWhich: function () {
-			return this.$store.state.manage;
+			return this.$store.state.manageWhich;
 		},
 		overallView: function () {
 			return !(this.manageWhich === 'up' || this.manageWhich === 'down');

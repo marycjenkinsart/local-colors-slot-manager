@@ -76,7 +76,7 @@ var monthViewPage = Vue.component('month-view', {
 			return this.$store.state.manageLabel;
 		},
 		manageWhich: function () {
-			return this.$store.state.manage;
+			return this.$store.state.manageWhich;
 		},
 		uniqueUpstairs: function () {
 			return this.artists.up.filter(this.getUnique).sort();

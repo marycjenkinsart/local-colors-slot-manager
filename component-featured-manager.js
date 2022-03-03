@@ -29,7 +29,7 @@ Vue.component('featured-manager', {
 	},
 	computed: {
 		manage: function () {
-			return this.$store.state.manage === 'feat';
+			return this.$store.state.manageWhich === 'feat';
 		},
 		checkEmptyCustomName: function () {
 			if (this.customName.length > 1) {
