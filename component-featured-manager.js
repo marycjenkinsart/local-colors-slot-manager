@@ -89,7 +89,7 @@ Vue.component('featured-manager', {
 		checkForbiddenCustomName: function () {
 			var result = false;
 			var custom = this.customName || '';
-			this.forbiddenChars.forEach(function (char) {
+			forbiddenChars.forEach(function (char) {
 				if (custom.includes(char)) {
 					result = true;
 				}

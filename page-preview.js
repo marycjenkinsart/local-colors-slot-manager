@@ -23,13 +23,13 @@ var previewPage = Vue.component('preview', {
 			};
 		},
 		labelData: function () {
-			return this.makeLabelUncompact(this.queryData.l);
+			return makeLabelUncompact(this.queryData.l);
 		},
 		artists: function () {
 			return result = {
-				feat: this.makeCompactFeaturedUnfancy(this.queryData.f),
-				up: this.makeCompactFloorUnfancy(this.queryData.u),
-				down: this.makeCompactFloorUnfancy(this.queryData.d),
+				feat: makeCompactFeaturedUnfancy(this.queryData.f),
+				up: makeCompactFloorUnfancy(this.queryData.u),
+				down: makeCompactFloorUnfancy(this.queryData.d),
 			};
 		},
 	},

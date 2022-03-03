@@ -55,10 +55,10 @@ Vue.component('name-manager', {
 			return this.nameList.includes(this.guestName);
 		},
 		fancyNameList: function () {
-			return this.makeFancy(this.nameList);
+			return makeFancy(this.nameList);
 		},
 		forbiddenNewNames: function () {
-			var unique = this.nameList.filter(this.getUnique);
+			var unique = this.nameList.filter(getUnique);
 			var oldIndex = unique.indexOf(this.editName.oldName);
 			unique.splice(oldIndex,1);
 			return unique;
@@ -92,7 +92,7 @@ Vue.component('name-manager', {
 		checkForbiddenChar: function () {
 			var result = false;
 			var newName = this.editName.newName || '';
-			this.forbiddenChars.forEach(function (char) {
+			forbiddenChars.forEach(function (char) {
 				if (newName.includes(char)) {
 					result = true;
 				}
@@ -102,7 +102,7 @@ Vue.component('name-manager', {
 		checkForbiddenCharNewName: function () {
 			var result = false;
 			var newName = this.newName.newName || '';
-			this.forbiddenChars.forEach(function (char) {
+			forbiddenChars.forEach(function (char) {
 				if (newName.includes(char)) {
 					result = true;
 				}
@@ -117,12 +117,12 @@ Vue.component('name-manager', {
 			}
 		},
 		uniqueArtists: function () {
-			var result = this.nameList.filter(this.getUnique);
+			var result = this.nameList.filter(getUnique);
 			return result;
 		},
 		slotColors: function () {
 			var lookup = 'count' + this.uniqueArtists.length;
-			return this.colorMap[lookup];
+			return colorMap[lookup];
 		},
 	},
 	methods: {

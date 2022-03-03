@@ -18,7 +18,7 @@ var monthViewPage = Vue.component('month-view', {
 				'down': false,
 			},
 			guestName: guestNameString,
-			rotationLabel: this.makeLabelUncompact(origData.l),
+			rotationLabel: makeLabelUncompact(origData.l),
 			// rotationLabel: {
 			// 	year: 2021,
 			// 	month: 12,
@@ -27,9 +27,9 @@ var monthViewPage = Vue.component('month-view', {
 			// 	editing: false,
 			// },
 			artists: {
-				feat: this.makeCompactFeaturedUnfancy(origData.f),
-				up: this.makeCompactFloorUnfancy(origData.u),
-				down: this.makeCompactFloorUnfancy(origData.d),
+				feat: makeCompactFeaturedUnfancy(origData.f),
+				up: makeCompactFloorUnfancy(origData.u),
+				down: makeCompactFloorUnfancy(origData.d),
 			},
 			// artists: {
 			// 	'feat': [ // can be more than one! or zero!
@@ -74,10 +74,10 @@ var monthViewPage = Vue.component('month-view', {
 			return this.$store.state.manageWhich;
 		},
 		uniqueUpstairs: function () {
-			return this.artists.up.filter(this.getUnique).sort();
+			return this.artists.up.filter(getUnique).sort();
 		},
 		uniqueDownstairs: function () {
-			return this.artists.down.filter(this.getUnique).sort();
+			return this.artists.down.filter(getUnique).sort();
 		},
 		moveFloor: function () {
 			var splits = this.move.name.split('-');
@@ -94,7 +94,7 @@ var monthViewPage = Vue.component('month-view', {
 			return splits[1] || '';
 		},
 		compactFloor: function () {
-			return this.makeCompact(this.artists, this.rotationLabel);
+			return makeCompact(this.artists, this.rotationLabel);
 		},
 		compactFloorURL: function () {
 			var viewURL = "https://marycjenkinsart.github.io/local-colors-slot-manager/#/view?";
@@ -103,7 +103,7 @@ var monthViewPage = Vue.component('month-view', {
 		checkForbiddenLabel: function () {
 			var result = false;
 			var custom = this.rotationLabel.custom || '';
-			this.forbiddenChars.forEach(function (char) {
+			forbiddenChars.forEach(function (char) {
 				if (custom.includes(char)) {
 					result = true;
 				}

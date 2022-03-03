@@ -85,12 +85,12 @@ Vue.component('floor-preview', {
 			return this.artists.length;
 		},
 		uniqueArtists: function () {
-			var result = this.artists.filter(this.getUnique);
+			var result = this.artists.filter(getUnique);
 			return result;
 		},
 		slotColors: function () {
 			var lookup = 'count' + this.uniqueArtists.length;
-			return this.colorMap[lookup];
+			return colorMap[lookup];
 		},
 		stringX: function () {
 			var result = this.origin.x || 0;
@@ -108,7 +108,7 @@ Vue.component('floor-preview', {
 			return result;
 		},
 		fancyArtists: function () {
-			return this.makeFancy(this.artists);
+			return makeFancy(this.artists);
 		},
 		rawLineSegments: function () {
 			var lineSegments = templates[this.floorName][this.selectedTemplateBase];
