@@ -109,8 +109,8 @@ Vue.component('floor-preview', {
 		},
 		rawLineSegments: function () {
 			var lineSegments = templates[this.floorName]['00'];
-			console.log(`${this.floorName} rawLineSegments:`);
-			console.log(lineSegments);
+			// console.log(`${this.floorName} rawLineSegments:`);
+			// console.log(lineSegments);
 			return lineSegments;
 		},
 		rawLineSegmentLengths: function () {
@@ -177,8 +177,8 @@ Vue.component('floor-preview', {
 				insert.name = insertName;
 				processedLines.push(insert);
 			})
-			console.log(`${this.floorName} naiveLineSegments:`);
-			console.log(processedLines);
+			// console.log(`${this.floorName} naiveLineSegments:`);
+			// console.log(processedLines);
 			return processedLines;
 		},
 		naiveSlotEdges: function () { // drawn with black dots
@@ -208,8 +208,8 @@ Vue.component('floor-preview', {
 					result.push(insert);
 				}
 			}
-			console.log(`${this.floorName} naiveSlotEdges:`);
-			console.log(result);
+			// console.log(`${this.floorName} naiveSlotEdges:`);
+			// console.log(result);
 			return result;
 		},
 		snappedLineSegments: function () {
@@ -260,8 +260,8 @@ Vue.component('floor-preview', {
 					result.push(testLine);
 				}
 			}
-			console.log(`${this.floorName} snappedLineSegments:`);
-			console.log(result);
+			// console.log(`${this.floorName} snappedLineSegments:`);
+			// console.log(result);
 			return result;
 		},
 		snappedSlotEdges: function () {

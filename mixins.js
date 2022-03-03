@@ -2,6 +2,13 @@ var mixins = {
 	data: function () {
 		return {
 			colorMap: { // unique artists, not slot count
+				count1: [
+					'color-01', // red
+				],
+				count2: [
+					'color-01', // red
+					'color-15', // blue
+				],
 				count3: [
 					'color-01', // red
 					'color-15', // blue

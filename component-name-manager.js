@@ -36,6 +36,9 @@ Vue.component('name-manager', {
 		};
 	},
 	computed: {
+		showCircles: function () {
+			return this.$store.state.showCircles;
+		},
 		manage: function () {
 			return this.$store.state.manage === this.floorName;
 		},
@@ -567,7 +570,7 @@ Vue.component('name-manager', {
 					>Show pre-snapped borders: </span>
 					<input
 						type="checkbox"
-						:checked="templateFloorInfo.showCircles"
+						:checked="showCircles"
 						@input="toggleSnapCircles"
 					/>
 				</label>
