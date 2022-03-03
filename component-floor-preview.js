@@ -149,7 +149,7 @@ Vue.component('floor-preview', {
 			lines.forEach(function (line, index) {
 				line.origLineSegmentIndex = index;
 			})
-			var artists;
+			var artists; // TODO: why did I split this line?
 			artists = JSON.parse(JSON.stringify(this.processedArtistSlots));
 			var processedLines = [];
 			var insertName = artists[0].name;
@@ -212,6 +212,58 @@ Vue.component('floor-preview', {
 			// console.log(result);
 			return result;
 		},
+		ghostHalfSlots: function () {
+			// permanent half slots
+			var totalLength = this.rawLineSegmentLengths.reduce(function (prev, cur) {
+				return prev + cur;
+			});
+			var totalHalfSlots = this.artists.length;
+			var halfSlotSize = totalLength / totalHalfSlots;
+			var ghostHalfSlots = [];
+			var beginning = 0;
+			var end = 0;
+			for (let index = 0; index < totalHalfSlots; index++) {
+				end += halfSlotSize;
+				var practicalSlot = {
+					beginning: beginning,
+					end: end,
+					size: end - beginning,
+					inches: templateNumberToInches(end - beginning),
+				}
+				ghostHalfSlots.push(practicalSlot);
+				beginning = end;
+			}
+			console.warn(`GHOST`);
+			console.log(ghostHalfSlots);
+			// part 2
+			var circleCoords = [];
+			var lines = JSON.parse(JSON.stringify(this.rawLineSegments));
+			lines.forEach(function (line, index) {
+				line.origLineSegmentIndex = index;
+			})
+			var processedLines = [];
+			while (ghostHalfSlots.length > 1) {
+				if (ghostHalfSlots[0].size > getLengthFromLineCoords(lines[0])) {
+					ghostHalfSlots[0].size -= getLengthFromLineCoords(lines[0]);
+					var insert = lines.shift();
+					processedLines.push(insert);
+				} else {
+					var workingLine = lines.shift();
+					var splits = cutLineAtDistance(workingLine, ghostHalfSlots[0].size);
+					console.error(`SPLITS`);
+					console.warn(splits);
+					circleCoords.push({
+						x: splits[0].x2,
+						y: splits[0].y2,
+					});
+					var insert = splits[0];
+					processedLines.push(insert);
+					lines.unshift(splits[1]);
+					ghostHalfSlots.shift();
+				}
+			}
+			return circleCoords;
+		},
 		snappedLineSegments: function () {
 			var naiveLineSegments = JSON.parse(JSON.stringify(this.naiveLineSegments));
 			var origTemplateLines = this.rawLineSegments;
@@ -260,8 +312,8 @@ Vue.component('floor-preview', {
 					result.push(testLine);
 				}
 			}
-			// console.log(`${this.floorName} snappedLineSegments:`);
-			// console.log(result);
+			console.log(`${this.floorName} snappedLineSegments:`);
+			console.log(result);
 			return result;
 		},
 		snappedSlotEdges: function () {
@@ -1779,6 +1831,14 @@ Vue.component('floor-preview', {
 	:points="rect.points"
 />
 <circle
+	v-for="point in ghostHalfSlots"
+	v-show="showCircles"
+	class="st0"
+	:cx="point.x"
+	:cy="point.y"
+	r="1.5"
+/>
+<circle
 	v-for="point in naiveSlotEdges"
 	v-show="showCircles"
 	:cx="point.x"
@@ -3162,6 +3222,14 @@ Vue.component('floor-preview', {
 	v-for="rect in processedRectangles"
 	:class="getArtistColorByName(rect.artist)"
 	:points="rect.points"
+/>
+<circle
+	v-for="point in ghostHalfSlots"
+	v-show="showCircles"
+	class="st0"
+	:cx="point.x"
+	:cy="point.y"
+	r="1.5"
 />
 <circle
 	v-for="point in naiveSlotEdges"
