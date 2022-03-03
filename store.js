@@ -16,6 +16,12 @@ var store = new Vuex.Store({
 				snapInches: 18,
 			},
 		},
+		routerQueryData: {
+			l: '1969,12,1337,ROUTER_DATA_MISSING',
+			f: 'Fallback_Vuex_data-3D-1',
+			u: '1-1,2,3-1,4',
+			d: 'a-1,b,c,d-1,e-1',
+		},
 	},
 	// getters: {}, // ≈'computed' for everyone
 	mutations: {
@@ -43,6 +49,9 @@ var store = new Vuex.Store({
 			var value = args.value;
 			state.templateInfo[floorName].selectedTemplateBase = value;
 		},
+		UPDATE_ROUTER_DATA: function (state, data) {
+			state.routerQueryData = data;
+		},
 	},
 	actions: {
 		// only one additional thing can be passed besides 'context'
@@ -64,6 +73,9 @@ var store = new Vuex.Store({
 		},
 		setSelectedTemplateBase: function (context, args) {
 			context.commit('SET_SELECTED_TEMPLATE_BASE', args);
+		},
+		updateRouterData: function (context, data) {
+			context.commit('UPDATE_ROUTER_DATA', data);
 		},
 	},
 });

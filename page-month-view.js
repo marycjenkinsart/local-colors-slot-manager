@@ -5,12 +5,7 @@ var monthViewPage = Vue.component('month-view', {
 	data: function () {
 		var guestNameString = 'GUEST';
 		var query = this.$route.query; // requires the vue router
-		var origData = {
-			l: query && query.l || '1970,1,1,LABEL_ERROR',
-			f: query && query.f || 'FEAT-2D-1',
-			u: query && query.u || 'test1-1,test2,test3-1,test4',
-			d: query && query.d || 'temp1-1,temp2,temp3,temp4-1,temp1-1',
-		};
+		var origData = this.$store.state.routerQueryData;
 		return {
 			lockGuest: true,
 			move: {
@@ -115,6 +110,15 @@ var monthViewPage = Vue.component('month-view', {
 			})
 			return result;
 		},
+	},
+	created: function () {
+		var realQueryData = this.$route.query; // requires the vue router
+		var newStoreQueryData = JSON.parse(JSON.stringify(this.$store.state.routerQueryData));
+		newStoreQueryData.l = realQueryData && realQueryData.l || '2000,1,6502,Vuex_store_data_missing';
+		newStoreQueryData.f = realQueryData && realQueryData.f || 'Component_default_data-2D-1';
+		newStoreQueryData.u = realQueryData && realQueryData.u || 'I-1,II,III-1,IV';
+		newStoreQueryData.d = realQueryData && realQueryData.d || 'A-1,B,C,D-1,E-1';
+		this.$store.dispatch('updateRouterData',newStoreQueryData);
 	},
 	methods: {
 		getDisplaySlotSize: function (slotSize) {
