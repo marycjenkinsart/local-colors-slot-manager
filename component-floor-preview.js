@@ -108,7 +108,7 @@ Vue.component('floor-preview', {
 			return this.makeFancy(this.artists);
 		},
 		rawLineSegments: function () {
-			var lineSegments = templates[this.floorName]['00'];
+			var lineSegments = templates[this.floorName]['template-00'];
 			// console.log(`${this.floorName} rawLineSegments:`);
 			// console.log(lineSegments);
 			return lineSegments;
@@ -233,8 +233,6 @@ Vue.component('floor-preview', {
 				ghostHalfSlots.push(practicalSlot);
 				beginning = end;
 			}
-			console.warn(`GHOST`);
-			console.log(ghostHalfSlots);
 			// part 2
 			var circleCoords = [];
 			var lines = JSON.parse(JSON.stringify(this.rawLineSegments));
@@ -250,8 +248,6 @@ Vue.component('floor-preview', {
 				} else {
 					var workingLine = lines.shift();
 					var splits = cutLineAtDistance(workingLine, ghostHalfSlots[0].size);
-					console.error(`SPLITS`);
-					console.warn(splits);
 					circleCoords.push({
 						x: splits[0].x2,
 						y: splits[0].y2,
@@ -303,17 +299,17 @@ Vue.component('floor-preview', {
 						result.push(fusedLine);
 					} else {
 						console.error('The line fusion algorithm has been thwarted!');
-						console.error(testLine);
-						console.error(origLineSegment);
-						console.error(`beginningDifX: ${beginningDifX}, beginningDifY: ${beginningDifY}`);
-						console.error(`endDifX: ${beginningDifX}, endDifY: ${beginningDifY}`);
+						console.warn(testLine);
+						console.warn(origLineSegment);
+						console.warn(`beginningDifX: ${beginningDifX}, beginningDifY: ${beginningDifY}`);
+						console.warn(`endDifX: ${beginningDifX}, endDifY: ${beginningDifY}`);
 					}
 				} else {
 					result.push(testLine);
 				}
 			}
-			console.log(`${this.floorName} snappedLineSegments:`);
-			console.log(result);
+			// console.log(`${this.floorName} snappedLineSegments:`);
+			// console.log(result);
 			return result;
 		},
 		snappedSlotEdges: function () {
@@ -1886,6 +1882,7 @@ Vue.component('floor-preview', {
 	<path class="st0" d="M145.4,305.5c-9.6,0-19.4,10.9-19.4,21.6s5.6,16.5,13.3,16.5"/>
 	<rect x="146.2" y="110.8" class="st2" width="21.3" height="194.7"/>
 	</g>
+	<g v-if="rigidView === true">
 	<g id="show_if_slots_16_1_" v-if="slotCount === 16">
 	<rect x="51.7" y="131.6" class="st3" width="87.4" height="108.9"/>
 	<rect x="96.7" y="161.8" class="st4" width="64.3" height="71.5"/>
@@ -1922,7 +1919,6 @@ Vue.component('floor-preview', {
 	<text transform="matrix(1 0 0 1 96.3279 149.2523)" class="st7 st5 st8">NO PREVIEW!</text>
 	</g>
 	</g>
-	<g v-if="rigidView === true">
 	<g id="show_if_slots_13" v-if="slotCount === 13">
 	<g id="Slots_13">
 	<g id="_x31_3s-s-1">
