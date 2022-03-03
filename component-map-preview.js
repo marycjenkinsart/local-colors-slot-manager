@@ -123,7 +123,6 @@ Vue.component('map-preview', {
 >
 		<floor-preview
 			v-if="manage.which !== 'up'"
-			:artists="artists.down"
 			floor-name="down"
 			:origin="origins('down')"
 			:canvas-size="wrapperSize"
@@ -131,7 +130,6 @@ Vue.component('map-preview', {
 		</floor-preview>
 		<floor-preview
 			v-if="manage.which !== 'down'"
-			:artists="artists.up"
 			floor-name="up"
 			:origin="origins('up')"
 			:canvas-size="wrapperSize"

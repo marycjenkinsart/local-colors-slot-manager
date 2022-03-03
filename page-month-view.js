@@ -19,7 +19,7 @@ var monthViewPage = Vue.component('month-view', {
 			return this.$store.state.artists;
 		},
 		guestName: function () {
-			return this.$store.state.guestNameString;
+			return this.$store.state.guestNameString || 'GUEST';
 		},
 		manage: function () {
 			return this.$store.state.manage;
@@ -412,9 +412,6 @@ var monthViewPage = Vue.component('month-view', {
 		</h3>
 		<name-manager
 			floor-name="up"
-			:name-list="artists.up"
-			:guest-name-string="guestName"
-			:manage="manage.up"
 			@replace-floor="replaceFloor('up',$event)"
 		></name-manager>
 	</div>
@@ -434,9 +431,6 @@ var monthViewPage = Vue.component('month-view', {
 	</h3>
 		<name-manager
 			floor-name="down"
-			:name-list="artists.down"
-			:guest-name-string="guestName"
-			:manage="manage.down"
 			@replace-floor="replaceFloor('down',$event)"
 		></name-manager>
 	</div>

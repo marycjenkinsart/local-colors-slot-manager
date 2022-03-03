@@ -1,12 +1,5 @@
 Vue.component('floor-preview', {
-	mixins: [
-		mixins,
-	],
 	props: {
-		artists: {
-			type: Array,
-			require: true,
-		},
 		floorName: {
 			type: String,
 			require: true,
@@ -27,6 +20,9 @@ Vue.component('floor-preview', {
 		}
 	},
 	computed: {
+		artists: function () {
+			return this.$store.state.artists[this.floorName];
+		},
 		showCircles: function () {
 			return this.$store.state.showCircles;
 		},

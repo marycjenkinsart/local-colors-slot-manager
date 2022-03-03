@@ -3,17 +3,9 @@ Vue.component('name-manager', {
 		mixins,
 	],
 	props: {
-		nameList: {
-			type: Array,
-			require: true,
-		},
 		floorName: {
 			type: String,
 			require: true,
-		},
-		guestNameString: {
-			type: String,
-			require: false,
 		},
 	},
 	data: function () {
@@ -32,10 +24,15 @@ Vue.component('name-manager', {
 			artistTransfer: {
 				attempt: false,
 			},
-			guestName: this.guestNameString || 'GUEST',
 		};
 	},
 	computed: {
+		guestName: function () {
+			return this.$store.state.guestNameString || 'GUEST';
+		},
+		nameList: function () {
+			return this.$store.state.artists[this.floorName];
+		},
 		showCircles: function () {
 			return this.$store.state.showCircles;
 		},
