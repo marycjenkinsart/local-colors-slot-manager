@@ -45,6 +45,9 @@ Vue.component('name-manager', {
 		templateFloorInfo: function () {
 			return this.$store.state.templateInfo[this.floorName];
 		},
+		templateBaseOptions: function () {
+			return Object.keys(templates[this.floorName]);
+		},
 		slotCount: function () {
 			return this.nameList.length / 2;
 		},
@@ -383,6 +386,12 @@ Vue.component('name-manager', {
 				value: value,
 			});
 		},
+		setSelectedTemplateBase: function (value) {
+			this.$store.dispatch('setSelectedTemplateBase',{
+				floorName: this.floorName,
+				value: value,
+			});
+		},
 	},
 	template: /*html*/`
 <div class="name-manager">
@@ -537,6 +546,21 @@ Vue.component('name-manager', {
 						v-model="lockGuest"
 						type="checkbox"
 					/>
+				</label>
+			</p>
+			<p>
+				<label>
+					<span
+						title="Choose which wall flow to use"
+					>Template base: </span>
+					<select
+						:value="templateFloorInfo.selectedTemplateBase"
+						@input="setSelectedTemplateBase($event.target.value)"
+					>
+						<option
+							v-for="templateName in templateBaseOptions"
+						>{{templateName}}</option>
+					</select>
 				</label>
 			</p>
 			<p>

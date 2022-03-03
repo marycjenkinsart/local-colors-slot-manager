@@ -36,6 +36,9 @@ Vue.component('floor-preview', {
 		snapInches: function () {
 			return this.$store.state.templateInfo[this.floorName].snapInches;
 		},
+		selectedTemplateBase: function () {
+			return this.$store.state.templateInfo[this.floorName].selectedTemplateBase;
+		},
 		rigidView: function () {
 			return this.$store.state.rigidView;
 		},
@@ -108,7 +111,7 @@ Vue.component('floor-preview', {
 			return this.makeFancy(this.artists);
 		},
 		rawLineSegments: function () {
-			var lineSegments = templates[this.floorName]['template-00'];
+			var lineSegments = templates[this.floorName][this.selectedTemplateBase];
 			// console.log(`${this.floorName} rawLineSegments:`);
 			// console.log(lineSegments);
 			return lineSegments;

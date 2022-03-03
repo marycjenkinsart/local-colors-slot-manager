@@ -6,10 +6,12 @@ var store = new Vuex.Store({
 		manage: '',
 		templateInfo: {
 			up: {
+				selectedTemplateBase: Object.keys(templates.up)[0],
 				snapOn: true,
 				snapInches: 18,
 			},
 			down: {
+				selectedTemplateBase: Object.keys(templates.down)[0],
 				snapOn: true,
 				snapInches: 18,
 			},
@@ -36,24 +38,32 @@ var store = new Vuex.Store({
 			var value = args.value;
 			state.templateInfo[floorName].snapInches = value;
 		},
+		SET_SELECTED_TEMPLATE_BASE: function (state, args) {
+			var floorName = args.floorName;
+			var value = args.value;
+			state.templateInfo[floorName].selectedTemplateBase = value;
+		},
 	},
 	actions: {
 		// only one additional thing can be passed besides 'context'
 		// you'll have to pack multiples in an object :(
-		toggleCornerSnap: function (context, floorName) {
-			context.commit('TOGGLE_CORNER_SNAP', floorName);
-		},
-		toggleSnapCircles: function (context) {
-			context.commit('TOGGLE_SNAP_CIRCLES');
-		},
-		changeCornerSnapThreshold: function (context, args) {
-			context.commit('CHANGE_CORNER_SNAP_THRESHOLD', args);
-		},
 		setManageLabel: function (context, bool) {
 			context.commit('SET_MANAGE_LABEL', bool);
 		},
 		manageThis: function (context, value) {
 			context.commit('MANAGE_THIS', value);
+		},
+		toggleSnapCircles: function (context) {
+			context.commit('TOGGLE_SNAP_CIRCLES');
+		},
+		toggleCornerSnap: function (context, floorName) {
+			context.commit('TOGGLE_CORNER_SNAP', floorName);
+		},
+		changeCornerSnapThreshold: function (context, args) {
+			context.commit('CHANGE_CORNER_SNAP_THRESHOLD', args);
+		},
+		setSelectedTemplateBase: function (context, args) {
+			context.commit('SET_SELECTED_TEMPLATE_BASE', args);
 		},
 	},
 });
