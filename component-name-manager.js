@@ -371,6 +371,9 @@ Vue.component('name-manager', {
 		toggleCornerSnap: function () {
 			this.$store.dispatch('toggleCornerSnap',this.floorName);
 		},
+		toggleSnapCircles: function () {
+			this.$store.dispatch('toggleSnapCircles');
+		},
 		changeCornerSnapThreshold: function (value) {
 			this.$store.dispatch('changeCornerSnapThreshold',{
 				floorName: this.floorName,
@@ -536,7 +539,7 @@ Vue.component('name-manager', {
 			<p>
 				<label>
 					<span
-						title="Toggle corner snapping"
+						title="Control snapping to corners"
 					>Snap: </span>
 					<input
 						type="checkbox"
@@ -544,14 +547,28 @@ Vue.component('name-manager', {
 						@input="toggleCornerSnap"
 					/>
 				</label>
-			</p>
-			<p>
-				<label>
-					<span>Snap inches: </span>
+				<label
+					style="margin-left: 8px;"
+				>
+					<span
+						title="Slot 'islands' smaller than this will be snapped to the nearest edge"
+					>Inches: </span>
 					<input
 						type="number"
 						:value="templateFloorInfo.snapInches"
 						@input="changeCornerSnapThreshold($event.target.value)"
+					/>
+				</label>
+			</p>
+			<p>
+				<label>
+					<span
+						title="Displays the original slot edges before snapping behavior is applied"
+					>Show pre-snapped borders: </span>
+					<input
+						type="checkbox"
+						:checked="templateFloorInfo.showCircles"
+						@input="toggleSnapCircles"
 					/>
 				</label>
 			</p>

@@ -27,6 +27,15 @@ Vue.component('floor-preview', {
 		}
 	},
 	computed: {
+		showCircles: function () {
+			return this.$store.state.showCircles;
+		},
+		snapOn: function () {
+			return this.$store.state.templateInfo[this.floorName].snapOn;
+		},
+		snapInches: function () {
+			return this.$store.state.templateInfo[this.floorName].snapInches;
+		},
 		rigidView: function () {
 			return this.$store.state.rigidView;
 		},
@@ -100,6 +109,8 @@ Vue.component('floor-preview', {
 		},
 		rawLineSegments: function () {
 			var lineSegments = templates[this.floorName]['00'];
+			console.log(`${this.floorName} rawLineSegments:`);
+			console.log(lineSegments);
 			return lineSegments;
 		},
 		rawLineSegmentLengths: function () {
@@ -108,7 +119,7 @@ Vue.component('floor-preview', {
 			});
 			return lengths;
 		},
-		processedArtistSlots: function () {
+		processedArtistSlots: function () { // TODO: make this "raw" and add "adjustments" to this
 			var totalLength = this.rawLineSegmentLengths.reduce(function (prev, cur) {
 				return prev + cur;
 			});
@@ -132,10 +143,11 @@ Vue.component('floor-preview', {
 			})
 			return result;
 		},
-		processedLineSegments: function () {
+		naiveLineSegments: function () {
+			// literal interpretation, resulting in ghastly "islands" that must be removed later
 			var lines = JSON.parse(JSON.stringify(this.rawLineSegments));
 			lines.forEach(function (line, index) {
-				line.index = index;
+				line.origLineSegmentIndex = index;
 			})
 			var artists;
 			artists = JSON.parse(JSON.stringify(this.processedArtistSlots));
@@ -159,15 +171,19 @@ Vue.component('floor-preview', {
 				}
 			}
 			lines.forEach(function (line) {
+				// adding the last artist name to the remainder of line segments
+				// so we can color it correctly later
 				var insert = line;
 				insert.name = insertName;
 				processedLines.push(insert);
 			})
+			console.log(`${this.floorName} naiveLineSegments:`);
+			console.log(processedLines);
 			return processedLines;
 		},
-		slotBordersToDraw: function () {
+		naiveSlotEdges: function () { // drawn with black dots
 			var result = [];
-			var workingLines = this.processedLineSegments;
+			var workingLines = this.naiveLineSegments;
 			for (var index = 1; index < workingLines.length; index++) {
 				var first = workingLines[index - 1];
 				var second = workingLines[index];
@@ -192,12 +208,93 @@ Vue.component('floor-preview', {
 					result.push(insert);
 				}
 			}
+			console.log(`${this.floorName} naiveSlotEdges:`);
+			console.log(result);
+			return result;
+		},
+		snappedLineSegments: function () {
+			var naiveLineSegments = JSON.parse(JSON.stringify(this.naiveLineSegments));
+			var origTemplateLines = this.rawLineSegments;
+			var result = [];
+			var snapDistance = inchesToTemplateNumber(this.snapInches);
+			while (naiveLineSegments.length > 0) {
+				var testLine = naiveLineSegments.shift();
+				var length = getLengthFromLineCoords(testLine);
+				var origLineSegment = origTemplateLines[testLine.origLineSegmentIndex];
+				if (
+					length < snapDistance
+					&& length !== getLengthFromLineCoords(origLineSegment)
+				) {
+					var beginningDifX = Math.abs(testLine.x1 - origLineSegment.x1);
+					var beginningDifY = Math.abs(testLine.y1 - origLineSegment.y1);
+					var endDifX = Math.abs(testLine.x2 - origLineSegment.x2);
+					var endDifY = Math.abs(testLine.y2 - origLineSegment.y2);
+					if (
+						beginningDifX < 0.1
+						&& beginningDifY < 0.1
+					) {
+						var lineAfter = naiveLineSegments.shift();
+						var fusedLine = makeFusedLine(testLine, lineAfter);
+						fusedLine.name = lineAfter.name;
+						fusedLine.fusedX2 = testLine.x2;
+						fusedLine.fusedY2 = testLine.y2;
+						result.push(fusedLine);
+					} else if (
+						endDifX < 0.1
+						&& endDifY < 0.1
+					) {
+						var lineBefore = result.pop();
+						var fusedLine = makeFusedLine(lineBefore, testLine);
+						fusedLine.name = lineBefore.name;
+						fusedLine.fusedX1 = testLine.x1;
+						fusedLine.fusedY1 = testLine.y1;
+						result.push(fusedLine);
+					} else {
+						console.error('The line fusion algorithm has been thwarted!');
+						console.error(testLine);
+						console.error(origLineSegment);
+						console.error(`beginningDifX: ${beginningDifX}, beginningDifY: ${beginningDifY}`);
+						console.error(`endDifX: ${beginningDifX}, endDifY: ${beginningDifY}`);
+					}
+				} else {
+					result.push(testLine);
+				}
+			}
+			console.log(`${this.floorName} snappedLineSegments:`);
+			console.log(result);
+			return result;
+		},
+		snappedSlotEdges: function () {
+			var result = [];
+			var fusedPoints = [];
+			var origSlotEdges = this.naiveSlotEdges;
+			this.snappedLineSegments.forEach(function (fusedLine) {
+				if (fusedLine.fusedX1) {
+					var coords = fusedLine.fusedX1 + ',' + fusedLine.fusedY1
+					fusedPoints.push(coords);
+				}
+				if (fusedLine.fusedX2) {
+					var coords = fusedLine.fusedX2 + ',' + fusedLine.fusedY2
+					fusedPoints.push(coords);
+				}
+			})
+			origSlotEdges.forEach(function (edge) {
+				var testEdge = edge.x + ',' + edge.y;
+				var check = fusedPoints.includes(testEdge);
+				if (!check) {
+					result.push(edge);
+				}
+			})
 			return result;
 		},
 		processedDottedLines: function () {
 			var result = [];
+			var slotEdges = this.naiveSlotEdges;
+			if (this.snapOn === true) {
+				slotEdges = this.snappedSlotEdges;
+			}
 			var lineLength = this.dottedLineLength;
-			this.slotBordersToDraw.forEach(function (line) {
+			slotEdges.forEach(function (line) {
 				var extension = lineToRightLineAtOrigin(line.line, lineLength, line.x, line.y);
 				var insert = {
 					x1: line.x,
@@ -212,7 +309,11 @@ Vue.component('floor-preview', {
 		processedRectangles: function () {
 			var result = [];
 			var rectWidth = this.rectWidth
-			this.processedLineSegments.forEach(function (line) {
+			var lineSegments = this.naiveLineSegments;
+			if (this.snapOn === true) {
+				lineSegments = this.snappedLineSegments;
+			}
+			lineSegments.forEach(function (line) {
 				var rect = lineToLeftRectangle(line, rectWidth);
 				var rectPoints = rect.x1 + ',' + rect.y1 + ' ' +
 					rect.x2 + ',' + rect.y2 + ' ' +
@@ -1677,6 +1778,13 @@ Vue.component('floor-preview', {
 	:class="getArtistColorByName(rect.artist)"
 	:points="rect.points"
 />
+<circle
+	v-for="point in naiveSlotEdges"
+	v-show="showCircles"
+	:cx="point.x"
+	:cy="point.y"
+	r="1.5"
+/>
 </g>
 </svg>
 </g>
@@ -3054,6 +3162,13 @@ Vue.component('floor-preview', {
 	v-for="rect in processedRectangles"
 	:class="getArtistColorByName(rect.artist)"
 	:points="rect.points"
+/>
+<circle
+	v-for="point in naiveSlotEdges"
+	v-show="showCircles"
+	:cx="point.x"
+	:cy="point.y"
+	r="1.5"
 />
 </g>
 	</svg>  

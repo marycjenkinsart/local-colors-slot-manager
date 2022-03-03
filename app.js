@@ -94,6 +94,18 @@ var cutLineAtDistance = function (coords, distance) {
 	return result;
 }
 
+var makeFusedLine = function (line1, line2) {
+	var result = {
+		origLine1: line1,
+		origLine2: line2,
+		x1: line1.x1,
+		y1: line1.y1,
+		x2: line2.x2,
+		y2: line2.y2,
+	};
+	return result;
+}
+
 var lineToLeftRectangle = function (coords, width) {
 	var normalizedTangent = getNormalizedTangent(coords);
 	var xExtension = normalizedTangent.x * width;
