@@ -16,11 +16,46 @@ var store = new Vuex.Store({
 				snapInches: 18,
 			},
 		},
-		routerQueryData: {
-			l: '1969,12,1337,ROUTER_DATA_MISSING',
-			f: 'Fallback_Vuex_data-3D-1',
-			u: '1-1,2,3-1,4',
-			d: 'a-1,b,c,d-1,e-1',
+		rotationLabel: {
+			year: 1970,
+			month: 1,
+			version: 255,
+			custom: 'Default Label Value',
+			editing: false,
+		},
+		guestNameString: 'GUEST',
+		artists: {
+			'feat': [ // can be more than one! or zero!
+				{
+					name:'Teri',
+					type: '2D',
+					origSlotSize: 1,
+				},
+			],
+			'up': [
+				'GUEST',
+				'Bill',
+				'Bill',
+				'J. Clay',
+				'Jeff M.',
+				'Jeff M.',
+				'Emily',
+				'Emily',
+				'Blaine',
+				'Blaine',
+			],
+			'down': [
+				'Adam',
+				'Nuha',
+				'Nuha',
+				'Pam',
+				'Pam',
+				'Mary',
+				'Mary',
+				'Jan',
+				'Jan',
+				'Adam',
+			],
 		},
 	},
 	// getters: {}, // ≈'computed' for everyone
@@ -49,8 +84,11 @@ var store = new Vuex.Store({
 			var value = args.value;
 			state.templateInfo[floorName].selectedTemplateBase = value;
 		},
-		UPDATE_ROUTER_DATA: function (state, data) {
-			state.routerQueryData = data;
+		UPDATE_LABEL_OBJECT: function (state, data) {
+			state.rotationLabel = data;
+		},
+		UPDATE_ARTISTS_OBJECT: function (state, data) {
+			state.artists = data;
 		},
 	},
 	actions: {
@@ -74,8 +112,11 @@ var store = new Vuex.Store({
 		setSelectedTemplateBase: function (context, args) {
 			context.commit('SET_SELECTED_TEMPLATE_BASE', args);
 		},
-		updateRouterData: function (context, data) {
-			context.commit('UPDATE_ROUTER_DATA', data);
+		updateLabelObject: function (context, data) {
+			context.commit('UPDATE_LABEL_OBJECT', data);
+		},
+		updateArtistsObject: function (context, data) {
+			context.commit('UPDATE_ARTISTS_OBJECT', data);
 		},
 	},
 });

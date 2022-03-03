@@ -3,9 +3,6 @@ var monthViewPage = Vue.component('month-view', {
 		mixins,
 	],
 	data: function () {
-		var guestNameString = 'GUEST';
-		var query = this.$route.query; // requires the vue router
-		var origData = this.$store.state.routerQueryData;
 		return {
 			lockGuest: true,
 			move: {
@@ -17,56 +14,18 @@ var monthViewPage = Vue.component('month-view', {
 				'up': false,
 				'down': false,
 			},
-			guestName: guestNameString,
-			rotationLabel: makeLabelUncompact(origData.l),
-			// rotationLabel: {
-			// 	year: 2021,
-			// 	month: 12,
-			// 	version: 1,
-			// 	custom: '',
-			// 	editing: false,
-			// },
-			artists: {
-				feat: makeCompactFeaturedUnfancy(origData.f),
-				up: makeCompactFloorUnfancy(origData.u),
-				down: makeCompactFloorUnfancy(origData.d),
-			},
-			// artists: {
-			// 	'feat': [ // can be more than one! or zero!
-			// 		{
-			// 			name:'Teri',
-			// 			type: '2D',
-			// 			origSlotSize: 1,
-			// 		},
-			// 	],
-			// 	'up': [
-			// 		guestNameString,
-			// 		'Bill',
-			// 		'Bill',
-			// 		'J. Clay',
-			// 		'Jeff M.',
-			// 		'Jeff M.',
-			// 		'Emily',
-			// 		'Emily',
-			// 		'Blaine',
-			// 		'Blaine',
-			// 	],
-			// 	'down': [
-			// 		'Adam',
-			// 		'Nuha',
-			// 		'Nuha',
-			// 		'Pam',
-			// 		'Pam',
-			// 		'Mary',
-			// 		'Mary',
-			// 		'Jan',
-			// 		'Jan',
-			// 		'Adam',
-			// 	],
-			// },
 		}
 	},
 	computed: {
+		rotationLabel: function () {
+			return this.$store.state.rotationLabel;
+		},
+		artists: function () {
+			return this.$store.state.artists;
+		},
+		guestName: function () {
+			return this.$store.state.guestNameString;
+		},
 		manageLabel: function () {
 			return this.$store.state.manageLabel;
 		},
@@ -112,28 +71,33 @@ var monthViewPage = Vue.component('month-view', {
 		},
 	},
 	created: function () {
-		var realQueryData = this.$route.query; // requires the vue router
-		var newStoreQueryData = JSON.parse(JSON.stringify(this.$store.state.routerQueryData));
-		newStoreQueryData.l = realQueryData && realQueryData.l || '2000,1,6502,Vuex_store_data_missing';
-		newStoreQueryData.f = realQueryData && realQueryData.f || 'Component_default_data-2D-1';
-		newStoreQueryData.u = realQueryData && realQueryData.u || 'I-1,II,III-1,IV';
-		newStoreQueryData.d = realQueryData && realQueryData.d || 'A-1,B,C,D-1,E-1';
-		this.$store.dispatch('updateRouterData',newStoreQueryData);
+		var actualQueryData = this.$route.query;
+		var patchedQueryData = {};
+		var artistsFromQuery = {};
+		var defaultData = {
+			l: '1969,12,1337,No_router_query_data_found',
+			f: 'no_router_query_data_found-3D-1',
+			u: 'no-1,router,query-1,data,found',
+			d: 'No-1,Rrouter,Query,Data,Found-1',
+		}
+		Object.keys(defaultData).forEach(function (key) {
+			patchedQueryData[key] = actualQueryData && actualQueryData[key] || defaultData[key];
+		})
+		var rotationLabel = makeLabelUncompact(patchedQueryData.l);
+		artistsFromQuery.feat = makeCompactFeaturedUnfancy(patchedQueryData.f);
+		artistsFromQuery.up = makeCompactFloorUnfancy(patchedQueryData.u);
+		artistsFromQuery.down = makeCompactFloorUnfancy(patchedQueryData.d);
+		this.$store.dispatch('updateLabelObject',rotationLabel);
+		this.$store.dispatch('updateArtistsObject',artistsFromQuery);
 	},
 	methods: {
-		getDisplaySlotSize: function (slotSize) {
-			if (slotSize === 1) {
-				return '1';
-			} else if (slotSize === 0.5) {
-				return '½';
-			}
+		replaceFloor: function (floorName, floorData) {
+			var artists = JSON.parse(JSON.stringify(this.$store.state.artists));
+			artists[floorName] = floorData;
+			this.replaceArtists(artists);
 		},
-		replaceFloor: function (floorName, event) {
-			this.artists[floorName] = event;
-			// console.log(this.compactFloor);
-		},
-		replaceArtists: function (event) {
-			this.artists = event;
+		replaceArtists: function (artists) {
+			this.$store.dispatch('updateArtistsObject',artists);
 		},
 		swapFloorsButton: function () {
 			if (this.lockGuest) {
@@ -147,7 +111,7 @@ var monthViewPage = Vue.component('month-view', {
 			newArtists.feat = this.artists.feat;
 			newArtists.up = this.artists.down;
 			newArtists.down = this.artists.up;
-			this.artists = newArtists;
+			this.$store.dispatch('updateArtistsObject',newArtists);
 		},
 		freezeGuestAndSwapFloors: function () {
 			var guestName = this.guestName;
@@ -170,7 +134,7 @@ var monthViewPage = Vue.component('month-view', {
 				}
 			})
 			var newArtists = {};
-			newArtists.feat = this.artists.feat;
+			newArtists.feat = JSON.parse(JSON.stringify(this.artists.feat));
 			newArtists.up = downSansGuests;
 			newArtists.down = upSansGuests;
 			downGuestIndices.forEach(function (guestIndex) {
@@ -179,7 +143,7 @@ var monthViewPage = Vue.component('month-view', {
 			upGuestIndices.forEach(function (guestIndex) {
 				newArtists.up.splice(guestIndex, 0, guestName);
 			})
-			this.artists = newArtists;
+			this.replaceArtists(newArtists);
 		},
 		moveArtistToOtherFloorAttempt: function () {
 			var targetFloor = this.moveFloor;
@@ -213,7 +177,7 @@ var monthViewPage = Vue.component('month-view', {
 					strippedFloor.push(halfSlot);
 				}
 			})
-			this.artists[otherFloor] = strippedFloor;
+			this.replaceFloor(otherFloor, strippedFloor);
 			this.move.message = `${this.moveName} moved ${this.moveFloor}stairs!`;
 		},
 		moveArtistToOtherFloorFail: function () {
