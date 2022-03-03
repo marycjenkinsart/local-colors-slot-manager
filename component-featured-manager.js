@@ -28,8 +28,8 @@ Vue.component('featured-manager', {
 		};
 	},
 	computed: {
-		manage: function () {
-			return this.$store.state.manageWhich === 'feat';
+		manageMe: function () {
+			return this.$store.state.manage.which === 'feat';
 		},
 		checkEmptyCustomName: function () {
 			if (this.customName.length > 1) {
@@ -210,7 +210,7 @@ Vue.component('featured-manager', {
 	},
 	template: /*html*/`
 <div class="featured-manager">
-	<div v-if="!manage">
+	<div v-if="!manageMe">
 		<ul>
 			<li v-for="(artist, index) in artists.feat">
 				<span v-if="artists.feat[index].type === 'group'">Theme: </span>
@@ -290,7 +290,7 @@ Vue.component('featured-manager', {
 		class="manager-inner"
 		v-if="
 			!adding2D && !adding3D && !addingGroup && !message
-			&& manage
+			&& manageMe
 		"
 		>
 		<p>

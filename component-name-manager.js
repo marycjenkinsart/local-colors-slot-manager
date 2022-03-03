@@ -39,8 +39,8 @@ Vue.component('name-manager', {
 		showCircles: function () {
 			return this.$store.state.showCircles;
 		},
-		manage: function () {
-			return this.$store.state.manageWhich === this.floorName;
+		manageMe: function () {
+			return this.$store.state.manage.which === this.floorName;
 		},
 		templateFloorInfo: function () {
 			return this.$store.state.templateInfo[this.floorName];
@@ -395,7 +395,7 @@ Vue.component('name-manager', {
 	},
 	template: /*html*/`
 <div class="name-manager">
-	<div v-if="!manage">
+	<div v-if="!manageMe">
 		<ul>
 			<li
 				v-for="(artist, index) in fancyNameList"
@@ -518,7 +518,7 @@ Vue.component('name-manager', {
 	</div>
 	<div
 		class="manager-inner"
-		v-if="manage && !editName.editing && !newName.editing && !artistTransfer.attempt"
+		v-if="manageMe && !editName.editing && !newName.editing && !artistTransfer.attempt"
 	>
 		<div>
 			<p>

@@ -9,11 +9,6 @@ var monthViewPage = Vue.component('month-view', {
 				name: '',
 				message: '',
 			},
-			manage: {
-				'feat': false,
-				'up': false,
-				'down': false,
-			},
 		}
 	},
 	computed: {
@@ -26,11 +21,8 @@ var monthViewPage = Vue.component('month-view', {
 		guestName: function () {
 			return this.$store.state.guestNameString;
 		},
-		manageLabel: function () {
-			return this.$store.state.manageLabel;
-		},
-		manageWhich: function () {
-			return this.$store.state.manageWhich;
+		manage: function () {
+			return this.$store.state.manage;
 		},
 		uniqueUpstairs: function () {
 			return this.artists.up.filter(getUnique).sort();
@@ -250,13 +242,13 @@ var monthViewPage = Vue.component('month-view', {
 	</h2>
 	<p>
 		<button
-			:disabled="manageLabel"
+			:disabled="manage.label"
 			title="Change the label for this rotation"
 			@click="editRotationNameStart"
 		>edit rotation name</button>
 	</p>
 	<div
-		v-if="manageLabel"
+		v-if="manage.label"
 		class="manager-box"
 	>
 		<div
@@ -387,11 +379,11 @@ var monthViewPage = Vue.component('month-view', {
 				Featured
 			</span>
 			<button
-				v-show="manageWhich !== 'feat'"
+				v-show="manage.which !== 'feat'"
 				@click="manageThis('feat')"
 			>Manage</button>
 			<button
-				v-show="manageWhich === 'feat'"
+				v-show="manage.which === 'feat'"
 				@click="manageThis('')"
 			>DONE</button>
 		</h3>
@@ -410,11 +402,11 @@ var monthViewPage = Vue.component('month-view', {
 				{{displayFloor('up')}} ({{artists.up.length / 2}})
 			</span>
 			<button
-				v-show="manageWhich !== 'up'"
+				v-show="manage.which !== 'up'"
 				@click="manageThis('up')"
 			>Manage</button>
 			<button
-				v-show="manageWhich === 'up'"
+				v-show="manage.which === 'up'"
 				@click="manageThis('')"
 			>DONE</button>
 		</h3>
@@ -432,11 +424,11 @@ var monthViewPage = Vue.component('month-view', {
 			{{displayFloor('down')}} ({{artists.down.length / 2}})
 		</span>
 		<button
-			v-show="manageWhich !== 'down'"
+			v-show="manage.which !== 'down'"
 			@click="manageThis('down')"
 		>Manage</button>
 		<button
-			v-show="manageWhich === 'down'"
+			v-show="manage.which === 'down'"
 			@click="manageThis('')"
 		>DONE</button>
 	</h3>

@@ -24,14 +24,14 @@ Vue.component('map-preview', {
 		},
 	},
 	computed: {
-		manageWhich: function () {
-			return this.$store.state.manageWhich;
+		manage: function () {
+			return this.$store.state.manage;
 		},
 		overallView: function () {
-			return !(this.manageWhich === 'up' || this.manageWhich === 'down');
+			return !(this.manage.which === 'up' || this.manage.which === 'down');
 		},
 		wrapperSize: function () {
-			var lookup = svgSizes[this.manageWhich] || svgSizes.combined;
+			var lookup = svgSizes[this.manage.which] || svgSizes.combined;
 			return {
 				x: lookup.x,
 				y: lookup.y,
@@ -105,7 +105,7 @@ Vue.component('map-preview', {
 	methods: {
 		origins: function (floor) {
 			var result = offsets[floor]
-			if (this.manageWhich === floor) {
+			if (this.manage.which === floor) {
 				result = {
 					x: 0,
 					y: 0,
@@ -122,7 +122,7 @@ Vue.component('map-preview', {
 	:viewBox="viewBoxString"
 >
 		<floor-preview
-			v-if="manageWhich !== 'up'"
+			v-if="manage.which !== 'up'"
 			:artists="artists.down"
 			floor-name="down"
 			:origin="origins('down')"
@@ -130,7 +130,7 @@ Vue.component('map-preview', {
 		>
 		</floor-preview>
 		<floor-preview
-			v-if="manageWhich !== 'down'"
+			v-if="manage.which !== 'down'"
 			:artists="artists.up"
 			floor-name="up"
 			:origin="origins('up')"

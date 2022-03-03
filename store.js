@@ -2,8 +2,10 @@ var store = new Vuex.Store({
 	state: {
 		rigidView: true, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
 		showCircles: true,
-		manageLabel: false,
-		manageWhich: '',
+		manage: {
+			label: false,
+			which: '',
+		},
 		templateInfo: {
 			up: {
 				selectedTemplateBase: Object.keys(templates.up)[0],
@@ -62,10 +64,10 @@ var store = new Vuex.Store({
 	mutations: {
 		// this is what actually changes the state
 		SET_MANAGE_LABEL: function (state, bool) {
-			state.manageLabel = bool;
+			state.manage.label = bool;
 		},
 		MANAGE_THIS: function (state, value) {
-			state.manageWhich = value;
+			state.manage.which = value;
 		},
 		TOGGLE_SNAP_CIRCLES: function (state) {
 			state.showCircles = !state.showCircles;
