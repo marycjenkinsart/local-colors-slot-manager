@@ -200,8 +200,9 @@ var getLengthFromLineCoords = function (l) { // l = lineObj
 var getNormalizedTangent = function (lineObj) {
 	var difX = lineObj.x2 - lineObj.x1;
 	var difY = lineObj.y2 - lineObj.y1;
-	var xForTangent = difY;
-	var yForTangent = -difX;
+	var reversal = lineObj.ccw ? -1 : 1;
+	var xForTangent = reversal * difY;
+	var yForTangent = reversal * -difX;
 	var tangentRadians = Math.atan2(yForTangent, xForTangent);
 	return {
 		x: Math.cos(tangentRadians),
@@ -238,6 +239,7 @@ var makeFusedLine = function (line1, line2) {
 		y1: line1.y1,
 		x2: line2.x2,
 		y2: line2.y2,
+		ccw: !!line1.ccw,
 	};
 	return result;
 }
