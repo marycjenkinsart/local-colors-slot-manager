@@ -65,7 +65,7 @@ Object.keys(rawTemplates).forEach(function (floorName) {
 			attributes.forEach(function (attribute) {
 				var attributeSplits = attribute.split('=');
 				if (attributeSplits[1].includes('ccw')) {
-					parsedLine.direction = 'ccw'
+					parsedLine.ccw = true;
 				}
 				if (
 					attributeSplits[0].includes('x')

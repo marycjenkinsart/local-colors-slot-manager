@@ -20,11 +20,11 @@ Vue.component('floor-preview', {
 		}
 	},
 	computed: {
-		artists: function () {
+		nameList: function () {
 			return this.$store.state.artists[this.floorName];
 		},
 		showCircles: function () {
-			return this.$store.state.advancedMode.showCircles;
+			return this.$store.state.advanced.showCircles;
 		},
 		snapOn: function () {
 			return this.$store.state.templateInfo[this.floorName].snapOn;
@@ -36,52 +36,52 @@ Vue.component('floor-preview', {
 			return this.$store.state.templateInfo[this.floorName].selectedTemplateBase;
 		},
 		rigidView: function () {
-			return this.$store.state.advancedMode.rigidView;
+			return this.$store.state.advanced.rigidView;
 		},
 		slot01: function () {
-			return this.artists[0] || 'ERROR';
+			return this.nameList[0] || 'ERROR';
 		},
 		slot02: function () {
-			return this.artists[1] || 'ERROR';
+			return this.nameList[1] || 'ERROR';
 		},
 		slot03: function () {
-			return this.artists[2] || 'ERROR';
+			return this.nameList[2] || 'ERROR';
 		},
 		slot04: function () {
-			return this.artists[3] || 'ERROR';
+			return this.nameList[3] || 'ERROR';
 		},
 		slot05: function () {
-			return this.artists[4] || 'ERROR';
+			return this.nameList[4] || 'ERROR';
 		},
 		slot06: function () {
-			return this.artists[5] || 'ERROR';
+			return this.nameList[5] || 'ERROR';
 		},
 		slot07: function () {
-			return this.artists[6] || 'ERROR';
+			return this.nameList[6] || 'ERROR';
 		},
 		slot08: function () {
-			return this.artists[7] || 'ERROR';
+			return this.nameList[7] || 'ERROR';
 		},
 		slot09: function () {
-			return this.artists[8] || 'ERROR';
+			return this.nameList[8] || 'ERROR';
 		},
 		slot10: function () {
-			return this.artists[9] || 'ERROR';
+			return this.nameList[9] || 'ERROR';
 		},
 		slot11: function () {
-			return this.artists[10] || 'ERROR';
+			return this.nameList[10] || 'ERROR';
 		},
 		slot12: function () {
-			return this.artists[11] || 'ERROR';
+			return this.nameList[11] || 'ERROR';
 		},
 		slot13: function () {
-			return this.artists[12] || 'ERROR';
+			return this.nameList[12] || 'ERROR';
 		},
 		slotCount: function () {
-			return this.artists.length;
+			return this.nameList.length;
 		},
 		uniqueArtists: function () {
-			var result = this.artists.filter(getUnique);
+			var result = this.nameList.filter(getUnique);
 			return result;
 		},
 		slotColors: function () {
@@ -103,8 +103,8 @@ Vue.component('floor-preview', {
 			result += x + ' ' + y;
 			return result;
 		},
-		fancyArtists: function () {
-			return makeFancy(this.artists);
+		fancyNameList: function () {
+			return this.$store.getters.fancyArtists[this.floorName];
 		},
 		rawLineSegments: function () {
 			var lineSegments = templates[this.floorName][this.selectedTemplateBase];
@@ -122,12 +122,12 @@ Vue.component('floor-preview', {
 			var totalLength = this.rawLineSegmentLengths.reduce(function (prev, cur) {
 				return prev + cur;
 			});
-			var totalHalfSlots = this.artists.length;
+			var totalHalfSlots = this.nameList.length;
 			var halfSlotSize = totalLength / totalHalfSlots;
 			var result = [];
 			var beginning = 0;
 			var end = 0;
-			this.fancyArtists.forEach(function (artist) {
+			this.fancyNameList.forEach(function (artist) {
 				var artistWidth = artist.slotSize * 2 * halfSlotSize;
 				end += artistWidth;
 				var practicalSlot = {
@@ -216,7 +216,7 @@ Vue.component('floor-preview', {
 			var totalLength = this.rawLineSegmentLengths.reduce(function (prev, cur) {
 				return prev + cur;
 			});
-			var totalHalfSlots = this.artists.length;
+			var totalHalfSlots = this.nameList.length;
 			var halfSlotSize = totalLength / totalHalfSlots;
 			var ghostHalfSlots = [];
 			var beginning = 0;
@@ -377,7 +377,7 @@ Vue.component('floor-preview', {
 	},
 	methods: {
 		getArtistColorByIndex: function (index) {
-			var slotName = this.artists[index - 1];
+			var slotName = this.nameList[index - 1];
 			var colorIndex = this.uniqueArtists.findIndex(function (item) {
 				return item === slotName;
 			});

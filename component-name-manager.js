@@ -34,13 +34,13 @@ Vue.component('name-manager', {
 			return this.$store.state.artists[this.floorName];
 		},
 		showCircles: function () {
-			return this.$store.state.advancedMode.showCircles;
+			return this.$store.state.advanced.showCircles;
 		},
 		advancedModeOn: function () {
-			return this.$store.state.advancedMode.advancedModeOn;
+			return this.$store.state.advanced.advancedModeOn;
 		},
 		rigidViewOn: function () {
-			return this.$store.state.advancedMode.rigidView;
+			return this.$store.state.advanced.rigidView;
 		},
 		manageMe: function () {
 			return this.$store.state.manage.which === this.floorName;
@@ -58,7 +58,7 @@ Vue.component('name-manager', {
 			return this.nameList.includes(this.guestName);
 		},
 		fancyNameList: function () {
-			return makeFancy(this.nameList);
+			return this.$store.getters.fancyArtists[this.floorName];
 		},
 		forbiddenNewNames: function () {
 			var unique = this.nameList.filter(getUnique);

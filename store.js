@@ -1,6 +1,6 @@
 var store = new Vuex.Store({
 	state: {
-		advancedMode: {
+		advanced: {
 			advancedModeOn: false,
 			rigidView: true, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
 			showCircles: false,
@@ -86,17 +86,23 @@ var store = new Vuex.Store({
 			}
 			return result;
 		},
+		fancyArtists: function (state) {
+			return {
+				up: makeFancy(state.artists.up),
+				down: makeFancy(state.artists.down),
+			};
+		}
 	},
 	mutations: {
 		// this is what actually changes the state
 		TOGGLE_RIGID_VIEW: function (state) {
-			state.advancedMode.rigidView = !state.advancedMode.rigidView;
+			state.advanced.rigidView = !state.advanced.rigidView;
 		},
 		TOGGLE_ADVANCED_MODE: function (state) {
-			state.advancedMode.advancedModeOn = !state.advancedMode.advancedModeOn;
+			state.advanced.advancedModeOn = !state.advanced.advancedModeOn;
 		},
 		SET_ADVANCED_MODE: function (state, bool) {
-			state.advancedMode.advancedModeOn = bool;
+			state.advanced.advancedModeOn = bool;
 		},
 		SET_MANAGE_LABEL: function (state, bool) {
 			state.manage.label = bool;
@@ -105,7 +111,7 @@ var store = new Vuex.Store({
 			state.manage.which = value;
 		},
 		TOGGLE_SNAP_CIRCLES: function (state) {
-			state.advancedMode.showCircles = !state.advancedMode.showCircles;
+			state.advanced.showCircles = !state.advanced.showCircles;
 		},
 		TOGGLE_CORNER_SNAP: function (state, floorName) {
 			var floor = state.templateInfo[floorName];
