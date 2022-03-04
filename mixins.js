@@ -32,26 +32,5 @@ var mixins = {
 			result = array.join('');
 			return result;
 		},
-		getLongLabel: function (labelObject) {
-			var year = labelObject.year || 1970;
-			var month = labelObject.month || 13;
-			var version = labelObject.version || 1;
-			var custom = labelObject.custom || '';
-			var result = '';
-			if (custom.length) {
-				result = custom;
-			} else {
-				var monthMap = [
-					'Jan', 'Feb', 'Mar', 'April', 'May', 'June',
-					'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
-				]
-				var monthName = monthMap[parseInt(month) - 1] || 'ERROR';
-				result = monthName + ' ' + year
-				if (version > 1) {
-					result += ' v' + version;
-				}
-			}
-			return result;
-		},
 	}
 }

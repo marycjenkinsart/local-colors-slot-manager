@@ -3,10 +3,6 @@ Vue.component('featured-manager', {
 		mixins,
 	],
 	props: {
-		artists: {
-			type: Object,
-			require: true,
-		},
 		uniqueUpstairs: {
 			type: Array,
 			require: true,
@@ -28,6 +24,9 @@ Vue.component('featured-manager', {
 		};
 	},
 	computed: {
+		artists: function () {
+			return this.$store.state.artists;
+		},
 		manageMe: function () {
 			return this.$store.state.manage.which === 'feat';
 		},
@@ -96,21 +95,11 @@ Vue.component('featured-manager', {
 			})
 			return result;
 		},
-		// displayFeatured: function () {
-		//	 var result = 'No featured artists found!'
-		//	 var featureds = this.artists.feat
-		//	 if (featureds.length > 0) {
-		//		 result = featureds[0].name;
-		//	 }
-		//	 if (featureds.length > 1) {
-		//		 for (let index = 1; index < featureds.length; index++) {
-		//			 result += ', ' + featureds[index].name;
-		//		 }
-		//	 }
-		//	 return result;
-		// },
 	},
 	methods: {
+		updateArtistsObject (artistsObject) {
+			this.$store.dispatch('updateArtistsObject',artistsObject);
+		},
 		removeArtist: function (artistName) {
 			var newObject = JSON.parse(JSON.stringify(this.artists));
 			var newFeatured = [];
@@ -120,7 +109,7 @@ Vue.component('featured-manager', {
 				}
 			})
 			newObject.feat = newFeatured;
-			this.$emit('replace-artists', newObject);
+			this.updateArtistsObject(newObject);
 		},
 		moveArtistToFloor: function (artistName, floor) {
 			var newObject = JSON.parse(JSON.stringify(this.artists));
@@ -137,7 +126,7 @@ Vue.component('featured-manager', {
 			for (let index = 0; index < halfSlotCount; index++) {
 				newObject[floor].push(artistName);
 			}
-			this.$emit('replace-artists', newObject);
+			this.updateArtistsObject(newObject);
 		},
 		add2Dartist: function () {
 			this.adding2D = true;
@@ -165,7 +154,7 @@ Vue.component('featured-manager', {
 				origSlotSize: slotSize,
 			})
 			this.message = this.moveName + ' was added to the featured show!';
-			this.$emit('replace-artists', newObject);
+			this.updateArtistsObject(newObject);
 			this.move2Dcancel();
 		},
 		addingCustomConfirm: function () {
@@ -185,7 +174,7 @@ Vue.component('featured-manager', {
 			} else if (this.adding3D) {
 				this.message = '3D artist "' + this.customName + '" added!';
 			}
-			this.$emit('replace-artists', newObject);
+			this.updateArtistsObject(newObject);
 			this.addingCustomCancel();
 		},
 		addingCustomCancel: function () {

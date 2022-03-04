@@ -15,6 +15,9 @@ var monthViewPage = Vue.component('month-view', {
 		rotationLabel: function () {
 			return this.$store.state.rotationLabel;
 		},
+		longLabel: function () {
+			return this.$store.getters.longLabel;
+		},
 		artists: function () {
 			return this.$store.state.artists;
 		},
@@ -238,7 +241,7 @@ var monthViewPage = Vue.component('month-view', {
 >
 	<h1 class="flat">LC Rotation Manager</h1>
 	<h2>
-		<span>Rotation: {{getLongLabel(rotationLabel)}}</span>
+		<span>Rotation: {{longLabel}}</span>
 	</h2>
 	<p>
 		<button
@@ -388,11 +391,8 @@ var monthViewPage = Vue.component('month-view', {
 			>DONE</button>
 		</h3>
 		<featured-manager
-			:artists="artists"
-			:manage="manage.feat"
 			:unique-upstairs="uniqueUpstairs"
 			:unique-downstairs="uniqueDownstairs"
-			@replace-artists="replaceArtists($event)"
 		>
 		</featured-manager>
 	</div>
@@ -412,7 +412,6 @@ var monthViewPage = Vue.component('month-view', {
 		</h3>
 		<name-manager
 			floor-name="up"
-			@replace-floor="replaceFloor('up',$event)"
 		></name-manager>
 	</div>
 	<div class="manager-box">
@@ -431,7 +430,6 @@ var monthViewPage = Vue.component('month-view', {
 	</h3>
 		<name-manager
 			floor-name="down"
-			@replace-floor="replaceFloor('down',$event)"
 		></name-manager>
 	</div>
 	<p>
@@ -455,10 +453,6 @@ var monthViewPage = Vue.component('month-view', {
 		class="svg_preview"
 	>
 		<map-preview
-			:manage-up="manage.up"
-			:manage-down="manage.down"
-			:artists="artists"
-			:label="getLongLabel(rotationLabel)"
 		></map-preview>
 	</div>
 </div>

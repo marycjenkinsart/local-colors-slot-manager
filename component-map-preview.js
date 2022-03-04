@@ -13,17 +13,13 @@ Vue.component('map-preview', {
 	mixins: [
 		mixins,
 	],
-	props: {
-		artists: {
-			type: Object,
-			require: true,
-		},
-		label: {
-			type: String,
-			require: true,
-		},
-	},
 	computed: {
+		artists: function () {
+			return this.$store.state.artists;
+		},
+		longLabel: function () {
+			return this.$store.getters.longLabel;
+		},
 		manage: function () {
 			return this.$store.state.manage;
 		},
@@ -144,7 +140,7 @@ Vue.component('map-preview', {
 			>
 				<tspan
 					class="ust11 ust12 bigfont"
-				>Preview: {{label}}</tspan>
+				>Preview: {{longLabel}}</tspan>
 			</text>
 			<text>
 				<tspan

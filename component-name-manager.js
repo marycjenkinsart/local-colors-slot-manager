@@ -123,6 +123,11 @@ Vue.component('name-manager', {
 		},
 	},
 	methods: {
+		updateFloor (floor) {
+			var artistsObject = JSON.parse(JSON.stringify(this.$store.state.artists));
+			artistsObject[this.floorName] = floor;
+			this.$store.dispatch('updateArtistsObject',artistsObject);
+		},
 		getArtistColorByName: function (name) {
 			var colorIndex = this.uniqueArtists.findIndex(function (uniqueName) {
 				return name === uniqueName;
@@ -158,7 +163,7 @@ Vue.component('name-manager', {
 				}
 			})
 			this.editNameCancel();
-			this.$emit('replace-floor', newFloor);
+			this.updateFloor(newFloor);
 		},
 		newNameStart: function () {
 			this.newName.editing = true;
@@ -177,7 +182,7 @@ Vue.component('name-manager', {
 			newFloor.push(name);
 			newFloor.push(name);
 			this.newNameCancel();
-			this.$emit('replace-floor', newFloor);
+			this.updateFloor(newFloor);
 		},
 		// detectWrapping: function (array) {
 		//	 var first = array[0];
@@ -205,12 +210,12 @@ Vue.component('name-manager', {
 		reduceArtist: function (slotIndex) {
 			var newFloor = this.nameList.slice();
 			newFloor.splice(slotIndex,1);
-			this.$emit('replace-floor', newFloor);
+			this.updateFloor(newFloor);
 		},
 		expandArtist: function (slotIndex) {
 			var newFloor = this.nameList.slice();
 			newFloor.splice(slotIndex,0,newFloor[slotIndex]);
-			this.$emit('replace-floor', newFloor);
+			this.updateFloor(newFloor);
 		},
 		exciseGuests: function (unfancyArray) {
 			var array = unfancyArray.slice();
@@ -242,7 +247,7 @@ Vue.component('name-manager', {
 			var newFloor = surgery.array;
 			newFloor = this.rotateArrayCCW(newFloor);
 			newFloor = this.restoreGuests(newFloor, guestIndices);
-			this.$emit('replace-floor', newFloor);
+			this.updateFloor(newFloor);
 		},
 		rotateFloorCW: function () {
 			var surgery = this.exciseGuests(this.nameList.slice());
@@ -250,7 +255,7 @@ Vue.component('name-manager', {
 			var newFloor = surgery.array;
 			newFloor = this.rotateArrayCW(newFloor);
 			newFloor = this.restoreGuests(newFloor, guestIndices);
-			this.$emit('replace-floor', newFloor);
+			this.updateFloor(newFloor);
 		},
 		rotateArrayCW: function (array) {
 			var newArray = array.slice();
@@ -361,7 +366,7 @@ Vue.component('name-manager', {
 					workingIndex = self.findUpIndex(workingIndex);
 				}
 			})
-			this.$emit('replace-floor', newFloor);
+			this.updateFloor(newFloor);
 		},
 		getSwapMessage: function (fancyIndex) {
 			var targetArtist = this.fancyNameList[fancyIndex].name;
