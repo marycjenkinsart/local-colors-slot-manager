@@ -81,7 +81,7 @@ Vue.component('floor-preview', {
 			return this.nameList.length;
 		},
 		uniqueArtists: function () {
-			var result = this.nameList.filter(getUnique);
+			var result = this.nameList.filter(getUnique); // don't use getter for this; this needs to be not sorted!
 			return result;
 		},
 		slotColors: function () {

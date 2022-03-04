@@ -27,11 +27,8 @@ var monthViewPage = Vue.component('month-view', {
 		manage: function () {
 			return this.$store.state.manage;
 		},
-		uniqueUpstairs: function () {
-			return this.artists.up.filter(getUnique).sort();
-		},
-		uniqueDownstairs: function () {
-			return this.artists.down.filter(getUnique).sort();
+		uniqueArtists: function () {
+			return this.$store.getters.uniqueArtists;
 		},
 		moveFloor: function () {
 			var splits = this.move.name.split('-');
@@ -316,7 +313,7 @@ var monthViewPage = Vue.component('month-view', {
 			@click="swapFloorsButton"
 		>swap floors</button>
 		<label
-			v-if="uniqueUpstairs.includes(guestName) || uniqueDownstairs.includes(guestName)"
+			v-if="uniqueArtists.up.includes(guestName) || uniqueArtists.down.includes(guestName)"
 		>
 			<input
 			v-model="lockGuest"
@@ -334,13 +331,13 @@ var monthViewPage = Vue.component('month-view', {
 		>
 			<optgroup label="Upstairs">
 				<option
-					v-for="name in uniqueUpstairs"
+					v-for="name in uniqueArtists.up"
 					:value="'up-' + name"
 				>{{name}}</option>
 			</optgroup>
 			<optgroup label="Downstairs">
 				<option
-					v-for="name in uniqueDownstairs"
+					v-for="name in uniqueArtists.down"
 					:value="'down-' + name"
 				>{{name}}</option>
 			</optgroup>
@@ -390,10 +387,7 @@ var monthViewPage = Vue.component('month-view', {
 				@click="manageThis('')"
 			>DONE</button>
 		</h3>
-		<featured-manager
-			:unique-upstairs="uniqueUpstairs"
-			:unique-downstairs="uniqueDownstairs"
-		>
+		<featured-manager>
 		</featured-manager>
 	</div>
 	<div class="manager-box">

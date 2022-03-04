@@ -2,16 +2,6 @@ Vue.component('featured-manager', {
 	mixins: [
 		mixins,
 	],
-	props: {
-		uniqueUpstairs: {
-			type: Array,
-			require: true,
-		},
-		uniqueDownstairs: {
-			type: Array,
-			require: true,
-		},
-	},
 	data: function () {
 		return {
 			warning: '',
@@ -26,6 +16,9 @@ Vue.component('featured-manager', {
 	computed: {
 		artists: function () {
 			return this.$store.state.artists;
+		},
+		uniqueArtists: function () {
+			return this.$store.getters.uniqueArtists;
 		},
 		manageMe: function () {
 			return this.$store.state.manage.which === 'feat';
@@ -255,12 +248,12 @@ Vue.component('featured-manager', {
 			<p>
 				<select v-model="move2D" >
 					<optgroup label="Upstairs">
-						<option v-for="name in uniqueUpstairs"
+						<option v-for="name in uniqueArtists.up"
 							:value="'up-' + name"
 						>{{name}}</option>
 					</optgroup>
 					<optgroup label="Downstairs">
-						<option v-for="name in uniqueDownstairs"
+						<option v-for="name in uniqueArtists.down"
 							:value="'down-' + name"
 						>{{name}}</option>
 					</optgroup>

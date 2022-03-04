@@ -91,7 +91,13 @@ var store = new Vuex.Store({
 				up: makeFancy(state.artists.up),
 				down: makeFancy(state.artists.down),
 			};
-		}
+		},
+		uniqueArtists: function (state) {
+			return {
+				up: state.artists.up.filter(getUnique),
+				down: state.artists.down.filter(getUnique),
+			};
+		},
 	},
 	mutations: {
 		// this is what actually changes the state

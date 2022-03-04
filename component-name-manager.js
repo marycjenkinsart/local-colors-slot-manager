@@ -120,8 +120,7 @@ Vue.component('name-manager', {
 			}
 		},
 		uniqueArtists: function () {
-			var result = this.nameList.filter(getUnique);
-			return result;
+			return this.$store.getters.uniqueArtists[this.floorName];
 		},
 		slotColors: function () {
 			var lookup = 'count' + this.uniqueArtists.length;
