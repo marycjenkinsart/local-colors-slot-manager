@@ -34,7 +34,13 @@ Vue.component('name-manager', {
 			return this.$store.state.artists[this.floorName];
 		},
 		showCircles: function () {
-			return this.$store.state.showCircles;
+			return this.$store.state.advancedMode.showCircles;
+		},
+		advancedModeOn: function () {
+			return this.$store.state.advancedMode.advancedModeOn;
+		},
+		rigidViewOn: function () {
+			return this.$store.state.advancedMode.rigidView;
 		},
 		manageMe: function () {
 			return this.$store.state.manage.which === this.floorName;
@@ -123,6 +129,15 @@ Vue.component('name-manager', {
 		},
 	},
 	methods: {
+		// setAdvancedMode: function (bool) {
+		// 	this.$store.dispatch('setAdvancedMode',bool);
+		// },
+		toggleAdvancedMode: function () {
+			this.$store.dispatch('toggleAdvancedMode');
+		},
+		toggleRigidView: function () {
+			this.$store.dispatch('toggleRigidView');
+		},
 		updateFloor (floor) {
 			var artistsObject = JSON.parse(JSON.stringify(this.$store.state.artists));
 			artistsObject[this.floorName] = floor;
@@ -537,57 +552,6 @@ Vue.component('name-manager', {
 					@click="newNameStart"
 				>Add Artist</button>
 			</p>
-			<p>
-				<label>
-					<span
-						title="Choose which wall flow to use"
-					>Template base: </span>
-					<select
-						:value="templateFloorInfo.selectedTemplateBase"
-						@input="setSelectedTemplateBase($event.target.value)"
-					>
-						<option
-							v-for="templateName in templateBaseOptions"
-						>{{templateName}}</option>
-					</select>
-				</label>
-			</p>
-			<p>
-				<label>
-					<span
-						title="Control snapping to corners"
-					>Snap: </span>
-					<input
-						type="checkbox"
-						:checked="templateFloorInfo.snapOn"
-						@input="toggleCornerSnap"
-					/>
-				</label>
-				<label
-					style="margin-left: 8px;"
-				>
-					<span
-						title="Slot 'islands' smaller than this will be snapped to the nearest edge"
-					>Inches: </span>
-					<input
-						type="number"
-						:value="templateFloorInfo.snapInches"
-						@input="changeCornerSnapThreshold($event.target.value)"
-					/>
-				</label>
-			</p>
-			<p>
-				<label>
-					<span
-						title="Displays the original slot edges before snapping behavior is applied"
-					>Show pre-snapped borders: </span>
-					<input
-						type="checkbox"
-						:checked="showCircles"
-						@input="toggleSnapCircles"
-					/>
-				</label>
-			</p>
 			<p
 				v-if="hasGuestArtist"
 			>
@@ -657,6 +621,96 @@ Vue.component('name-manager', {
 					</template>
 				</tbody>
 			</table>
+			<div
+				class="manager-inner-inner"
+			>
+				<p
+					class="red"
+				>
+					<span>Advanced edge control:</span>
+					<input
+						type="checkbox"
+						:checked="advancedModeOn"
+						@input="toggleAdvancedMode"
+					/>
+				</p>
+				<div
+					v-show="advancedModeOn"
+				>
+					<p>
+						<label>
+							<span
+								title="Use the old 'rigid' handmade templates"
+							>Legacy mode: </span>
+							<input
+								type="checkbox"
+								:checked="rigidViewOn"
+								@input="toggleRigidView"
+							/>
+						</label>
+					</p>
+					<p>
+						<label>
+							<span
+								:class="rigidViewOn ? 'pretend-disabled' : ''"
+								title="Choose which wall flow to use"
+							>Template base: </span>
+							<select
+								:disabled="rigidViewOn"
+								:value="templateFloorInfo.selectedTemplateBase"
+								@input="setSelectedTemplateBase($event.target.value)"
+							>
+								<option
+									v-for="templateName in templateBaseOptions"
+								>{{templateName}}</option>
+							</select>
+						</label>
+					</p>
+					<p>
+						<label>
+							<span
+								:class="rigidViewOn ? 'pretend-disabled' : ''"
+								title="Control snapping to corners"
+							>Snap: </span>
+							<input
+								type="checkbox"
+								:disabled="rigidViewOn"
+								:checked="templateFloorInfo.snapOn"
+								@input="toggleCornerSnap"
+							/>
+						</label>
+						<label
+							style="margin-left: 8px;"
+						>
+							<span
+								:class="rigidViewOn ? 'pretend-disabled' : ''"
+								title="Slot 'islands' smaller than this will be snapped to the nearest edge"
+							>Threshold (inches): </span>
+							<input
+								id="threshold-inches"
+								type="number"
+								:disabled="rigidViewOn"
+								:value="templateFloorInfo.snapInches"
+								@input="changeCornerSnapThreshold($event.target.value)"
+							/>
+						</label>
+					</p>
+					<p>
+						<label>
+							<span
+								:class="rigidViewOn ? 'pretend-disabled' : ''"
+								title="Displays the original slot edges before snapping behavior is applied"
+							>Show pre-snapped borders: </span>
+							<input
+								type="checkbox"
+								:disabled="rigidViewOn"
+								:checked="showCircles"
+								@input="toggleSnapCircles"
+							/>
+						</label>
+					</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

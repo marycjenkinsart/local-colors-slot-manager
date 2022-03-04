@@ -24,7 +24,7 @@ Vue.component('floor-preview', {
 			return this.$store.state.artists[this.floorName];
 		},
 		showCircles: function () {
-			return this.$store.state.showCircles;
+			return this.$store.state.advancedMode.showCircles;
 		},
 		snapOn: function () {
 			return this.$store.state.templateInfo[this.floorName].snapOn;
@@ -36,7 +36,7 @@ Vue.component('floor-preview', {
 			return this.$store.state.templateInfo[this.floorName].selectedTemplateBase;
 		},
 		rigidView: function () {
-			return this.$store.state.rigidView;
+			return this.$store.state.advancedMode.rigidView;
 		},
 		slot01: function () {
 			return this.artists[0] || 'ERROR';

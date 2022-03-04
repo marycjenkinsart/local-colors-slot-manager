@@ -1,10 +1,9 @@
 var store = new Vuex.Store({
 	state: {
-		rigidView: true, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
-		showCircles: true,
-		manage: {
-			label: false,
-			which: '',
+		advancedMode: {
+			advancedModeOn: false,
+			rigidView: true, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
+			showCircles: false,
 		},
 		templateInfo: {
 			up: {
@@ -17,6 +16,10 @@ var store = new Vuex.Store({
 				snapOn: true,
 				snapInches: 18,
 			},
+		},
+		manage: {
+			label: false,
+			which: '',
 		},
 		rotationLabel: {
 			year: 1970,
@@ -86,6 +89,15 @@ var store = new Vuex.Store({
 	},
 	mutations: {
 		// this is what actually changes the state
+		TOGGLE_RIGID_VIEW: function (state) {
+			state.advancedMode.rigidView = !state.advancedMode.rigidView;
+		},
+		TOGGLE_ADVANCED_MODE: function (state) {
+			state.advancedMode.advancedModeOn = !state.advancedMode.advancedModeOn;
+		},
+		SET_ADVANCED_MODE: function (state, bool) {
+			state.advancedMode.advancedModeOn = bool;
+		},
 		SET_MANAGE_LABEL: function (state, bool) {
 			state.manage.label = bool;
 		},
@@ -93,7 +105,7 @@ var store = new Vuex.Store({
 			state.manage.which = value;
 		},
 		TOGGLE_SNAP_CIRCLES: function (state) {
-			state.showCircles = !state.showCircles;
+			state.advancedMode.showCircles = !state.advancedMode.showCircles;
 		},
 		TOGGLE_CORNER_SNAP: function (state, floorName) {
 			var floor = state.templateInfo[floorName];
@@ -119,6 +131,15 @@ var store = new Vuex.Store({
 	actions: {
 		// only one additional thing can be passed besides 'context'
 		// you'll have to pack multiples in an object :(
+		setAdvancedMode: function (context, bool) {
+			context.commit('SET_ADVANCED_MODE', bool);
+		},
+		toggleAdvancedMode: function (context) {
+			context.commit('TOGGLE_ADVANCED_MODE');
+		},
+		toggleRigidView: function (context) {
+			context.commit('TOGGLE_RIGID_VIEW');
+		},
 		setManageLabel: function (context, bool) {
 			context.commit('SET_MANAGE_LABEL', bool);
 		},

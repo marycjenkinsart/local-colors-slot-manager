@@ -27,7 +27,7 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
 	font-weight: 900;
 }
-h2, h3 {
+h2, h3, h4 {
 	color: #910000;
 }
 p {
@@ -137,6 +137,10 @@ table, th, td {
 	white-space: nowrap;
 }
 
+.pretend-disabled {
+	color: rgba(0,0,0,.4);
+}
+
 /* *-*-*-*   SPECIFICS   *-*-*-*  */
 
 .artist-name {
@@ -149,12 +153,18 @@ table, th, td {
 	margin-bottom: 8px;
 	width: 400px;
 }
-
 .manager-inner {
 	background-color: #fff;
 	margin: 5px;
 	padding: 8px 16px;
 }
+.manager-inner-inner {
+	background-color: #ddd;
+	margin-top: 12px;
+	margin-bottom: 4px;
+	padding: 4px 8px;
+}
+
 .round-and-shadow {
 	border-radius: 8px;
 	box-shadow: 3px 3px 5px rgba(0,0,0,.5);
@@ -204,4 +214,8 @@ table, th, td {
 
 #month-view {
 	position: relative;
+}
+
+#threshold-inches {
+	width: 5em;
 }
