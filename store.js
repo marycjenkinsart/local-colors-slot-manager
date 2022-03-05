@@ -98,6 +98,48 @@ var store = new Vuex.Store({
 				down: state.artists.down.filter(getUnique),
 			};
 		},
+		upTemplate: function (state) {
+			return templates.up[state.templateInfo.up.selectedTemplateBase];
+		},
+		downTemplate: function (state) {
+			return templates.down[state.templateInfo.down.selectedTemplateBase];
+		},
+		uniformHalfSlotLengths: function (state, getters) {
+			return {
+				up: getBaselineHalfSlots(getters.upTemplate, state.artists.up),
+				down: getBaselineHalfSlots(getters.downTemplate, state.artists.down),
+			};
+		},
+		naiveHalfSlots: function (state, getters) {
+			return {
+				up: makeComplexLines(getters.upTemplate, getters.uniformHalfSlotLengths.up),
+				down: makeComplexLines(getters.downTemplate, getters.uniformHalfSlotLengths.down),
+			};
+		},
+		naiveHalfSlotsFused: function (state, getters) {
+			return {
+				up: fuseComplexLinesByArtist(getters.naiveHalfSlots.up),
+				down: fuseComplexLinesByArtist(getters.naiveHalfSlots.down),
+			};
+		},
+		snappedHalfSlotsFused: function (state, getters) {
+			// return {
+			// 	up: fuseComplexLinesByArtist(getters.naiveHalfSlots.up),
+			// 	down: fuseComplexLinesByArtist(getters.naiveHalfSlots.down),
+			// };
+		},
+		naiveHalfSlotEdges: function (state, getters) {
+			return {
+				up: getEdgesFromComplexLines(getters.naiveHalfSlots.up),
+				down: getEdgesFromComplexLines(getters.naiveHalfSlots.down),
+			};
+		},
+		naiveHalfSlotsFused: function (state, getters) {
+			return {
+				up: getEdgesFromComplexLines(getters.naiveHalfSlotsFused.up),
+				down: getEdgesFromComplexLines(getters.naiveHalfSlotsFused.down),
+			};
+		},
 	},
 	mutations: {
 		// this is what actually changes the state
