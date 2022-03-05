@@ -5,16 +5,16 @@
 <style type="text/css">
 	.st0{fill:none;stroke:#2E3192;stroke-miterlimit:10;}
 	.st1{fill:none;stroke:#C7C4E2;stroke-miterlimit:10;}
-	.st2{fill:none;stroke:#2E3192;stroke-width:1;stroke-miterlimit:9.9944;}
+	.st2{fill:none;stroke:#2E3192;stroke-width:1;stroke-miterlimit:9.994;}
 	.st3{fill:none;stroke:#2E3192;stroke-miterlimit:10;stroke-dasharray:1,1;}
 	.st4{fill:none;stroke:#D3D1E9;stroke-width:1;stroke-miterlimit:10;}
 	.st5{fill:none;stroke:#D3D1E9;stroke-miterlimit:10;}
-	.st6{fill:#FFFFFF;stroke:#C7C4E2;stroke-width:1;stroke-miterlimit:10.007;}
-	.st7{fill:#FFFFFF;stroke:#C7C4E2;stroke-width:1;stroke-miterlimit:9.9972;}
+	.st6{fill:#FFFFFF;stroke:#C7C4E2;stroke-width:1;stroke-miterlimit:10.0075;}
+	.st7{fill:#FFFFFF;stroke:#C7C4E2;stroke-width:1;stroke-miterlimit:9.997;}
 	.st8{fill:#200000;}
 	.st9{font-family:'MyriadPro-Bold';}
 	.st10{font-size:12px;}
-	.st11{font-size:11.997px;}
+	.st11{font-size:11.9964px;}
 	.st12{fill:none;stroke:#231F20;stroke-miterlimit:10;}
 </style>
 <g id="Upstairs_Base">
@@ -50,7 +50,7 @@
 	<rect x="109.6" y="27" class="st1" width="10.8" height="6.1"/>
 	<g>
 		
-			<rect x="25.7" y="540.1" transform="matrix(0.255 -0.9669 0.9669 0.255 -493.6483 442.0677)" class="st2" width="28.8" height="2.6"/>
+			<rect x="25.7" y="540.1" transform="matrix(0.255 -0.9669 0.9669 0.255 -493.6121 442.0342)" class="st2" width="28.8" height="2.6"/>
 		<rect x="38" y="555.8" class="st0" width="28.8" height="2.6"/>
 		<path class="st0" d="M45,527.8c12.5,3.1,21.8,14.4,21.8,28"/>
 	</g>
@@ -67,7 +67,7 @@
 	<polyline class="st0" points="152.2,99.7 182.7,99.7 182.7,27 120.4,27 109.6,27 99.1,27 99.1,49.1 96.1,49.1 	"/>
 	<polyline class="st0" points="179.5,476.7 183.7,476.7 183.7,484.8 179.5,484.8 179.5,536.1 	"/>
 	
-		<rect x="114.9" y="525.1" transform="matrix(0.6181 -0.7861 0.7861 0.6181 -368.7529 305.6487)" class="st4" width="30.6" height="14.5"/>
+		<rect x="114.9" y="525.1" transform="matrix(0.6181 -0.7861 0.7861 0.6181 -368.7505 305.6556)" class="st4" width="30.6" height="14.5"/>
 	<g>
 		<path class="st5" d="M124.6,517.4c4.4,3.5,1.2,6.8-2.3,11.2s-5.9,8.4-10.3,4.9s-5.2-9.9-1.7-14.3
 			C113.7,514.7,120.1,513.9,124.6,517.4z"/>
@@ -80,9 +80,8 @@
 		<path class="st5" d="M153.3,542.7c0.7,0.6,1,1.4-3.5,7.1c-4.5,5.7-5.4,5.6-6.1,5.1c-0.7-0.6-1-1.4,3.5-7.1
 			C151.7,542,152.6,542.1,153.3,542.7z"/>
 		
-			<rect x="146.6" y="532.1" transform="matrix(0.6183 -0.786 0.786 0.6183 -365.9727 321.7122)" class="st6" width="3.2" height="11"/>
-		
-			<rect x="136" y="545.6" transform="matrix(0.6182 -0.786 0.786 0.6182 -380.6287 318.5556)" class="st7" width="3.2" height="11"/>
+			<rect x="146.6" y="532.1" transform="matrix(0.6183 -0.786 0.786 0.6183 -365.9771 321.7167)" class="st6" width="3.2" height="11"/>
+		<rect x="136" y="545.6" transform="matrix(0.6182 -0.786 0.786 0.6182 -380.631 318.5569)" class="st7" width="3.2" height="11"/>
 	</g>
 	<g id="featured-show-jl">
 		<text transform="matrix(0 -1 1 0 46.4052 183)" class="st8 st9 st10">FEATURED SHOW</text>
@@ -98,7 +97,7 @@
 	</g>
 </g>
 <g id="template-00">
-	<line class="st12" x1="50.1" y1="113.2" x2="68.1" y2="73.5"/>
+	<line id="ccw_6_" class="st12" x1="68" y1="73.5" x2="50" y2="113.2"/>
 	<line class="st12" x1="122.6" y1="26.6" x2="182.7" y2="26.6"/>
 	<line class="st12" x1="182.7" y1="27" x2="182.7" y2="98.3"/>
 	<line class="st12" x1="142" y1="131.4" x2="181.2" y2="147.9"/>
@@ -114,7 +113,7 @@
 <g id="template-01">
 	<line class="st12" x1="122.5" y1="26.6" x2="182.6" y2="26.6"/>
 	<line class="st12" x1="182.6" y1="27" x2="182.6" y2="98.3"/>
-	<line class="st12" x1="50" y1="113.2" x2="68" y2="73.5"/>
+	<line id="ccw_7_" class="st12" x1="68.1" y1="73.5" x2="50.1" y2="113.2"/>
 	<line class="st12" x1="141.9" y1="131.4" x2="181.1" y2="147.9"/>
 	<line class="st12" x1="183.7" y1="149" x2="183.7" y2="174.9"/>
 	<line class="st12" x1="183.7" y1="178.1" x2="183.7" y2="329.4"/>

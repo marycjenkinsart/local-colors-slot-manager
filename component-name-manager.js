@@ -60,6 +60,17 @@ Vue.component('name-manager', {
 		fancyNameList: function () {
 			return this.$store.getters.fancyArtists[this.floorName];
 		},
+		artistPar: function () {
+			return this.$store.getters.artistPar[this.floorName];
+		},
+		halfSlotSize: function () {
+			return this.$store.getters.uniformHalfSlotLengths[this.floorName][0].size;
+		},
+		halfSlotSizeOverPar: function () {
+			var inchesPar = 12 * 12;
+			var actualSize = 2 * templateNumberToInches(this.halfSlotSize);
+			return (100 * actualSize / inchesPar).toFixed(0);
+		},
 		forbiddenNewNames: function () {
 			var unique = this.nameList.filter(getUnique);
 			var oldIndex = unique.indexOf(this.editName.oldName);
@@ -128,9 +139,6 @@ Vue.component('name-manager', {
 		},
 	},
 	methods: {
-		// setAdvancedMode: function (bool) {
-		// 	this.$store.dispatch('setAdvancedMode',bool);
-		// },
 		toggleAdvancedMode: function () {
 			this.$store.dispatch('toggleAdvancedMode');
 		},
@@ -599,6 +607,12 @@ Vue.component('name-manager', {
 									@click="editNameStart(artist.name)"
 									title="change the artist's name"
 								>edit</button>
+								<span
+									:title="getDisplayPercentOverPar(artistPar[artist.name].slotTotal,artistPar[artist.name].par)"
+									v-if="!rigidViewOn"
+									class="medium-mini"
+									:class="getDisplayInches(artistPar[artist.name].overPar).includes('+') ? 'green' : 'red'"
+								>{{getDisplayInches(artistPar[artist.name].overPar)}}</span>
 							</td>
 							<td class="table_third">
 								<button
@@ -620,6 +634,13 @@ Vue.component('name-manager', {
 					</template>
 				</tbody>
 			</table>
+			<div
+				v-if="!rigidViewOn"
+				class="unflat"
+			>Target slot size: {{getDisplayInches(halfSlotSize * 2).replace('+','')}}</div>
+			<div
+				v-if="!rigidViewOn"
+			>({{halfSlotSizeOverPar}}% of the minumum 12')</div>
 			<div
 				class="manager-inner-inner"
 			>

@@ -132,6 +132,9 @@ table, th, td {
 .flat {
 	padding-top: 0px;
 }
+.unflat {
+	padding-top: 12px;
+}
 
 .nowrap {
 	white-space: nowrap;
@@ -180,6 +183,10 @@ table, th, td {
 }
 .red {
 	color: #910000;
+	font-weight: bold;
+}
+.green {
+	color: #068b94;
 	font-weight: bold;
 }
 

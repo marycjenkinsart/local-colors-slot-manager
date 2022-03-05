@@ -151,6 +151,42 @@ var store = new Vuex.Store({
 			})
 			return snappedSlots;
 		},
+		artistPar: function (state, getters) {
+			var fancy = getters.fancyArtists;
+			console.log(fancy);
+			var result = {
+				up: {},
+				down: {},
+			};
+			Object.keys(fancy).forEach(function (floorName) {
+				Object.values(fancy[floorName]).forEach(function (artist) {
+					result[floorName][artist.name] = result[floorName][artist.name] || {};
+					var artistResult = result[floorName][artist.name];
+					var slotSize = artistResult.slotSize || 0;
+					slotSize += artist.slotSize;
+					artistResult.slotSize = slotSize;
+				})
+			})
+			var halfSlotSize = {
+				up: getters.uniformHalfSlotLengths.up[0].size,
+				down: getters.uniformHalfSlotLengths.down[0].size,
+			}
+			Object.keys(getters.snappedFusedSlotsFlat).forEach(function (floorName) {
+				var floor = getters.snappedFusedSlotsFlat[floorName];
+				floor.forEach(function (lineSegment) {
+					console.log(result[floorName][lineSegment.name]);
+					result[floorName][lineSegment.name].slotTotal = result[floorName][lineSegment.name].slotTotal || 0;
+					result[floorName][lineSegment.name].slotTotal += getLengthFromLineCoords(lineSegment);
+				})
+				Object.values(fancy[floorName]).forEach(function (artist) {
+					var artistData = result[floorName][artist.name];
+					artistData.par = artistData.slotSize * halfSlotSize[floorName] * 2;
+					artistData.overPar = artistData.slotTotal - artistData.par;
+				})
+			})
+			console.log({result});
+			return result;
+		},
 		naiveHalfSlotEdges: function (state, getters) { // draw the ghost slot border circles from this
 			return {
 				up: getEdgesFromComplexLines(getters.naiveHalfSlots.up),

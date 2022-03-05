@@ -32,5 +32,21 @@ var mixins = {
 			result = array.join('');
 			return result;
 		},
+		getDisplayInches: function (number) {
+			var inches = templateNumberToInches(number);
+			var intInches = inches.toFixed(0);
+			var result = '';
+			if (intInches > 0) {
+				result = '+' + intInches + '\"';
+			} else if (intInches < 0) {
+				result = '-' + Math.abs(intInches) + '\"';
+			}
+			return result;
+		},
+		getDisplayPercentOverPar: function (top, bot) {
+			var result = (100 * top / bot - 100).toFixed(1);
+			result = result > 0 ? '+' + Math.abs(result) : '-' + Math.abs(result);
+			return result + '%';
+		},
 	}
 }

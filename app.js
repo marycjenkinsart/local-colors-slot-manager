@@ -629,7 +629,7 @@ var app = new Vue({
 	router: router,
 	computed: {
 		demo: function () {
-			this.$store.getters.snappedFusedSlotsFlat;
+			this.$store.getters.artistsOverPar;
 		},
 	},
 	template: /*html*/`
