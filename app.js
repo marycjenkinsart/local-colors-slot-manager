@@ -532,6 +532,77 @@ var fuseComplexLinesByArtist = function (complexSlotsArray) {
 	// ]
 };
 
+var snapLast = function (_lineSegmentPieces) {
+	var lineSegmentPieces = JSON.parse(JSON.stringify(_lineSegmentPieces));
+	var penultimate = lineSegmentPieces[lineSegmentPieces.length - 2];
+	var last = lineSegmentPieces[lineSegmentPieces.length - 1];
+	var fusion = makeFusedLine( // last segment is snapped (removed)
+		penultimate,
+		last,
+		{ name: penultimate.name }
+	);
+	lineSegmentPieces.splice(
+		(lineSegmentPieces.length - 2),
+		2,
+		fusion
+	);
+	return lineSegmentPieces;
+};
+var snapFirst = function (_lineSegmentPieces) {
+	var lineSegmentPieces = JSON.parse(JSON.stringify(_lineSegmentPieces));
+	var first = lineSegmentPieces[0];
+	var second = lineSegmentPieces[1];
+	var fusion = makeFusedLine( // first segment is snapped (removed)
+		first,
+		second,
+		{ name: second.name }
+	);
+	lineSegmentPieces.splice(
+		0,
+		2,
+		fusion
+	);
+	return lineSegmentPieces;
+};
+var snapShortSegments = function (_lineSegmentPieces, threshold, priority) {
+	var lineSegmentPieces = JSON.parse(JSON.stringify(_lineSegmentPieces));
+	var arrayLength = lineSegmentPieces.length;
+	if (arrayLength > 1) {
+		var firstLengthShort = getLengthFromLineCoords(lineSegmentPieces[0]) < threshold;
+		var lastLengthShort = getLengthFromLineCoords(lineSegmentPieces[arrayLength - 1]) < threshold;
+		// if exactly two segments
+		if (arrayLength === 2) {
+			if (
+				(firstLengthShort && !lastLengthShort)
+				|| (firstLengthShort && lastLengthShort && priority === 'last')
+			) {
+				lineSegmentPieces = snapFirst(lineSegmentPieces);
+			} else if (
+				(lastLengthShort && !firstLengthShort)
+				|| (lastLengthShort && firstLengthShort && priority === 'first')
+			) {
+				lineSegmentPieces = snapLast(lineSegmentPieces);
+			}
+		} else {
+			if (firstLengthShort) {
+				lineSegmentPieces = snapFirst(lineSegmentPieces);
+			}
+			if (lastLengthShort) {
+				lineSegmentPieces = snapLast(lineSegmentPieces);
+			}
+		}
+	}
+	return lineSegmentPieces;
+};
+
+var snapAllShortSegments = function (_complexSlots, threshold, priority) {
+	var complexSlots = JSON.parse(JSON.stringify(_complexSlots));
+	for (let index = 0; index < complexSlots.length; index++) {
+		complexSlots[index] = snapShortSegments(complexSlots[index], threshold, priority);
+	}
+	return complexSlots;
+};
+
 var getEdgesFromComplexLines = function (complexLines) {
 	var points = [];
 	complexLines.forEach(function (lineSegment) {
@@ -558,7 +629,7 @@ var app = new Vue({
 	router: router,
 	computed: {
 		demo: function () {
-			this.$store.getters.snappedHalfSlotsFused;
+			this.$store.getters.snappedFusedSlotsFlat;
 		},
 	},
 	template: /*html*/`

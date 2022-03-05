@@ -10,11 +10,13 @@ var store = new Vuex.Store({
 				selectedTemplateBase: Object.keys(templates.up)[0],
 				snapOn: true,
 				snapInches: 18,
+				priority: 'last', // in a slot size tie, give preference to last slot(s)
 			},
 			down: {
 				selectedTemplateBase: Object.keys(templates.down)[0],
 				snapOn: true,
 				snapInches: 18,
+				priority: 'first',
 			},
 		},
 		manage: {
@@ -116,28 +118,59 @@ var store = new Vuex.Store({
 				down: makeComplexLines(getters.downTemplate, getters.uniformHalfSlotLengths.down),
 			};
 		},
-		naiveHalfSlotsFused: function (state, getters) {
+		fusedHalfSlots: function (state, getters) {
 			return {
 				up: fuseComplexLinesByArtist(getters.naiveHalfSlots.up),
 				down: fuseComplexLinesByArtist(getters.naiveHalfSlots.down),
 			};
 		},
-		snappedHalfSlotsFused: function (state, getters) {
-			// return {
-			// 	up: fuseComplexLinesByArtist(getters.naiveHalfSlots.up),
-			// 	down: fuseComplexLinesByArtist(getters.naiveHalfSlots.down),
-			// };
+		snappedFusedSlots: function (state, getters) {
+			var snappedSlots = JSON.parse(JSON.stringify(getters.fusedHalfSlots));
+			Object.keys(snappedSlots).forEach(function (floorName) {
+				var templateInfo = state.templateInfo[floorName];
+				if (templateInfo.snapOn) {
+					snappedSlots[floorName] = snapAllShortSegments(
+						snappedSlots[floorName],
+						inchesToTemplateNumber(templateInfo.snapInches),
+						templateInfo.priority
+					);
+				}
+			})
+			return snappedSlots;
 		},
-		naiveHalfSlotEdges: function (state, getters) {
+		snappedFusedSlotsFlat: function (state, getters) { // draw the svgs from this
+			var snappedSlots = {}
+			Object.keys(getters.snappedFusedSlots).forEach(function (floorName) {
+				var lineSegmentFragments = getters.snappedFusedSlots[floorName];
+				lineSegmentFragments.forEach(function (lineSegment) {
+					lineSegment.forEach(function (line) {
+						snappedSlots[floorName] = snappedSlots[floorName] || [];
+						snappedSlots[floorName].push(line);
+					})
+				})
+			})
+			return snappedSlots;
+		},
+		naiveHalfSlotEdges: function (state, getters) { // draw the ghost slot border circles from this
 			return {
 				up: getEdgesFromComplexLines(getters.naiveHalfSlots.up),
 				down: getEdgesFromComplexLines(getters.naiveHalfSlots.down),
 			};
 		},
-		naiveHalfSlotsFused: function (state, getters) {
+		// adjustedSlotEdges: function (state, getters) { // draw the slot borders and marin measurements from this
+		// 	var up = getEdgesFromComplexLines(getters.fusedHalfSlots.up);
+		// 	var down = getEdgesFromComplexLines(getters.fusedHalfSlots.down);
+		// 	return {
+		// 		up: up,
+		// 		down: down,
+		// 	};
+		// },
+		snappedSlotEdges: function (state, getters) { // draw the slot borders and marin measurements from this
+			var up = getEdgesFromComplexLines(getters.snappedFusedSlots.up);
+			var down = getEdgesFromComplexLines(getters.snappedFusedSlots.down);
 			return {
-				up: getEdgesFromComplexLines(getters.naiveHalfSlotsFused.up),
-				down: getEdgesFromComplexLines(getters.naiveHalfSlotsFused.down),
+				up: up,
+				down: down,
 			};
 		},
 	},

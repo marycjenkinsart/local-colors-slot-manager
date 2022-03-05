@@ -23,18 +23,6 @@ Vue.component('floor-preview', {
 		nameList: function () {
 			return this.$store.state.artists[this.floorName];
 		},
-		showCircles: function () {
-			return this.$store.state.advanced.showCircles;
-		},
-		snapOn: function () {
-			return this.$store.state.templateInfo[this.floorName].snapOn;
-		},
-		snapInches: function () {
-			return this.$store.state.templateInfo[this.floorName].snapInches;
-		},
-		selectedTemplateBase: function () {
-			return this.$store.state.templateInfo[this.floorName].selectedTemplateBase;
-		},
 		rigidView: function () {
 			return this.$store.state.advanced.rigidView;
 		},
@@ -103,249 +91,30 @@ Vue.component('floor-preview', {
 			result += x + ' ' + y;
 			return result;
 		},
-		fancyNameList: function () {
-			return this.$store.getters.fancyArtists[this.floorName];
-		},
-		rawLineSegments: function () {
-			var lineSegments = templates[this.floorName][this.selectedTemplateBase];
-			// console.log(`${this.floorName} rawLineSegments:`);
-			// console.log(lineSegments);
-			return lineSegments;
-		},
-		rawLineSegmentLengths: function () {
-			var lengths = this.rawLineSegments.map(function (line) {
-				return getLengthFromLineCoords(line);
-			});
-			return lengths;
-		},
-		processedArtistSlots: function () { // TODO: make this "raw" and add "adjustments" to this
-			var totalLength = this.rawLineSegmentLengths.reduce(function (prev, cur) {
-				return prev + cur;
-			});
-			var totalHalfSlots = this.nameList.length;
-			var halfSlotSize = totalLength / totalHalfSlots;
-			var result = [];
-			var beginning = 0;
-			var end = 0;
-			this.fancyNameList.forEach(function (artist) {
-				var artistWidth = artist.slotSize * 2 * halfSlotSize;
-				end += artistWidth;
-				var practicalSlot = {
-					name: artist.name,
-					beginning: beginning,
-					end: end,
-					size: end - beginning,
-					inches: templateNumberToInches(end - beginning),
-				}
-				result.push(practicalSlot);
-				beginning = end;
-			})
-			return result;
-		},
-		naiveLineSegments: function () {
-			// literal interpretation, resulting in ghastly "islands" that must be removed later
-			var lines = JSON.parse(JSON.stringify(this.rawLineSegments));
-			lines.forEach(function (line, index) {
-				line.origLineSegmentIndex = index;
-			})
-			var artists; // TODO: why did I split this line?
-			artists = JSON.parse(JSON.stringify(this.processedArtistSlots));
-			var processedLines = [];
-			var insertName = artists[0].name;
-			while (artists.length > 1) {
-				if (artists[0].size > getLengthFromLineCoords(lines[0])) {
-					artists[0].size -= getLengthFromLineCoords(lines[0]);
-					var insert = lines.shift();
-					insert.name = insertName;
-					processedLines.push(insert);
-				} else {
-					var workingLine = lines.shift();
-					var splits = cutLineAtDistance(workingLine, artists[0].size);
-					var insert = splits[0];
-					insert.name = insertName;
-					processedLines.push(insert);
-					lines.unshift(splits[1]);
-					artists.shift();
-					insertName = artists[0] && artists[0].name || insertName;
-				}
-			}
-			lines.forEach(function (line) {
-				// adding the last artist name to the remainder of line segments
-				// so we can color it correctly later
-				var insert = line;
-				insert.name = insertName;
-				processedLines.push(insert);
-			})
-			// console.log(`${this.floorName} naiveLineSegments:`);
-			// console.log(processedLines);
-			return processedLines;
-		},
-		naiveSlotEdges: function () { // drawn with black dots
-			var result = [];
-			var workingLines = this.naiveLineSegments;
-			for (var index = 1; index < workingLines.length; index++) {
-				var first = workingLines[index - 1];
-				var second = workingLines[index];
-				if (
-					first.name !== second.name
-					&& first.x2 === second.x1
-					&& first.y2 === second.y1
-					&& getNormalizedTangent(first).x - getNormalizedTangent(second).x < 0.0001
-					&& getNormalizedTangent(first).y - getNormalizedTangent(second).y < 0.0001
-				) {
-					var shorterLine;
-					if (getLengthFromLineCoords(first) > getLengthFromLineCoords(second)) {
-						shorterLine = second;
-					} else {
-						shorterLine = first;
-					}
-					var insert = {
-						x: second.x1,
-						y: second.y1,
-						line: shorterLine,
-					}
-					result.push(insert);
-				}
-			}
-			// console.log(`${this.floorName} naiveSlotEdges:`);
-			// console.log(result);
-			return result;
-		},
-		ghostHalfSlots: function () {
-			// permanent half slots
-			var totalLength = this.rawLineSegmentLengths.reduce(function (prev, cur) {
-				return prev + cur;
-			});
-			var totalHalfSlots = this.nameList.length;
-			var halfSlotSize = totalLength / totalHalfSlots;
-			var ghostHalfSlots = [];
-			var beginning = 0;
-			var end = 0;
-			for (let index = 0; index < totalHalfSlots; index++) {
-				end += halfSlotSize;
-				var practicalSlot = {
-					beginning: beginning,
-					end: end,
-					size: end - beginning,
-					inches: templateNumberToInches(end - beginning),
-				}
-				ghostHalfSlots.push(practicalSlot);
-				beginning = end;
-			}
-			// part 2
-			var circleCoords = [];
-			var lines = JSON.parse(JSON.stringify(this.rawLineSegments));
-			lines.forEach(function (line, index) {
-				line.origLineSegmentIndex = index;
-			})
-			var processedLines = [];
-			while (ghostHalfSlots.length > 1) {
-				if (ghostHalfSlots[0].size > getLengthFromLineCoords(lines[0])) {
-					ghostHalfSlots[0].size -= getLengthFromLineCoords(lines[0]);
-					var insert = lines.shift();
-					processedLines.push(insert);
-				} else {
-					var workingLine = lines.shift();
-					var splits = cutLineAtDistance(workingLine, ghostHalfSlots[0].size);
-					circleCoords.push({
-						x: splits[0].x2,
-						y: splits[0].y2,
-					});
-					var insert = splits[0];
-					processedLines.push(insert);
-					lines.unshift(splits[1]);
-					ghostHalfSlots.shift();
-				}
-			}
-			return circleCoords;
+		showCircles: function () {
+			return this.$store.state.advanced.showCircles;
 		},
 		snappedLineSegments: function () {
-			var naiveLineSegments = JSON.parse(JSON.stringify(this.naiveLineSegments));
-			var origTemplateLines = this.rawLineSegments;
-			var result = [];
-			var snapDistance = inchesToTemplateNumber(this.snapInches);
-			while (naiveLineSegments.length > 0) {
-				var testLine = naiveLineSegments.shift();
-				var length = getLengthFromLineCoords(testLine);
-				var origLineSegment = origTemplateLines[testLine.origLineSegmentIndex];
-				if (
-					length < snapDistance
-					&& length !== getLengthFromLineCoords(origLineSegment)
-				) {
-					var beginningDifX = Math.abs(testLine.x1 - origLineSegment.x1);
-					var beginningDifY = Math.abs(testLine.y1 - origLineSegment.y1);
-					var endDifX = Math.abs(testLine.x2 - origLineSegment.x2);
-					var endDifY = Math.abs(testLine.y2 - origLineSegment.y2);
-					if (
-						beginningDifX < 0.1
-						&& beginningDifY < 0.1
-					) {
-						var lineAfter = naiveLineSegments.shift();
-						var fusedLine = makeFusedLine(testLine, lineAfter);
-						fusedLine.name = lineAfter.name;
-						fusedLine.fusedX2 = testLine.x2;
-						fusedLine.fusedY2 = testLine.y2;
-						result.push(fusedLine);
-					} else if (
-						endDifX < 0.1
-						&& endDifY < 0.1
-					) {
-						var lineBefore = result.pop();
-						var fusedLine = makeFusedLine(lineBefore, testLine);
-						fusedLine.name = lineBefore.name;
-						fusedLine.fusedX1 = testLine.x1;
-						fusedLine.fusedY1 = testLine.y1;
-						result.push(fusedLine);
-					} else {
-						console.error('The line fusion algorithm has been thwarted!');
-						console.warn(testLine);
-						console.warn(origLineSegment);
-						console.warn(`beginningDifX: ${beginningDifX}, beginningDifY: ${beginningDifY}`);
-						console.warn(`endDifX: ${beginningDifX}, endDifY: ${beginningDifY}`);
-					}
-				} else {
-					result.push(testLine);
-				}
-			}
-			// console.log(`${this.floorName} snappedLineSegments:`);
-			// console.log(result);
-			return result;
+			return this.$store.getters.snappedFusedSlotsFlat[this.floorName];
 		},
-		snappedSlotEdges: function () {
-			var result = [];
-			var fusedPoints = [];
-			var origSlotEdges = this.naiveSlotEdges;
-			this.snappedLineSegments.forEach(function (fusedLine) {
-				if (fusedLine.fusedX1) {
-					var coords = fusedLine.fusedX1 + ',' + fusedLine.fusedY1
-					fusedPoints.push(coords);
-				}
-				if (fusedLine.fusedX2) {
-					var coords = fusedLine.fusedX2 + ',' + fusedLine.fusedY2
-					fusedPoints.push(coords);
-				}
-			})
-			origSlotEdges.forEach(function (edge) {
-				var testEdge = edge.x + ',' + edge.y;
-				var check = fusedPoints.includes(testEdge);
-				if (!check) {
-					result.push(edge);
-				}
-			})
-			return result;
+		ghostCircles: function () {
+			return this.$store.getters.naiveHalfSlotEdges[this.floorName];
+		},
+		solidCircles: function () {
+			return this.$store.getters.naiveHalfSlotEdges[this.floorName]; // TODO: change to adjusted version later
+		},
+		realSlotEdges: function () {
+			return this.$store.getters.snappedSlotEdges[this.floorName];
 		},
 		processedDottedLines: function () {
 			var result = [];
-			var slotEdges = this.naiveSlotEdges;
-			if (this.snapOn === true) {
-				slotEdges = this.snappedSlotEdges;
-			}
+			var slotEdges = this.realSlotEdges;
 			var lineLength = this.dottedLineLength;
-			slotEdges.forEach(function (line) {
-				var extension = lineToRightLineAtOrigin(line.line, lineLength, line.x, line.y);
+			slotEdges.forEach(function (point) {
+				var extension = lineToRightLineAtOrigin(point.line1, lineLength, point.x, point.y);
 				var insert = {
-					x1: line.x,
-					y1: line.y,
+					x1: point.x,
+					y1: point.y,
 					x2: extension.x,
 					y2: extension.y,
 				}
@@ -357,9 +126,7 @@ Vue.component('floor-preview', {
 			var result = [];
 			var rectWidth = this.rectWidth
 			var lineSegments = this.naiveLineSegments;
-			if (this.snapOn === true) {
-				lineSegments = this.snappedLineSegments;
-			}
+			lineSegments = this.snappedLineSegments;
 			lineSegments.forEach(function (line) {
 				var rect = lineToLeftRectangle(line, rectWidth);
 				var rectPoints = rect.x1 + ',' + rect.y1 + ' ' +
@@ -1826,19 +1593,19 @@ Vue.component('floor-preview', {
 	:points="rect.points"
 />
 <circle
-	v-for="point in ghostHalfSlots"
+	v-for="point in ghostCircles"
 	v-show="showCircles"
 	class="st0"
 	:cx="point.x"
 	:cy="point.y"
-	r="1.5"
+	r="1.2"
 />
 <circle
-	v-for="point in naiveSlotEdges"
+	v-for="point in solidCircles"
 	v-show="showCircles"
 	:cx="point.x"
 	:cy="point.y"
-	r="1.5"
+	r="1.2"
 />
 </g>
 </svg>
@@ -3219,19 +2986,19 @@ Vue.component('floor-preview', {
 	:points="rect.points"
 />
 <circle
-	v-for="point in ghostHalfSlots"
+	v-for="point in ghostCircles"
 	v-show="showCircles"
 	class="st0"
 	:cx="point.x"
 	:cy="point.y"
-	r="1.5"
+	r="1.2"
 />
 <circle
-	v-for="point in naiveSlotEdges"
+	v-for="point in solidCircles"
 	v-show="showCircles"
 	:cx="point.x"
 	:cy="point.y"
-	r="1.5"
+	r="1.2"
 />
 </g>
 	</svg>  
