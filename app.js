@@ -342,6 +342,35 @@ var lineToRightLineAtOrigin = function (coords, length, originX, originY) {
 	return result;
 };
 
+var textLabelOrigin = function (coords, spacing) {
+	var midpointLength = getLengthFromLineCoords(coords) / 2;
+	var lineHalves = cutLineAtDistance(coords, midpointLength);
+	var x = lineHalves[1].x1;
+	var y = lineHalves[1].y1;
+	var result = lineToRightLineAtOrigin(lineHalves[1], spacing, x, y);
+	if (
+		Math.abs(coords.y1 - coords.y2) < 0.01
+		&& coords.x1 > coords.x2
+	) {
+		result.y = result.y + spacing * 0.75;
+	}
+	return result;
+};
+
+var textLabelRotation = function (coords, x, y) {
+	var tanCoords = getNormalizedTangent(coords);
+	var radians = Math.atan2(tanCoords.y, tanCoords.x);
+	var degrees = (radians * 180 / Math.PI + 90).toFixed(0);
+	var result = 'rotate(' + degrees + ',' + x + ',' + y + ')';
+	if (
+		Math.abs(coords.y1 - coords.y2) < 0.01
+		&& coords.x1 > coords.x2
+	) {
+		result = '';
+	}
+	return result;
+}
+
   //----------------------//
  /*   LINE INTERATIONS   */
 //----------------------//

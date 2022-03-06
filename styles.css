@@ -226,3 +226,7 @@ table, th, td {
 #threshold-inches {
 	width: 5em;
 }
+
+.artist-name-label {
+	font-size: 0.6rem;
+}

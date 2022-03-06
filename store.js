@@ -11,12 +11,14 @@ var store = new Vuex.Store({
 				snapOn: true,
 				snapInches: 18,
 				priority: 'last', // in a slot size tie, give preference to last slot(s)
+				adjustments: {},
 			},
 			down: {
 				selectedTemplateBase: Object.keys(templates.down)[0],
 				snapOn: true,
 				snapInches: 18,
 				priority: 'first',
+				adjustments: {},
 			},
 		},
 		manage: {
@@ -153,7 +155,6 @@ var store = new Vuex.Store({
 		},
 		artistPar: function (state, getters) {
 			var fancy = getters.fancyArtists;
-			console.log(fancy);
 			var result = {
 				up: {},
 				down: {},

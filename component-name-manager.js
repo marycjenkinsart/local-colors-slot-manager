@@ -635,11 +635,9 @@ Vue.component('name-manager', {
 				</tbody>
 			</table>
 			<div
-				v-if="!rigidViewOn"
 				class="unflat"
-			>Target slot size: {{getDisplayInches(halfSlotSize * 2).replace('+','')}}</div>
+			>Full slot size: {{getDisplayInches(halfSlotSize * 2).replace('+','')}}</div>
 			<div
-				v-if="!rigidViewOn"
 			>({{halfSlotSizeOverPar}}% of the minumum 12')</div>
 			<div
 				class="manager-inner-inner"
@@ -647,12 +645,14 @@ Vue.component('name-manager', {
 				<p
 					class="red"
 				>
-					<span>Advanced edge control:</span>
-					<input
-						type="checkbox"
-						:checked="advancedModeOn"
-						@input="toggleAdvancedMode"
-					/>
+					<label>
+						<span>Advanced edge control:</span>
+						<input
+							type="checkbox"
+							:checked="advancedModeOn"
+							@input="toggleAdvancedMode"
+						/>
+					</label>
 				</p>
 				<div
 					v-show="advancedModeOn"

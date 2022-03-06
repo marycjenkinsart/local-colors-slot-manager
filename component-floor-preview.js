@@ -140,7 +140,29 @@ Vue.component('floor-preview', {
 				result.push(insert);
 			})
 			return result;
-		}
+		},
+		artistNameLabels: function () {
+			var result = JSON.parse(JSON.stringify(this.snappedLineSegments));
+			var spacing = 10;
+			result.forEach(function (lineSegment, index) {
+				result[index] = Object.assign(
+					result[index],
+					textLabelOrigin(result[index], spacing),
+				)
+				result[index].transform = textLabelRotation(
+					lineSegment,
+					result[index].x,
+					result[index].y,
+				)
+
+			})
+			result = result.filter(function (lineSegment) {
+				var charCount = lineSegment.name.length;
+				var threshold = charCount * 3;
+				return getLengthFromLineCoords(lineSegment) > threshold;
+			})
+			return result;
+		},
 	},
 	methods: {
 		getArtistColorByIndex: function (index) {
@@ -1607,6 +1629,14 @@ Vue.component('floor-preview', {
 	:cy="point.y"
 	r="1.2"
 />
+<text
+	v-for="line in artistNameLabels"
+	:x="line.x"
+	:y="line.y"
+	:transform="line.transform"
+	class="center artist-name-label"
+	:class="getArtistColorByName(line.name)"
+>{{line.name}}</text>
 </g>
 </svg>
 </g>
@@ -3000,6 +3030,15 @@ Vue.component('floor-preview', {
 	:cy="point.y"
 	r="1.2"
 />
+<text
+	v-for="line in artistNameLabels"
+	:x="line.x"
+	:y="line.y"
+	:transform="line.transform"
+	class="center artist-name-label"
+	:class="getArtistColorByName(line.name)"
+>{{line.name}}</text>
+
 </g>
 	</svg>  
 	</g>
