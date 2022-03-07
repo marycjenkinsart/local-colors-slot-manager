@@ -656,6 +656,26 @@ var app = new Vue({
 	el:' #app',
 	store: store, // available to all children as this.$store(.state.etc)
 	router: router,
+	created: function () {
+		var actualQueryData = this.$route.query;
+		var patchedQueryData = {};
+		var artistsFromQuery = {};
+		var defaultData = {
+			l: '1969,12,1337,No_router_query_data_found',
+			f: 'no_router_query_data_found-3D-1',
+			u: 'no-1,router,query-1,data,found',
+			d: 'No-1,Rrouter,Query,Data,Found-1',
+		}
+		Object.keys(defaultData).forEach(function (key) {
+			patchedQueryData[key] = actualQueryData && actualQueryData[key] || defaultData[key];
+		})
+		var rotationLabel = makeLabelUncompact(patchedQueryData.l);
+		artistsFromQuery.feat = makeCompactFeaturedUnfancy(patchedQueryData.f);
+		artistsFromQuery.up = makeCompactFloorUnfancy(patchedQueryData.u);
+		artistsFromQuery.down = makeCompactFloorUnfancy(patchedQueryData.d);
+		this.$store.dispatch('updateLabelObject',rotationLabel);
+		this.$store.dispatch('updateArtistsObject',artistsFromQuery);
+	},
 	computed: {
 		demo: function () {
 			this.$store.getters.artistsOverPar;

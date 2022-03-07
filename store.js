@@ -175,7 +175,6 @@ var store = new Vuex.Store({
 			Object.keys(getters.snappedFusedSlotsFlat).forEach(function (floorName) {
 				var floor = getters.snappedFusedSlotsFlat[floorName];
 				floor.forEach(function (lineSegment) {
-					console.log(result[floorName][lineSegment.name]);
 					result[floorName][lineSegment.name].slotTotal = result[floorName][lineSegment.name].slotTotal || 0;
 					result[floorName][lineSegment.name].slotTotal += getLengthFromLineCoords(lineSegment);
 				})
@@ -185,7 +184,6 @@ var store = new Vuex.Store({
 					artistData.overPar = artistData.slotTotal - artistData.par;
 				})
 			})
-			console.log({result});
 			return result;
 		},
 		naiveHalfSlotEdges: function (state, getters) { // draw the ghost slot border circles from this

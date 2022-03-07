@@ -73,6 +73,9 @@ Object.keys(rawTemplates).forEach(function (floorName) {
 				) {
 					var attributeBody = attributeSplits[1].replace('"','').replace('"','');
 					parsedLine[attributeSplits[0]] = parseFloat(attributeBody);
+					// TODO: multiply this number by 100 and use parseInt instead of parseFloat
+					// All the svg drawing stuff will have to change
+					// But then there's no more weird rounding garbage!
 				}
 			})
 			var targetArray = templates[floorName][templateName]
