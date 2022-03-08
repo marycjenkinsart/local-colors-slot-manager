@@ -111,48 +111,37 @@ var makeLabelUncompact = function (compactLabelString) {
 		return result;
 	}
 };
-var makeCompact = function (artistsObject, label) {
-	var compactLabel = makeLabelCompact(label);
-	var getCompactFloor = function (array) {
-		var compactFloorArray = [];
-		var fancy = makeFancy(array);
-		fancy.forEach(function (item) {
-			var entry = item.name
-			var halfSlots = item.slotSize * 2;
-			if (halfSlots !== 2) {
-				entry += '-' + halfSlots;
-			}
-			compactFloorArray.push(entry);
-		})
-		var compactFloor = compactFloorArray.join(',');
-		return compactFloor;
-	};
-	var interpretFeatured = function (featuredObject) {
-		var compactFeaturedArray = [];
-		featuredObject.forEach(function (item) {
-			var parsedItemArray = [];
-			if (item.type === '2D') {
-				parsedItemArray.push(item.name);
-				parsedItemArray.push(item.type);
-				parsedItemArray.push(item.origSlotSize * 2);
-			} else {
-				parsedItemArray.push(item.name);
-				parsedItemArray.push(item.type);
-			}
-			var parsedItem = parsedItemArray.join('-');
-			compactFeaturedArray.push(parsedItem);
-		})
-		var result = compactFeaturedArray.join(',');
-		return result;
-	};
-	var up = getCompactFloor(artistsObject.up);
-	var down = getCompactFloor(artistsObject.down);
-	var feat = interpretFeatured(artistsObject.feat);
-	var result = 'l=' + compactLabel + '&' +
-		'f=' + feat + '&' +
-		'u=' + up + '&' +
-		'd=' + down;
-	return makeSpacesUnderscores(result);
+var makeFloorCompact = function (array) {
+	var compactFloorArray = [];
+	var fancy = makeFancy(array);
+	fancy.forEach(function (item) {
+		var entry = item.name
+		var halfSlots = item.slotSize * 2;
+		if (halfSlots !== 2) {
+			entry += '-' + halfSlots;
+		}
+		compactFloorArray.push(entry);
+	})
+	var compactFloor = compactFloorArray.join(',');
+	return compactFloor;
+};
+var makeFeaturedCompact = function (featuredObject) {
+	var compactFeaturedArray = [];
+	featuredObject.forEach(function (item) {
+		var parsedItemArray = [];
+		if (item.type === '2D') {
+			parsedItemArray.push(item.name);
+			parsedItemArray.push(item.type);
+			parsedItemArray.push(item.origSlotSize * 2);
+		} else {
+			parsedItemArray.push(item.name);
+			parsedItemArray.push(item.type);
+		}
+		var parsedItem = parsedItemArray.join('-');
+		compactFeaturedArray.push(parsedItem);
+	})
+	var result = compactFeaturedArray.join(',');
+	return result;
 };
 var makeCompactFloorUnfancy = function (string) {
 	var stringSplits = string.split(',');
@@ -184,6 +173,45 @@ var makeCompactFeaturedUnfancy = function (string) {
 		}
 		result.push(artist);
 	})
+	return result;
+};
+var makeAdjustmentsCompact = function (array) {
+	var result = [];
+	var zeroCount = 0;
+	array.forEach(function (number) {
+		if (number === 0) {
+			zeroCount += 1;
+		} else {
+			if (zeroCount > 0) {
+				result.push('x' + zeroCount);
+				zeroCount = 0;
+			}
+			result.push(number);
+		}
+	})
+	result = result.join(',');
+	return result;
+};
+var makeAdjustmentsUncompact = function (string, length) {
+	var result = [];
+	if (string.length > 0) {
+		var array = string.split(',');
+		array.forEach(function (item) {
+			if (item.includes('x')) {
+				var count = parseInt(item.replace('x',''));
+				for (let index = 0; index < count; index++) {
+					result.push(0);
+				}
+			} else if (item.includes('-')) {
+				var insert = parseInt(item);
+				result.push(insert);
+			} else {
+				var insert = parseInt(item);
+				result.push(insert);
+			}
+		})
+	}
+	result.fill(0, result.length, length);
 	return result;
 };
 
@@ -680,16 +708,30 @@ var app = new Vue({
 			f: 'no_router_query_data_found-3D-1',
 			u: 'no-1,router,query-1,data,found',
 			d: 'No-1,Rrouter,Query,Data,Found-1',
+			// t: '',
+			au: '',
+			ad: '',
 		}
 		Object.keys(defaultData).forEach(function (key) {
 			patchedQueryData[key] = actualQueryData && actualQueryData[key] || defaultData[key];
 		})
+		console.log(patchedQueryData);
 		var rotationLabel = makeLabelUncompact(patchedQueryData.l);
 		artistsFromQuery.feat = makeCompactFeaturedUnfancy(patchedQueryData.f);
 		artistsFromQuery.up = makeCompactFloorUnfancy(patchedQueryData.u);
 		artistsFromQuery.down = makeCompactFloorUnfancy(patchedQueryData.d);
 		this.$store.dispatch('updateLabelObject',rotationLabel);
 		this.$store.dispatch('updateArtistsObject',artistsFromQuery);
+		var upHalfSlots = artistsFromQuery.up.length;
+		var downHalfSlots = artistsFromQuery.down.length;
+		this.$store.dispatch('importAdjustments',{
+			up: makeAdjustmentsUncompact(patchedQueryData.au, upHalfSlots),
+			down: makeAdjustmentsUncompact(patchedQueryData.ad, downHalfSlots),
+		});
+		// this.$store.dispatch('importBaseTemplate',{
+		// 	up: makeAdjustmentsUncompact(patchedQueryData.tu),
+		// 	down: makeAdjustmentsUncompact(patchedQueryData.td),
+		// });
 	},
 	computed: {
 		demo: function () {

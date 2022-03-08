@@ -44,12 +44,8 @@ var monthViewPage = Vue.component('month-view', {
 			var splits = this.move.name.split('-');
 			return splits[1] || '';
 		},
-		compactFloor: function () {
-			return makeCompact(this.artists, this.rotationLabel);
-		},
-		compactFloorURL: function () {
-			var viewURL = "https://marycjenkinsart.github.io/local-colors-slot-manager/#/view?";
-			return viewURL + this.compactFloor;
+		compactURL: function () {
+			return this.$store.getters.compactURL;
 		},
 		checkForbiddenLabel: function () {
 			var result = false;
@@ -416,7 +412,7 @@ var monthViewPage = Vue.component('month-view', {
 			class="position-absolute"
 			ref="linkToCopy"
 			readonly
-		>{{compactFloorURL}}</textarea>
+		>{{compactURL}}</textarea>
 	</p>
 	<p>
 		<button

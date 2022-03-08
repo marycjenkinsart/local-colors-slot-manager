@@ -233,6 +233,30 @@ var store = new Vuex.Store({
 				down: down,
 			};
 		},
+		compactEverything: function (state) {
+			var compactLabel = makeLabelCompact(state.rotationLabel);
+			var up = makeFloorCompact(state.artists.up);
+			var down = makeFloorCompact(state.artists.down);
+			var feat = makeFeaturedCompact(state.artists.feat);
+			var result = 'l=' + compactLabel + '&' +
+				'f=' + feat + '&' +
+				'u=' + up + '&' +
+				'd=' + down;
+			Object.keys(state.templateInfo).forEach(function (floorName) {
+				var halfSlotCount = state.artists[floorName].length;
+				var shortName = 'a' + floorName[0];
+				var adjustments = state.templateInfo[floorName].adjustments[halfSlotCount];
+				var shortValue = makeAdjustmentsCompact(adjustments);
+				if (shortValue.length > 0) {
+					result += '&' + shortName + '=' + shortValue;
+				}
+			})
+			return makeSpacesUnderscores(result);
+		},
+		compactURL: function (state, getters) {
+			var viewURL = "https://marycjenkinsart.github.io/local-colors-slot-manager/#/view?";
+			return viewURL + getters.compactEverything;
+		},
 	},
 	mutations: {
 		// this is what actually changes the state
@@ -273,6 +297,12 @@ var store = new Vuex.Store({
 		},
 		UPDATE_ARTISTS_OBJECT: function (state, data) {
 			state.artists = data;
+		},
+		IMPORT_ADJUSTMENTS: function (state, data) {
+			Object.keys(data).forEach(function (floorName) {
+				var halfSlotCount = state.artists[floorName].length;
+				state.templateInfo[floorName].adjustments[halfSlotCount] = data[floorName];
+			})
 		},
 		UPDATE_ADJUSTMENTS: function (state, data) {
 			var floorName = data.floorName;
@@ -319,6 +349,9 @@ var store = new Vuex.Store({
 		},
 		updateArtistsObject: function (context, data) {
 			context.commit('UPDATE_ARTISTS_OBJECT', data);
+		},
+		importAdjustments: function (context, data) {
+			context.commit('IMPORT_ADJUSTMENTS', data);
 		},
 		updateAdjustments: function (context, data) {
 			context.commit('UPDATE_ADJUSTMENTS', data);
