@@ -180,6 +180,18 @@ var store = new Vuex.Store({
 			})
 			return snappedSlots;
 		},
+		// snappedFusedSlotsLabels: function (state, getters) {
+		// 	var result = [];
+		// 	var findDistanceFromEnd = function (lines) {
+		// 		var firstX = lines[0].x1;
+		// 		var firstY = lines[0].y1;
+		// 		var lastX = lines[lines.length - 1].x1;
+		// 		var lastY = lines[lines.length - 1].y1;
+		// 		// TODO: getLengthFromLineCoords() wants a single line segment, with x1, y1, x2, y2 :(
+		// 		return distance;
+		// 	}
+		// 	return result;
+		// },
 		artistPar: function (state, getters) {
 			var fancy = getters.fancyArtists;
 			var result = {
@@ -242,33 +254,46 @@ var store = new Vuex.Store({
 				'&f=' + feat +
 				'&u=' + up +
 				'&d=' + down;
-			Object.keys(state.templateInfo).forEach(function (floorName) {
-				var halfSlotCount = state.artists[floorName].length;
-				var shortName = 'a' + floorName[0];
-				var adjustments = state.templateInfo[floorName].adjustments[halfSlotCount];
-				var shortValue = makeAdjustmentsCompact(adjustments);
-				if (shortValue.length > 0) {
-					result += '&' + shortName + '=' + shortValue;
+			// flags stuff -- DETECT LEGACY MODE HERE
+			var flags = [];
+			if (state.advanced.rigidView === false) {
+				flags.push('v2');
+			}
+			if (flags.length > 0) {
+				var joinedFlags = flags.join(',');
+				result += '&x=' + joinedFlags;
+			}
+			// if legacy mode is used, ignore custom template selection and adjustments:
+			if (flags.includes('v2')) {
+				// custom template selection:
+				var t = {};
+				Object.keys(state.templateInfo).forEach(function (floorName) {
+					var shortName = 't' + floorName[0];
+					var selected = state.templateInfo[floorName].selectedTemplateBase
+					var first = Object.keys(templates[floorName])[0];
+					if (
+						selected !== first
+					) {
+						t[shortName] = selected;
+					}
+				})
+				if (t.tu || t.td) {
+					tu = t.tu || '',
+					td = t.td || '',
+					result += '&t=' + tu + ',' + td;
 				}
-			})
-			var t = {};
-			Object.keys(state.templateInfo).forEach(function (floorName) {
-				var shortName = 't' + floorName[0];
-				var selected = state.templateInfo[floorName].selectedTemplateBase
-				var first = Object.keys(templates[floorName])[0];
-				if (
-					selected !== first
-				) {
-					t[shortName] = selected;
-				}
-			})
-			if (t.tu || t.td) {
-				tu = t.tu || '',
-				td = t.td || '',
-				result += '&t=' + tu + ',' + td;
+				// custom adjustments:
+				Object.keys(state.templateInfo).forEach(function (floorName) {
+					var halfSlotCount = state.artists[floorName].length;
+					var shortName = 'a' + floorName[0];
+					var adjustments = state.templateInfo[floorName].adjustments[halfSlotCount];
+					var shortValue = makeAdjustmentsCompact(adjustments);
+					if (shortValue.length > 0) {
+						result += '&' + shortName + '=' + shortValue;
+					}
+				})
 			}
 			var result = makeSpacesUnderscores(result)
-			console.log(result);
 			return result;
 		},
 		compactURL: function (state, getters) {
@@ -278,6 +303,11 @@ var store = new Vuex.Store({
 	},
 	mutations: {
 		// this is what actually changes the state
+		SET_LEGACY_MODE: function (state, bool) {
+			console.log(bool);
+			state.advanced.rigidView = bool;
+			// TODO: rename things to be more consistent, e.g. this one and the below
+		},
 		TOGGLE_RIGID_VIEW: function (state) {
 			state.advanced.rigidView = !state.advanced.rigidView;
 		},
@@ -335,6 +365,9 @@ var store = new Vuex.Store({
 	actions: {
 		// only one additional thing can be passed besides 'context'
 		// you'll have to pack multiples in an object :(
+		setLegacyMode: function (context, bool) {
+			context.commit('SET_LEGACY_MODE', bool);
+		},
 		setAdvancedMode: function (context, bool) {
 			context.commit('SET_ADVANCED_MODE', bool);
 		},

@@ -12,6 +12,7 @@ Vue.component('name-manager', {
 		return {
 			lockGuest: true,
 			listColors: false,
+			// lockColors: false,
 			editName: {
 				editing: false,
 				oldName: '',
@@ -175,7 +176,10 @@ Vue.component('name-manager', {
 			this.$store.dispatch('updateArtistsObject',artistsObject);
 		},
 		getArtistColorByName: function (name) {
-			var colorIndex = this.uniqueArtists.findIndex(function (uniqueName) {
+			// var uniqueArtists = this.lockColors ? this.uniqueArtists.sort() : this.uniqueArtists
+			// TODO: re-enable above, but only if you make the preview maps support this, too
+			var uniqueArtists = this.uniqueArtists;
+			var colorIndex = uniqueArtists.findIndex(function (uniqueName) {
 				return name === uniqueName;
 			});
 			var result = '';
@@ -613,9 +617,11 @@ Vue.component('name-manager', {
 						<tr class="zebra">
 							<td class="table_first">
 								<button
+									title="move artist clockwise"
 									@click="rotateArtistUp(findDownNeighbor(index))"
 								>↓</button>
 								<button
+								title="move artist counter-clockwise"
 									@click="rotateArtistUp(artist.slotIndex)"
 								>↑</button>
 							</td>
@@ -671,14 +677,15 @@ Vue.component('name-manager', {
 				<p
 					class="red"
 				>
-					<label>
-						<span>Advanced edge control:</span>
-						<input
-							type="checkbox"
-							:checked="advancedModeOn"
-							@input="toggleAdvancedMode"
-						/>
-					</label>
+					<span>Show advanced edge control:</span>
+					<button
+						v-if="!advancedModeOn"
+						@click="toggleAdvancedMode"
+					>Show</button>
+					<button
+						v-if="advancedModeOn"
+						@click="toggleAdvancedMode"
+					>Hide</button>
 				</p>
 				<div
 					v-show="advancedModeOn"
@@ -743,6 +750,7 @@ Vue.component('name-manager', {
 					</p>
 					<p>
 						<span
+							title="Adjust half slot edges manually (including fused edges)"
 							:class="rigidViewOn ? 'pretend-disabled' : ''"
 						>Tune edges:</span>
 						<button
@@ -777,7 +785,7 @@ Vue.component('name-manager', {
 												:class="
 													nameList[index] !== nameList[index+1]
 													? 'artist-name ' + getArtistColorByName(nameList[index])
-													: ''
+													: 'pretend-disabled'
 												"
 											>{{nameList[index]}}</span>
 										</td>
@@ -804,7 +812,7 @@ Vue.component('name-manager', {
 												:class="
 													nameList[index] !== nameList[index+1]
 													? 'artist-name ' + getArtistColorByName(nameList[index + 1])
-													: ''
+													: 'pretend-disabled'
 												"
 											>{{nameList[index+1]}}</span>
 										</td>

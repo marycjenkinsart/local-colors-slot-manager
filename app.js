@@ -712,6 +712,7 @@ var app = new Vue({
 			// t: '',
 			au: '',
 			ad: '',
+			x: '',
 		}
 		Object.keys(defaultData).forEach(function (key) {
 			patchedQueryData[key] = actualQueryData && actualQueryData[key] || defaultData[key];
@@ -746,6 +747,13 @@ var app = new Vue({
 					}
 				)
 			}
+		}
+		var flags = patchedQueryData.x.split(',');
+		// if not marked, assume legacy mode (aka v1: rigid svg templates)
+		if (flags.includes('v2')) {
+			this.$store.dispatch('setLegacyMode', false);
+		} else {
+			this.$store.dispatch('setLegacyMode', true);
 		}
 	},
 	computed: {
