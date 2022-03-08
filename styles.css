@@ -106,6 +106,9 @@ table, th, td {
 
 /* *-*-*-*   GENERICS   *-*-*-*  */
 
+.fifth {
+	width: 19%;
+}
 .quarter {
 	width: 24%;
 }
@@ -223,8 +226,8 @@ table, th, td {
 	position: relative;
 }
 
-#threshold-inches {
-	width: 5em;
+.threshold-inches {
+	width: 4em;
 }
 
 .artist-name-label {

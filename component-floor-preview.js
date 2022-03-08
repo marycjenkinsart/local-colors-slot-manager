@@ -1629,7 +1629,7 @@ Vue.component('floor-preview', {
 	v-show="showCircles"
 	:cx="point.x"
 	:cy="point.y"
-	r="1.2"
+	r="1.5"
 />
 <text
 	v-for="line in artistNameLabels"
@@ -3030,7 +3030,7 @@ Vue.component('floor-preview', {
 	v-show="showCircles"
 	:cx="point.x"
 	:cy="point.y"
-	r="1.2"
+	r="1.5"
 />
 <text
 	v-for="line in artistNameLabels"

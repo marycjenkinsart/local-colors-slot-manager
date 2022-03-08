@@ -24,6 +24,7 @@ Vue.component('name-manager', {
 			artistTransfer: {
 				attempt: false,
 			},
+			tuneEdges: false,
 		};
 	},
 	computed: {
@@ -143,9 +144,22 @@ Vue.component('name-manager', {
 		},
 	},
 	methods: {
+		toggleTuneEdges: function () {
+			this.tuneEdges = !this.tuneEdges;
+		},
 		setAdjustment: function (index, value) {
 			var newAdjustments = JSON.parse(JSON.stringify(this.adjustments));
 			newAdjustments[index] = value;
+			var args = {
+				floorName: this.floorName,
+				adjustments: newAdjustments,
+				halfSlotCount: this.adjustments.length,
+			}
+			this.$store.dispatch('updateAdjustments',args);
+		},
+		adjustAdjustment: function (index, direction) {
+			var newAdjustments = JSON.parse(JSON.stringify(this.adjustments));
+			newAdjustments[index] += direction * 3;
 			var args = {
 				floorName: this.floorName,
 				adjustments: newAdjustments,
@@ -721,7 +735,7 @@ Vue.component('name-manager', {
 								title="Slot 'islands' smaller than this will be snapped to the nearest edge"
 							>Threshold (inches): </span>
 							<input
-								id="threshold-inches"
+								class="threshold-inches"
 								type="number"
 								:disabled="rigidViewOn"
 								:value="templateFloorInfo.snapInches"
@@ -744,16 +758,72 @@ Vue.component('name-manager', {
 						</label>
 					</p>
 					<p>
-						<div
-							v-for="(adjustment, index) in adjustments"
-						>
-							<input
-								type="number"
-								:value="adjustment"
-								step="3"
-								@input="setAdjustment(index, $event.target.value)"
-							/>
-						</div>
+						<span>Tune edges:</span>
+						<button
+							v-if="!tuneEdges"
+							@click="toggleTuneEdges"
+						>Show</button>
+						<button
+							v-if="tuneEdges"
+							@click="toggleTuneEdges"
+						>Hide</button>
+					</p>
+					<p
+						v-if="!rigidViewOn && tuneEdges"
+					>
+						<table>
+							<tbody>
+								<template
+									v-for="(adjustment, index) in adjustments"
+								>
+									<tr
+										v-if="index !== adjustments.length - 1"
+										:class="
+											nameList[index] !== nameList[index+1]
+											? 'white-bg'
+											: ''
+										"
+									>
+										<td>
+											<span
+												:class="
+													nameList[index] !== nameList[index+1]
+													? 'artist-name ' + getArtistColorByName(nameList[index])
+													: ''
+												"
+											>{{nameList[index]}}</span>
+										</td>
+										<td>
+											<button
+												title="Give previous artist less space"
+												@click="adjustAdjustment(index, -1)"
+											>←</button>
+										</td>
+										<td
+											class="center"
+											style="width: 35px;"
+										>
+											{{adjustment}}"
+										</td>
+										<td>
+											<button
+												title="Give previous artist more space"
+												@click="adjustAdjustment(index, 1)"
+											>→</button>
+										</td>
+										<td>
+											<span
+												:class="
+													nameList[index] !== nameList[index+1]
+													? 'artist-name ' + getArtistColorByName(nameList[index + 1])
+													: ''
+												"
+											>{{nameList[index+1]}}</span>
+										</td>
+									</tr>
+								</template>
+							</tbody>
+						</table>
 					</p>
 				</div>
 			</div>
