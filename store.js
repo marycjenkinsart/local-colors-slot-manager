@@ -267,7 +267,9 @@ var store = new Vuex.Store({
 				td = t.td || '',
 				result += '&t=' + tu + ',' + td;
 			}
-			return makeSpacesUnderscores(result);
+			var result = makeSpacesUnderscores(result)
+			console.log(result);
+			return result;
 		},
 		compactURL: function (state, getters) {
 			var viewURL = "https://marycjenkinsart.github.io/local-colors-slot-manager/#/view?";

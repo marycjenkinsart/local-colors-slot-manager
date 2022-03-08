@@ -175,9 +175,10 @@ var makeCompactFeaturedUnfancy = function (string) {
 	})
 	return result;
 };
-var makeAdjustmentsCompact = function (array) {
+var makeAdjustmentsCompact = function (_array) {
 	var result = [];
 	var zeroCount = 0;
+	var array = _array || [];
 	array.forEach(function (number) {
 		if (number === 0) {
 			zeroCount += 1;
