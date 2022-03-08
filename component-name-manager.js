@@ -64,7 +64,7 @@ Vue.component('name-manager', {
 			return this.$store.getters.artistPar[this.floorName];
 		},
 		halfSlotSize: function () {
-			return this.$store.getters.uniformHalfSlotLengths[this.floorName][0].size;
+			return this.$store.getters.naiveHalfSlotLengths[this.floorName][0].size;
 		},
 		halfSlotSizeOverPar: function () {
 			var inchesPar = 12 * 12;
@@ -137,8 +137,22 @@ Vue.component('name-manager', {
 			var lookup = 'count' + this.uniqueArtists.length;
 			return colorMap[lookup];
 		},
+		adjustments: function () {
+			var halfSlotCount = 2 * this.slotCount;
+			return this.$store.state.templateInfo[this.floorName].adjustments[halfSlotCount] || [];
+		},
 	},
 	methods: {
+		setAdjustment: function (index, value) {
+			var newAdjustments = JSON.parse(JSON.stringify(this.adjustments));
+			newAdjustments[index] = value;
+			var args = {
+				floorName: this.floorName,
+				adjustments: newAdjustments,
+				halfSlotCount: this.adjustments.length,
+			}
+			this.$store.dispatch('updateAdjustments',args);
+		},
 		toggleAdvancedMode: function () {
 			this.$store.dispatch('toggleAdvancedMode');
 		},
@@ -728,6 +742,18 @@ Vue.component('name-manager', {
 								@input="toggleSnapCircles"
 							/>
 						</label>
+					</p>
+					<p>
+						<div
+							v-for="(adjustment, index) in adjustments"
+						>
+							<input
+								type="number"
+								:value="adjustment"
+								step="3"
+								@input="setAdjustment(index, $event.target.value)"
+							/>
+						</div>
 					</p>
 				</div>
 			</div>

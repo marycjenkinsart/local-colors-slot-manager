@@ -1,9 +1,9 @@
 var store = new Vuex.Store({
 	state: {
 		advanced: {
-			advancedModeOn: false,
-			rigidView: true, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
-			showCircles: false,
+			advancedModeOn: true,
+			rigidView: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
+			showCircles: true,
 		},
 		templateInfo: {
 			up: {
@@ -108,7 +108,7 @@ var store = new Vuex.Store({
 		downTemplate: function (state) {
 			return templates.down[state.templateInfo.down.selectedTemplateBase];
 		},
-		uniformHalfSlotLengths: function (state, getters) {
+		naiveHalfSlotLengths: function (state, getters) {
 			return {
 				up: getBaselineHalfSlots(getters.upTemplate, state.artists.up),
 				down: getBaselineHalfSlots(getters.downTemplate, state.artists.down),
@@ -116,14 +116,41 @@ var store = new Vuex.Store({
 		},
 		naiveHalfSlots: function (state, getters) {
 			return {
-				up: makeComplexLines(getters.upTemplate, getters.uniformHalfSlotLengths.up),
-				down: makeComplexLines(getters.downTemplate, getters.uniformHalfSlotLengths.down),
+				up: makeComplexLines(getters.upTemplate, getters.naiveHalfSlotLengths.up),
+				down: makeComplexLines(getters.downTemplate, getters.naiveHalfSlotLengths.down),
+			};
+		},
+		adjustedHalfSlotLengths: function (state, getters) {
+			var result = {};
+			Object.keys(state.templateInfo).forEach(function (floorName) {
+				var adjustments = state.templateInfo[floorName].adjustments;
+				var halfSlotCount = state.artists[floorName].length;
+				// guaranteeing there's something there:
+				adjustments[halfSlotCount] = adjustments[halfSlotCount] || [];
+				var emptyFrom = adjustments[halfSlotCount].length;
+				adjustments[halfSlotCount].length = halfSlotCount;
+				adjustments[halfSlotCount].fill(0,emptyFrom);
+				// the real work:
+				var adjustmentsArray = adjustments[halfSlotCount];
+				var templateName = floorName + 'Template';
+				result[floorName] = getBaselineHalfSlots(
+					getters[templateName],
+					state.artists[floorName],
+					adjustmentsArray,
+				)
+			})
+			return result;
+		},
+		adjustedHalfSlots: function (state, getters) {
+			return {
+				up: makeComplexLines(getters.upTemplate, getters.adjustedHalfSlotLengths.up),
+				down: makeComplexLines(getters.downTemplate, getters.adjustedHalfSlotLengths.down),
 			};
 		},
 		fusedHalfSlots: function (state, getters) {
 			return {
-				up: fuseComplexLinesByArtist(getters.naiveHalfSlots.up),
-				down: fuseComplexLinesByArtist(getters.naiveHalfSlots.down),
+				up: fuseComplexLinesByArtist(getters.adjustedHalfSlots.up),
+				down: fuseComplexLinesByArtist(getters.adjustedHalfSlots.down),
 			};
 		},
 		snappedFusedSlots: function (state, getters) {
@@ -169,8 +196,8 @@ var store = new Vuex.Store({
 				})
 			})
 			var halfSlotSize = {
-				up: getters.uniformHalfSlotLengths.up[0].size,
-				down: getters.uniformHalfSlotLengths.down[0].size,
+				up: getters.naiveHalfSlotLengths.up[0].size,
+				down: getters.naiveHalfSlotLengths.down[0].size,
 			}
 			Object.keys(getters.snappedFusedSlotsFlat).forEach(function (floorName) {
 				var floor = getters.snappedFusedSlotsFlat[floorName];
@@ -192,14 +219,12 @@ var store = new Vuex.Store({
 				down: getEdgesFromComplexLines(getters.naiveHalfSlots.down),
 			};
 		},
-		// adjustedSlotEdges: function (state, getters) { // draw the slot borders and marin measurements from this
-		// 	var up = getEdgesFromComplexLines(getters.fusedHalfSlots.up);
-		// 	var down = getEdgesFromComplexLines(getters.fusedHalfSlots.down);
-		// 	return {
-		// 		up: up,
-		// 		down: down,
-		// 	};
-		// },
+		adjustedHalfSlotEdges: function (state, getters) { // draw the solid slot border circles from this
+			return {
+				up: getEdgesFromComplexLines(getters.adjustedHalfSlots.up),
+				down: getEdgesFromComplexLines(getters.adjustedHalfSlots.down),
+			};
+		},
 		snappedSlotEdges: function (state, getters) { // draw the slot borders and marin measurements from this
 			var up = getEdgesFromComplexLines(getters.snappedFusedSlots.up);
 			var down = getEdgesFromComplexLines(getters.snappedFusedSlots.down);
@@ -249,6 +274,15 @@ var store = new Vuex.Store({
 		UPDATE_ARTISTS_OBJECT: function (state, data) {
 			state.artists = data;
 		},
+		UPDATE_ADJUSTMENTS: function (state, data) {
+			var floorName = data.floorName;
+			var newAdjustments = data.adjustments;
+			var halfSlotCount = data.halfSlotCount;
+			// couldn't figure out how else to trigger observability:
+			var adjustments = JSON.parse(JSON.stringify(state.templateInfo[floorName].adjustments));
+			adjustments[halfSlotCount] = newAdjustments;
+			state.templateInfo[floorName].adjustments = adjustments;
+		},
 	},
 	actions: {
 		// only one additional thing can be passed besides 'context'
@@ -285,6 +319,9 @@ var store = new Vuex.Store({
 		},
 		updateArtistsObject: function (context, data) {
 			context.commit('UPDATE_ARTISTS_OBJECT', data);
+		},
+		updateAdjustments: function (context, data) {
+			context.commit('UPDATE_ADJUSTMENTS', data);
 		},
 	},
 });

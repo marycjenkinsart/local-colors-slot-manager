@@ -375,7 +375,18 @@ var textLabelRotation = function (coords, x, y) {
  /*   LINE INTERATIONS   */
 //----------------------//
 
-var getBaselineHalfSlots = function (templateArray, unfancyArtists) {
+var getBaselineHalfSlots = function (templateArray, unfancyArtists, adjustmentsArray) {
+	if (
+		adjustmentsArray
+		&& adjustmentsArray.length !== unfancyArtists.length
+	) {
+		console.error('Adjustment and artist length mismatch!');
+		console.error({
+			template: templateArray,
+			artists: unfancyArtists,
+			adjustments: adjustmentsArray
+		});
+	}
 	var totalHangingLength = templateArray
 		.map(function (item) {
 			return getLengthFromLineCoords(item);
@@ -388,8 +399,11 @@ var getBaselineHalfSlots = function (templateArray, unfancyArtists) {
 	var practicalHalfSlotLengths = [];
 	var beginning = 0;
 	var end = 0;
+	var adjustmentPrev = 0;
 	for (let index = 0; index < halfSlotCount; index++) {
-		end += halfSlotLength;
+		var adjustmentCurr = adjustmentsArray && adjustmentsArray[index] || 0;
+		adjustmentCurr = inchesToTemplateNumber(adjustmentCurr);
+		end += halfSlotLength + adjustmentCurr - adjustmentPrev;
 		var practicalHalfSlot = {
 			beginning: beginning,
 			end: end,
@@ -398,6 +412,7 @@ var getBaselineHalfSlots = function (templateArray, unfancyArtists) {
 		}
 		practicalHalfSlotLengths.push(practicalHalfSlot);
 		beginning = end;
+		adjustmentPrev = adjustmentCurr;
 	}
 	return practicalHalfSlotLengths;
 	// [

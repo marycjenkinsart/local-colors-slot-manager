@@ -26,6 +26,7 @@ Vue.component('floor-preview', {
 		rigidView: function () {
 			return this.$store.state.advanced.rigidView;
 		},
+		// Still used for legacy stuff; don't excise yet
 		slot01: function () {
 			return this.nameList[0] || 'ERROR';
 		},
@@ -65,6 +66,7 @@ Vue.component('floor-preview', {
 		slot13: function () {
 			return this.nameList[12] || 'ERROR';
 		},
+		// End legacy stuff
 		slotCount: function () {
 			return this.nameList.length;
 		},
@@ -101,7 +103,7 @@ Vue.component('floor-preview', {
 			return this.$store.getters.naiveHalfSlotEdges[this.floorName];
 		},
 		solidCircles: function () {
-			return this.$store.getters.naiveHalfSlotEdges[this.floorName]; // TODO: change to adjusted version later
+			return this.$store.getters.adjustedHalfSlotEdges[this.floorName];
 		},
 		realSlotEdges: function () {
 			return this.$store.getters.snappedSlotEdges[this.floorName];
