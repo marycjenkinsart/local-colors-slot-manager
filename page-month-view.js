@@ -407,8 +407,8 @@ var monthViewPage = Vue.component('month-view', {
 	</p>
 	<p>
 		<textarea
-			cols="50"
-			rows="4"
+			cols="54"
+			rows="6"
 			class="position-absolute"
 			ref="linkToCopy"
 			readonly

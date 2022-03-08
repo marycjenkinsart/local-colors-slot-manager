@@ -2,7 +2,7 @@ var store = new Vuex.Store({
 	state: {
 		advanced: {
 			advancedModeOn: false,
-			rigidView: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
+			rigidView: true, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
 			showCircles: false,
 		},
 		templateInfo: {
@@ -238,10 +238,10 @@ var store = new Vuex.Store({
 			var up = makeFloorCompact(state.artists.up);
 			var down = makeFloorCompact(state.artists.down);
 			var feat = makeFeaturedCompact(state.artists.feat);
-			var result = 'l=' + compactLabel + '&' +
-				'f=' + feat + '&' +
-				'u=' + up + '&' +
-				'd=' + down;
+			var result = 'l=' + compactLabel +
+				'&f=' + feat +
+				'&u=' + up +
+				'&d=' + down;
 			Object.keys(state.templateInfo).forEach(function (floorName) {
 				var halfSlotCount = state.artists[floorName].length;
 				var shortName = 'a' + floorName[0];
@@ -251,6 +251,22 @@ var store = new Vuex.Store({
 					result += '&' + shortName + '=' + shortValue;
 				}
 			})
+			var t = {};
+			Object.keys(state.templateInfo).forEach(function (floorName) {
+				var shortName = 't' + floorName[0];
+				var selected = state.templateInfo[floorName].selectedTemplateBase
+				var first = Object.keys(templates[floorName])[0];
+				if (
+					selected !== first
+				) {
+					t[shortName] = selected;
+				}
+			})
+			if (t.tu || t.td) {
+				tu = t.tu || '',
+				td = t.td || '',
+				result += '&t=' + tu + ',' + td;
+			}
 			return makeSpacesUnderscores(result);
 		},
 		compactURL: function (state, getters) {

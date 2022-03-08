@@ -715,7 +715,6 @@ var app = new Vue({
 		Object.keys(defaultData).forEach(function (key) {
 			patchedQueryData[key] = actualQueryData && actualQueryData[key] || defaultData[key];
 		})
-		console.log(patchedQueryData);
 		var rotationLabel = makeLabelUncompact(patchedQueryData.l);
 		artistsFromQuery.feat = makeCompactFeaturedUnfancy(patchedQueryData.f);
 		artistsFromQuery.up = makeCompactFloorUnfancy(patchedQueryData.u);
@@ -728,10 +727,25 @@ var app = new Vue({
 			up: makeAdjustmentsUncompact(patchedQueryData.au, upHalfSlots),
 			down: makeAdjustmentsUncompact(patchedQueryData.ad, downHalfSlots),
 		});
-		// this.$store.dispatch('importBaseTemplate',{
-		// 	up: makeAdjustmentsUncompact(patchedQueryData.tu),
-		// 	down: makeAdjustmentsUncompact(patchedQueryData.td),
-		// });
+		if (actualQueryData.t) {
+			var splits = actualQueryData.t.split(',');
+			if (splits[0].length > 0) {
+				this.$store.dispatch('setSelectedTemplateBase',
+					{
+						floorName: 'up',
+						value: splits[0],
+					}
+				)
+			}
+			if (splits[1].length > 0) {
+				this.$store.dispatch('setSelectedTemplateBase',
+					{
+						floorName: 'down',
+						value: splits[0],
+					}
+				)
+			}
+		}
 	},
 	computed: {
 		demo: function () {
