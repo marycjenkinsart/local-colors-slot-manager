@@ -1,6 +1,6 @@
 var rawTemplates = {
 	up: `
-	<g id="template-00">
+	<g id="u00">
 		<line id="ccw_6_" class="st12" x1="68" y1="73.5" x2="50" y2="113.2"/>
 		<line class="st12" x1="122.6" y1="26.6" x2="182.7" y2="26.6"/>
 		<line class="st12" x1="182.7" y1="27" x2="182.7" y2="98.3"/>
@@ -14,7 +14,7 @@ var rawTemplates = {
 		<line id="ccw_1_" class="st12" x1="179.5" y1="532" x2="179.5" y2="489.5"/>
 		<line class="st12" x1="146.4" y1="351.2" x2="178.6" y2="351.2"/>
 	</g>
-	<g id="template-01">
+	<g id="u01">
 		<line class="st12" x1="122.5" y1="26.6" x2="182.6" y2="26.6"/>
 		<line class="st12" x1="182.6" y1="27" x2="182.6" y2="98.3"/>
 		<line id="ccw_7_" class="st12" x1="68.1" y1="73.5" x2="50.1" y2="113.2"/>
@@ -30,7 +30,7 @@ var rawTemplates = {
 	</g>
 	`,
 	down: `
-	<g id="template-00">
+	<g id="d00">
 		<line class="st3" x1="135.8" y1="351.9" x2="135.8" y2="392.6"/>
 		<line class="st3" x1="121.2" y1="392.6" x2="80.8" y2="392.6"/>
 		<line class="st3" x1="51.2" y1="392.6" x2="51.2" y2="369.6"/>

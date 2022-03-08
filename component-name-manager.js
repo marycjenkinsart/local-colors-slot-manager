@@ -24,7 +24,6 @@ Vue.component('name-manager', {
 			artistTransfer: {
 				attempt: false,
 			},
-			tuneEdges: false,
 		};
 	},
 	computed: {
@@ -144,9 +143,6 @@ Vue.component('name-manager', {
 		},
 	},
 	methods: {
-		toggleTuneEdges: function () {
-			this.tuneEdges = !this.tuneEdges;
-		},
 		setAdjustment: function (index, value) {
 			var newAdjustments = JSON.parse(JSON.stringify(this.adjustments));
 			newAdjustments[index] = value;
@@ -183,9 +179,7 @@ Vue.component('name-manager', {
 				return name === uniqueName;
 			});
 			var result = '';
-			if (this.listColors) {
-				result = this.slotColors[colorIndex];
-			}
+			result = this.slotColors[colorIndex];
 			return result;
 		},
 		editNameStart: function (name) {
@@ -628,7 +622,11 @@ Vue.component('name-manager', {
 							<td class="table_second">
 								<span
 									class="artist-name"
-									:class="getArtistColorByName(artist.name)"
+									:class="
+										listColors
+										? getArtistColorByName(artist.name)
+										: ''
+									"
 								>{{artist.name}}</span>
 								<button
 									:disabled="artist.name === guestName"
@@ -744,32 +742,22 @@ Vue.component('name-manager', {
 						</label>
 					</p>
 					<p>
-						<label>
-							<span
-								:class="rigidViewOn ? 'pretend-disabled' : ''"
-								title="Displays the original slot edges before snapping behavior is applied"
-							>Show pre-snapped borders: </span>
-							<input
-								type="checkbox"
-								:disabled="rigidViewOn"
-								:checked="showCircles"
-								@input="toggleSnapCircles"
-							/>
-						</label>
-					</p>
-					<p>
-						<span>Tune edges:</span>
+						<span
+							:class="rigidViewOn ? 'pretend-disabled' : ''"
+						>Tune edges:</span>
 						<button
-							v-if="!tuneEdges"
-							@click="toggleTuneEdges"
+							v-if="!showCircles"
+							:disabled="rigidViewOn"
+							@click="toggleSnapCircles"
 						>Show</button>
 						<button
-							v-if="tuneEdges"
-							@click="toggleTuneEdges"
+							v-if="showCircles"
+							:disabled="rigidViewOn"
+							@click="toggleSnapCircles"
 						>Hide</button>
 					</p>
 					<p
-						v-if="!rigidViewOn && tuneEdges"
+						v-if="!rigidViewOn && showCircles"
 					>
 						<table>
 							<tbody>

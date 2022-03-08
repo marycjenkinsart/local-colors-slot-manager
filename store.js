@@ -1,9 +1,9 @@
 var store = new Vuex.Store({
 	state: {
 		advanced: {
-			advancedModeOn: true,
+			advancedModeOn: false,
 			rigidView: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
-			showCircles: true,
+			showCircles: false,
 		},
 		templateInfo: {
 			up: {
