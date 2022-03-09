@@ -43,10 +43,14 @@ var mixins = {
 			}
 			return result;
 		},
-		getDisplayPercentOverPar: function (top, bot) {
-			var result = (100 * top / bot - 100).toFixed(1);
-			result = result > 0 ? '+' + Math.abs(result) : '-' + Math.abs(result);
-			return result + '%';
+		overParSummaryDisplay: function (top, bot) {
+			var overPar = top.toFixed(0);
+			var par = bot.toFixed(1);
+			var result = 'due: ' + par + '"\nhas: ' + overPar + '"';
+			var percent = (100 * top / bot - 100).toFixed(1);
+			percent = result > 0 ? '+' + Math.abs(result) : '-' + Math.abs(percent);
+			result = result + '\n(' + percent + '%)';
+			return result;
 		},
 	}
 }

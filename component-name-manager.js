@@ -640,7 +640,7 @@ Vue.component('name-manager', {
 									title="change the artist's name"
 								>edit</button>
 								<span
-									:title="getDisplayPercentOverPar(artistPar[artist.name].slotTotal,artistPar[artist.name].par)"
+									:title="overParSummaryDisplay(artistPar[artist.name].slotTotal,artistPar[artist.name].par)"
 									v-if="!rigidViewOn"
 									class="medium-mini"
 									:class="getDisplayInches(artistPar[artist.name].overPar).includes('+') ? 'green' : 'red'"
