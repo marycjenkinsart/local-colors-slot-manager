@@ -399,6 +399,19 @@ var textLabelRotation = function (coords, x, y) {
 	}
 	return result;
 }
+var measurementLabelRotation = function (coords, x, y) {
+	var tanCoords = getNormalizedTangent(coords);
+	var radians = Math.atan2(tanCoords.y, tanCoords.x);
+	var degrees = (radians * 180 / Math.PI + 90).toFixed(0) - 180; // quick fix for ccw
+	var result = 'rotate(' + degrees + ',' + x + ',' + y + ')';
+	if (
+		Math.abs(coords.y1 - coords.y2) < 0.01
+		&& coords.x1 > coords.x2
+	) {
+		result = '';
+	}
+	return result;
+}
 
   //----------------------//
  /*   LINE INTERATIONS   */
@@ -690,6 +703,44 @@ var getEdgesFromComplexLines = function (complexLines) {
 		}
 	})
 	return points;
+};
+
+// for determining which mini line segments need labels:
+var reconstructOrigLine = function (lineSegments) {
+	return {
+		x1: lineSegments[0].x1,
+		y1: lineSegments[0].y1,
+		x2: lineSegments[lineSegments.length - 1].x2,
+		y2: lineSegments[lineSegments.length - 1].y2,
+	};
+};
+var measureLineAgainstLongLine = function (line, longLine) {
+	var topTestLine = {
+		x1: longLine.x1,
+		y1: longLine.y1,
+		x2: line.x2,
+		y2: line.y2,
+	};
+	var botTestLine = {
+		x1: line.x1,
+		y1: line.y1,
+		x2: longLine.x2,
+		y2: longLine.y2,
+	};
+	var topDistance = getLengthFromLineCoords(topTestLine);
+	var botDistance = getLengthFromLineCoords(botTestLine);
+	var newLineData = Object.assign(
+		{},
+		line,
+		{
+			longLine: longLine,
+			topDistance: topDistance,
+			botDistance: botDistance,
+			topTestLine: topTestLine,
+			botTestLine: botTestLine,
+		}
+	);
+	return newLineData;
 };
 
   //------------------------//

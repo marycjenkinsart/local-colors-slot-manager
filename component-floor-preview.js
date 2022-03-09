@@ -17,6 +17,9 @@ Vue.component('floor-preview', {
 		return {
 			rectWidth: 4,
 			dottedLineLength: 16,
+			measurementLabelSpacing: 6,
+			measurementLabelSize: 9,
+			measurementLabelNumberSpacing: 3,
 		}
 	},
 	computed: {
@@ -156,12 +159,61 @@ Vue.component('floor-preview', {
 					result[index].x,
 					result[index].y,
 				)
-
 			})
 			result = result.filter(function (lineSegment) {
 				var charCount = lineSegment.name.length;
 				var threshold = charCount * 3;
 				return getLengthFromLineCoords(lineSegment) > threshold;
+			})
+			return result;
+		},
+		linesToLabel: function () {
+			return this.$store.getters.snappedFusedSlotsNeedingLabels[this.floorName];
+		},
+		processedMeasurementLabels: function () {
+			var result = [];
+			var spacing = this.measurementLabelSpacing;
+			var size = this.measurementLabelSize;
+			var labelSpacing = this.measurementLabelNumberSpacing;
+			this.linesToLabel.forEach(function (line) {
+				line.ccw = !line.ccw;
+				var startCoords = lineToRightLineAtOrigin(line, spacing, line.labelLine.x1, line.labelLine.y1);
+				var endCoords = lineToRightLineAtOrigin(line, spacing, line.labelLine.x2, line.labelLine.y2);
+				var midpointLength = getLengthFromLineCoords(line) / 2;
+				var lineHalves = cutLineAtDistance(line, midpointLength);
+				var midpointCoords = lineToRightLineAtOrigin(
+					line,
+					(size + spacing),
+					lineHalves[0].x2,
+					lineHalves[0].y2
+				);
+				var labelCoords = lineToRightLineAtOrigin(
+					line,
+					(size + spacing + labelSpacing),
+					lineHalves[0].x2,
+					lineHalves[0].y2
+				);
+				var insert = {
+					start: {
+						x: startCoords.x,
+						y: startCoords.y,
+					},
+					mid: {
+						x: midpointCoords.x,
+						y: midpointCoords.y,
+					},
+					end: {
+						x: endCoords.x,
+						y: endCoords.y,
+					},
+					label: {
+						x: labelCoords.x,
+						y: labelCoords.y,
+						value: templateNumberToInches(line.labelDistance).toFixed(0),
+						rotation: measurementLabelRotation(line, labelCoords.x, labelCoords.y),
+					}
+				};
+				result.push(insert);
 			})
 			return result;
 		},
@@ -1639,6 +1691,26 @@ Vue.component('floor-preview', {
 	class="center artist-name-label"
 	:class="getArtistColorByName(line.name)"
 >{{line.name}}</text>
+<template
+	v-for="label in processedMeasurementLabels"
+>
+	<polyline
+		class="st0"
+		:points="label.start.x + ',' + label.start.y + ' ' + label.mid.x + ',' + label.mid.y + ' ' + label.end.x + ',' + label.end.y + ' '"
+	/>
+	<text
+		:x="label.label.x"
+		:y="label.label.y"
+		:transform="label.label.rotation"
+		class="center ust35 ust34 ust17"
+	>{{label.label.value}}"</text>
+	<text
+		:x="label.label.x"
+		:y="label.label.y"
+		:transform="label.label.rotation"
+		class="center st22 st23 st6"
+	>{{label.label.value}}"</text>
+</template>
 </g>
 </svg>
 </g>
@@ -3040,7 +3112,26 @@ Vue.component('floor-preview', {
 	class="center artist-name-label"
 	:class="getArtistColorByName(line.name)"
 >{{line.name}}</text>
-
+<template
+	v-for="label in processedMeasurementLabels"
+>
+	<polyline
+		class="st0"
+		:points="label.start.x + ',' + label.start.y + ' ' + label.mid.x + ',' + label.mid.y + ' ' + label.end.x + ',' + label.end.y + ' '"
+	/>
+	<text
+		:x="label.label.x"
+		:y="label.label.y"
+		:transform="label.label.rotation"
+		class="center ust35 ust34 ust17"
+	>{{label.label.value}}"</text>
+	<text
+		:x="label.label.x"
+		:y="label.label.y"
+		:transform="label.label.rotation"
+		class="center st22 st23 st6"
+	>{{label.label.value}}"</text>
+</template>
 </g>
 	</svg>  
 	</g>

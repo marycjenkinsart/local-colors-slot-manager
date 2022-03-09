@@ -180,18 +180,43 @@ var store = new Vuex.Store({
 			})
 			return snappedSlots;
 		},
-		// snappedFusedSlotsLabels: function (state, getters) {
-		// 	var result = [];
-		// 	var findDistanceFromEnd = function (lines) {
-		// 		var firstX = lines[0].x1;
-		// 		var firstY = lines[0].y1;
-		// 		var lastX = lines[lines.length - 1].x1;
-		// 		var lastY = lines[lines.length - 1].y1;
-		// 		// TODO: getLengthFromLineCoords() wants a single line segment, with x1, y1, x2, y2 :(
-		// 		return distance;
-		// 	}
-		// 	return result;
-		// },
+		snappedFusedSlotsNeedingLabels: function (state, getters) {
+			var lineArrayArray = getters.snappedFusedSlots;
+			var result = {};
+			Object.keys(getters.snappedFusedSlots).forEach(function (floorName) {
+				floorResults = [];
+				lineArrayArray[floorName].forEach(function (lines) {
+					if (lines.length > 1) {
+						var longLine = reconstructOrigLine(lines);
+						var workingLines = lines.map(function (line) {
+							return measureLineAgainstLongLine(line, longLine);
+						});
+						while (workingLines.length > 1) {
+							var indexOfShortest = -1;
+							var valueOfShortest = Infinity;
+							var topOrBot = '';
+							Object.values(workingLines).forEach(function (line, index) {
+								if (
+									line.topDistance < valueOfShortest
+									|| line.botDistance < valueOfShortest
+								) {
+									topOrBot = line.topDistance > line.botDistance ? 'bot' : 'top';
+									var label = topOrBot + 'Distance';
+									valueOfShortest = line[label];
+									indexOfShortest = index;
+								}
+							})
+							var insert = workingLines.splice(indexOfShortest,1)[0];
+							insert.labelLine = topOrBot === 'top' ? insert.topTestLine : insert.botTestLine;
+							insert.labelDistance = valueOfShortest;
+							floorResults.push(insert);
+						}
+					}
+				})
+				result[floorName] = floorResults;
+			})
+			return result;
+		},
 		artistPar: function (state, getters) {
 			var fancy = getters.fancyArtists;
 			var result = {
@@ -304,7 +329,6 @@ var store = new Vuex.Store({
 	mutations: {
 		// this is what actually changes the state
 		SET_LEGACY_MODE: function (state, bool) {
-			console.log(bool);
 			state.advanced.rigidView = bool;
 			// TODO: rename things to be more consistent, e.g. this one and the below
 		},
