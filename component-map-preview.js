@@ -1,13 +1,69 @@
-var svgSizes = {
+var rawSvgSizes = {
+	// the size of the SVG "artboard" for each floor
+	// (0,0 is origin, which is at the top-left)
 	up: { x: 218.4, y: 630.7 },
 	down: { x: 197, y: 480 },
-	combined: { x: 612, y: 792 }
+	combined: { x: 612, y: 792 },
+};
+
+var rawOffsets = {
+	// use the single-floor SVG file origins ("solo") when viewing just a single floor:
+	solo: { x: 0, y: 0 },
+	// otherwise, you'll want to position them on the 8.5 x 11 "page":
+	up: { x: 63.9, y: 103.1 },
+	down: { x: 324.97, y: 120.19 },
+};
+
+// In practice, the above is too tightly spaced for solo floor view and too spacious for combined
+// (Printing the preview page does not yield original SVG dimensions, which would have been the reason to do it)
+// Therefore, use the following instead:
+
+var padding = 10;
+var undoUSLetterSize = {
+	x: -60,
+	y: -40,
+};
+
+var svgSizes = {
+	up: {
+		x: 218.4 + padding*2,
+		y: 630.7 + padding*2
+	},
+	down: {
+		x: 197 + padding*2,
+		y: 480 + padding*2
+	},
+	combined: {
+		x: 528 + undoUSLetterSize.x,
+		y: 750 + undoUSLetterSize.y
+	},
 };
 
 var offsets = {
-	up: { x: 63.9, y: 103.1 },
-	down: { x: 324.97, y: 120.19 }
+	solo: {
+		x: padding,
+		y: padding
+	},
+	up: {
+		x: 63.9 + undoUSLetterSize.x,
+		y: 103.1 + undoUSLetterSize.y
+	},
+	down: {
+		x: 324.97 + undoUSLetterSize.x,
+		y: 120.19 + undoUSLetterSize.y
+	},
 };
+
+var otherCoords = {
+	rotationLabel: {
+		x: 305.9999 + undoUSLetterSize.x,
+		y: 67.5836 + undoUSLetterSize.y,
+	},
+	featuredLabel: {
+		x: 320 + undoUSLetterSize.x,
+		y: 590 + undoUSLetterSize.y,
+	}
+}
 
 Vue.component('map-preview', {
 	mixins: [
@@ -25,6 +81,9 @@ Vue.component('map-preview', {
 		},
 		overallView: function () {
 			return !(this.manage.which === 'up' || this.manage.which === 'down');
+		},
+		otherCoords: function () {
+			return otherCoords;
 		},
 		wrapperSize: function () {
 			var lookup = svgSizes[this.manage.which] || svgSizes.combined;
@@ -103,8 +162,8 @@ Vue.component('map-preview', {
 			var result = offsets[floor]
 			if (this.manage.which === floor) {
 				result = {
-					x: 0,
-					y: 0,
+					x: offsets.solo.x,
+					y: offsets.solo.y,
 				};
 			}
 			return result;
@@ -135,8 +194,8 @@ Vue.component('map-preview', {
 			v-if="overallView"
 		>
 			<text
-				x="305.9999"
-				y="67.5836"
+				:x="otherCoords.rotationLabel.x"
+				:y="otherCoords.rotationLabel.y"
 			>
 				<tspan
 					class="ust11 ust12 bigfont"
@@ -144,12 +203,12 @@ Vue.component('map-preview', {
 			</text>
 			<text>
 				<tspan
-					x="320"
-					y="590"
+					:x="otherCoords.featuredLabel.x"
+					:y="otherCoords.featuredLabel.y"
 					class="jl ust11 ust12 ust13"
 				>{{featuredLabelString}}</tspan>
 				<tspan
-					x="320"
+					:x="otherCoords.featuredLabel.x"
 					dy="1.2em"
 					class="jl ust11 ust12 ust13"
 				>{{featuredBodyString}}</tspan>

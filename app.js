@@ -756,11 +756,10 @@ var app = new Vue({
 		var patchedQueryData = {};
 		var artistsFromQuery = {};
 		var defaultData = {
-			l: '1969,12,1337,No_router_query_data_found',
-			f: 'no_router_query_data_found-3D-1',
-			u: 'no-1,router,query-1,data,found',
-			d: 'No-1,Rrouter,Query,Data,Found-1',
-			// t: '',
+			l: '1969,12,0',
+			f: '',
+			u: 'artist1-1,artist2,artist3-1,artist4,artist5',
+			d: 'Artist1,Artist2,Artist3,Artist4,Artist5-1',
 			au: '',
 			ad: '',
 			x: '',
