@@ -408,7 +408,7 @@ var measurementLabelRotation = function (coords, x, y) {
 		Math.abs(coords.y1 - coords.y2) < 0.01
 		&& coords.x1 > coords.x2
 	) {
-		result = '';
+		result = 'translate(0,6)';
 	}
 	return result;
 }
