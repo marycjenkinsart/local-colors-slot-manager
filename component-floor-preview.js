@@ -175,7 +175,8 @@ Vue.component('floor-preview', {
 			var spacing = this.measurementLabelSpacing;
 			var size = this.measurementLabelSize;
 			var labelSpacing = this.measurementLabelNumberSpacing;
-			this.linesToLabel.forEach(function (line) {
+			var workingLines = JSON.parse(JSON.stringify(this.linesToLabel));
+			workingLines.forEach(function (line) {
 				line.ccw = !line.ccw;
 				var startCoords = lineToRightLineAtOrigin(line, spacing, line.labelLine.x1, line.labelLine.y1);
 				var endCoords = lineToRightLineAtOrigin(line, spacing, line.labelLine.x2, line.labelLine.y2);
@@ -294,15 +295,6 @@ Vue.component('floor-preview', {
 <path class="ust8" d="M153.3,542.7c0.7,0.6,1,1.4-3.5,7.1c-4.5,5.7-5.4,5.6-6.1,5.1c-0.7-0.6-1-1.4,3.5-7.1 C151.7,542,152.6,542.1,153.3,542.7z"/> 
 <rect x="146.6" y="532.1" transform="matrix(0.6183 -0.786 0.786 0.6183 -365.9767 321.6956)" class="ust9" width="3.2" height="11"/> 
 <rect x="136" y="545.6" transform="matrix(0.6182 -0.786 0.786 0.6182 -380.6283 318.5482)" class="ust10" width="3.2" height="11"/>
-</g>
-<g id="featured-show-jl">
-<text transform="matrix(0 -1 1 0 46.4052 183)" class="ust11 ust12 ust13">FEATURED SHOW</text>
-</g>
-<g id="featured-show-jl_1_">
-<text transform="matrix(0 -1 1 0 46.4052 321.2188)" class="ust11 ust12 ust13">FEATURED SHOW</text>
-</g>
-<g id="jewelry-jl">
-<text transform="matrix(0 -1 1 0 47.4059 429.6504)" class="ust11 ust12 ust13">JEWELRY</text>
 </g>
 </g>
 <g v-if="rigidView === true">
