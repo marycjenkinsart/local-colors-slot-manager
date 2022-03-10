@@ -1,3 +1,5 @@
+var defaultSnapInches = 18;
+
 var store = new Vuex.Store({
 	state: {
 		advanced: {
@@ -9,14 +11,14 @@ var store = new Vuex.Store({
 			up: {
 				selectedTemplateBase: Object.keys(templates.up)[0],
 				snapOn: true,
-				snapInches: 18,
+				snapInches: defaultSnapInches,
 				priority: 'last', // in a slot size tie, give preference to last slot(s)
 				adjustments: {},
 			},
 			down: {
 				selectedTemplateBase: Object.keys(templates.down)[0],
 				snapOn: true,
-				snapInches: 18,
+				snapInches: defaultSnapInches,
 				priority: 'first',
 				adjustments: {},
 			},
@@ -283,6 +285,15 @@ var store = new Vuex.Store({
 			var flags = [];
 			if (state.advanced.rigidView === false) {
 				flags.push('v2');
+			}
+			var snapUp = parseInt(state.templateInfo.up.snapInches);
+			var snapDown = parseInt(state.templateInfo.down.snapInches);
+			if (
+				snapUp !== defaultSnapInches
+				|| snapDown !== defaultSnapInches
+			) {
+				var snaps = 'snap' + snapUp + '-' + snapDown;
+				flags.push(snaps);
 			}
 			if (flags.length > 0) {
 				var joinedFlags = flags.join(',');

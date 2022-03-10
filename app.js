@@ -799,12 +799,26 @@ var app = new Vue({
 			}
 		}
 		var flags = patchedQueryData.x.split(',');
-		// if not marked, assume legacy mode (aka v1: rigid svg templates)
-		if (flags.includes('v2')) {
-			this.$store.dispatch('setLegacyMode', false);
-		} else {
-			this.$store.dispatch('setLegacyMode', true);
-		}
+		var self = this;
+		flags.forEach(function (flag) {
+			// if not marked, assume legacy mode (aka v1: rigid svg templates)
+			if (flag.includes('v2')) {
+				self.$store.dispatch('setLegacyMode', false);
+			} else {
+				self.$store.dispatch('setLegacyMode', true);
+			}
+			if (flag.includes('snap')) {
+				var splits = flag.replace('snap','').split('-');
+				self.$store.dispatch('changeCornerSnapThreshold', {
+					floorName: 'up',
+					value: splits[0],
+				});
+				self.$store.dispatch('changeCornerSnapThreshold', {
+					floorName: 'down',
+					value: splits[1],
+				});
+			}
+		})
 	},
 	computed: {
 		demo: function () {
