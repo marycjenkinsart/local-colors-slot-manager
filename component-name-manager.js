@@ -40,8 +40,8 @@ Vue.component('name-manager', {
 		advancedModeOn: function () {
 			return this.$store.state.advanced.advancedModeOn;
 		},
-		rigidViewOn: function () {
-			return this.$store.state.advanced.rigidView;
+		legacyModeOn: function () {
+			return this.$store.state.advanced.legacyMode;
 		},
 		manageMe: function () {
 			return this.$store.state.manage.which === this.floorName;
@@ -167,8 +167,8 @@ Vue.component('name-manager', {
 		toggleAdvancedMode: function () {
 			this.$store.dispatch('toggleAdvancedMode');
 		},
-		toggleRigidView: function () {
-			this.$store.dispatch('toggleRigidView');
+		togglelegacyMode: function () {
+			this.$store.dispatch('togglelegacyMode');
 		},
 		updateFloor (floor) {
 			var artistsObject = JSON.parse(JSON.stringify(this.$store.state.artists));
@@ -641,7 +641,7 @@ Vue.component('name-manager', {
 								>edit</button>
 								<span
 									:title="overParSummaryDisplay(artistPar[artist.name].slotTotal,artistPar[artist.name].par)"
-									v-if="!rigidViewOn"
+									v-if="!legacyModeOn"
 									class="medium-mini"
 									:class="getDisplayInches(artistPar[artist.name].overPar).includes('+') ? 'green' : 'red'"
 								>{{getDisplayInches(artistPar[artist.name].overPar)}}</span>
@@ -697,19 +697,19 @@ Vue.component('name-manager', {
 							>Legacy mode: </span>
 							<input
 								type="checkbox"
-								:checked="rigidViewOn"
-								@input="toggleRigidView"
+								:checked="legacyModeOn"
+								@input="togglelegacyMode"
 							/>
 						</label>
 					</p>
 					<p>
 						<label>
 							<span
-								:class="rigidViewOn ? 'pretend-disabled' : ''"
+								:class="legacyModeOn ? 'pretend-disabled' : ''"
 								title="Choose which wall flow to use"
 							>Template base: </span>
 							<select
-								:disabled="rigidViewOn"
+								:disabled="legacyModeOn"
 								:value="templateFloorInfo.selectedTemplateBase"
 								@input="setSelectedTemplateBase($event.target.value)"
 							>
@@ -722,12 +722,12 @@ Vue.component('name-manager', {
 					<p>
 						<label>
 							<span
-								:class="rigidViewOn ? 'pretend-disabled' : ''"
+								:class="legacyModeOn ? 'pretend-disabled' : ''"
 								title="Control snapping to corners"
 							>Snap: </span>
 							<input
 								type="checkbox"
-								:disabled="rigidViewOn"
+								:disabled="legacyModeOn"
 								:checked="templateFloorInfo.snapOn"
 								@input="toggleCornerSnap"
 							/>
@@ -736,13 +736,13 @@ Vue.component('name-manager', {
 							style="margin-left: 8px;"
 						>
 							<span
-								:class="rigidViewOn ? 'pretend-disabled' : ''"
+								:class="legacyModeOn ? 'pretend-disabled' : ''"
 								title="Slot 'islands' smaller than this will be snapped to the nearest edge"
 							>Threshold (inches): </span>
 							<input
 								class="threshold-inches"
 								type="number"
-								:disabled="rigidViewOn"
+								:disabled="legacyModeOn"
 								:value="templateFloorInfo.snapInches"
 								@input="changeCornerSnapThreshold($event.target.value)"
 							/>
@@ -751,21 +751,21 @@ Vue.component('name-manager', {
 					<p>
 						<span
 							title="Adjust half slot edges manually (including fused edges)"
-							:class="rigidViewOn ? 'pretend-disabled' : ''"
+							:class="legacyModeOn ? 'pretend-disabled' : ''"
 						>Tune edges:</span>
 						<button
 							v-if="!showCircles"
-							:disabled="rigidViewOn"
+							:disabled="legacyModeOn"
 							@click="toggleSnapCircles"
 						>Show</button>
 						<button
 							v-if="showCircles"
-							:disabled="rigidViewOn"
+							:disabled="legacyModeOn"
 							@click="toggleSnapCircles"
 						>Hide</button>
 					</p>
 					<p
-						v-if="!rigidViewOn && showCircles"
+						v-if="!legacyModeOn && showCircles"
 					>
 						<table>
 							<tbody>

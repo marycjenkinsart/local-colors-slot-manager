@@ -26,8 +26,8 @@ Vue.component('floor-preview', {
 		nameList: function () {
 			return this.$store.state.artists[this.floorName];
 		},
-		rigidView: function () {
-			return this.$store.state.advanced.rigidView;
+		legacyMode: function () {
+			return this.$store.state.advanced.legacyMode;
 		},
 		// Still used for legacy stuff; don't excise yet
 		slot01: function () {
@@ -297,7 +297,7 @@ Vue.component('floor-preview', {
 <rect x="136" y="545.6" transform="matrix(0.6182 -0.786 0.786 0.6182 -380.6283 318.5482)" class="ust10" width="3.2" height="11"/>
 </g>
 </g>
-<g v-if="rigidView === true">
+<g v-if="legacyMode === true">
 <g id="show_if_slots_16_1_" v-if="slotCount === 16">
 <rect x="71.1" y="166.3" class="ust14" width="87.4" height="108.9"/>
 <rect x="116.1" y="196.5" class="ust15" width="64.3" height="71.5"/>
@@ -1646,7 +1646,7 @@ Vue.component('floor-preview', {
 </g>
 </g>
 </g>
-<g v-if="rigidView === false">
+<g v-if="legacyMode === false">
 <line
 	v-for="line in processedDottedLines"
 	:x1="line.x1"
@@ -1744,7 +1744,7 @@ Vue.component('floor-preview', {
 	<path class="st0" d="M145.4,305.5c-9.6,0-19.4,10.9-19.4,21.6s5.6,16.5,13.3,16.5"/>
 	<rect x="146.2" y="110.8" class="st2" width="21.3" height="194.7"/>
 	</g>
-	<g v-if="rigidView === true">
+	<g v-if="legacyMode === true">
 	<g id="show_if_slots_16_1_" v-if="slotCount === 16">
 	<rect x="51.7" y="131.6" class="st3" width="87.4" height="108.9"/>
 	<rect x="96.7" y="161.8" class="st4" width="64.3" height="71.5"/>
@@ -3067,7 +3067,7 @@ Vue.component('floor-preview', {
 	</g>
 	</g>
 	</g>
-<g v-if="rigidView === false">
+<g v-if="legacyMode === false">
 <line
 	v-for="line in processedDottedLines"
 	:x1="line.x1"

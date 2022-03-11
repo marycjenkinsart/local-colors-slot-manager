@@ -4,7 +4,7 @@ var store = new Vuex.Store({
 	state: {
 		advanced: {
 			advancedModeOn: false,
-			rigidView: true, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
+			legacyMode: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
 			showCircles: false,
 		},
 		templateInfo: {
@@ -283,7 +283,7 @@ var store = new Vuex.Store({
 				'&d=' + down;
 			// flags stuff -- DETECT LEGACY MODE HERE
 			var flags = [];
-			if (state.advanced.rigidView === false) {
+			if (state.advanced.legacyMode === false) {
 				flags.push('v2');
 			}
 			var snapUp = parseInt(state.templateInfo.up.snapInches);
@@ -340,11 +340,11 @@ var store = new Vuex.Store({
 	mutations: {
 		// this is what actually changes the state
 		SET_LEGACY_MODE: function (state, bool) {
-			state.advanced.rigidView = bool;
+			state.advanced.legacyMode = bool;
 			// TODO: rename things to be more consistent, e.g. this one and the below
 		},
 		TOGGLE_RIGID_VIEW: function (state) {
-			state.advanced.rigidView = !state.advanced.rigidView;
+			state.advanced.legacyMode = !state.advanced.legacyMode;
 		},
 		TOGGLE_ADVANCED_MODE: function (state) {
 			state.advanced.advancedModeOn = !state.advanced.advancedModeOn;
@@ -409,7 +409,7 @@ var store = new Vuex.Store({
 		toggleAdvancedMode: function (context) {
 			context.commit('TOGGLE_ADVANCED_MODE');
 		},
-		toggleRigidView: function (context) {
+		togglelegacyMode: function (context) {
 			context.commit('TOGGLE_RIGID_VIEW');
 		},
 		setManageLabel: function (context, bool) {
