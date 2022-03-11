@@ -158,21 +158,23 @@ var makeCompactFloorUnfancy = function (string) {
 	return result;
 };
 var makeCompactFeaturedUnfancy = function (string) {
-	var stringSplits = string.split(',');
 	var result = [];
-	stringSplits.forEach(function (fancyItem) {
-		var innermostSplits = fancyItem.split('-');
-		var name = makeUnderscoresSpaces(innermostSplits[0]);
-		var type = innermostSplits[1];
-		var artist = {
-			name: name,
-			type: type
-		}
-		if (innermostSplits[2]) {
-			artist.origSlotSize = innermostSplits[2] / 2;
-		}
-		result.push(artist);
-	})
+	if (string.length > 0) {
+		var stringSplits = string.split(',');
+		stringSplits.forEach(function (fancyItem) {
+			var innermostSplits = fancyItem.split('-');
+			var name = makeUnderscoresSpaces(innermostSplits[0]);
+			var type = innermostSplits[1];
+			var artist = {
+				name: name,
+				type: type
+			}
+			if (innermostSplits[2]) {
+				artist.origSlotSize = innermostSplits[2] / 2;
+			}
+			result.push(artist);
+		})
+	}
 	return result;
 };
 var makeAdjustmentsCompact = function (_array) {

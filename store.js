@@ -278,9 +278,11 @@ var store = new Vuex.Store({
 			var down = makeFloorCompact(state.artists.down);
 			var feat = makeFeaturedCompact(state.artists.feat);
 			var result = 'l=' + compactLabel +
-				'&f=' + feat +
 				'&u=' + up +
 				'&d=' + down;
+			if (state.artists.feat.length > 0) {
+				result += '&f=' + feat;
+			}
 			// flags stuff -- DETECT LEGACY MODE HERE
 			var flags = [];
 			if (state.advanced.legacyMode === false) {
