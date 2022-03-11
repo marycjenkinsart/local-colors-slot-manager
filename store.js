@@ -1,11 +1,13 @@
 var defaultSnapInches = 18;
+limitedFloorNames = ['up','down'];
 
 var store = new Vuex.Store({
 	state: {
 		advanced: {
-			advancedModeOn: true,
+			advancedModeOn: false,
 			legacyMode: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
-			showCircles: true,
+			showCircles: false,
+			featuredExtras: false,
 		},
 		templateInfo: {
 			up: {
@@ -22,6 +24,9 @@ var store = new Vuex.Store({
 				priority: 'first',
 				adjustments: {},
 			},
+			feat: {
+				selectedTemplateBase: Object.keys(templates.feat)[0],
+			}
 		},
 		manage: {
 			label: false,
@@ -110,6 +115,20 @@ var store = new Vuex.Store({
 		downTemplate: function (state) {
 			return templates.down[state.templateInfo.down.selectedTemplateBase];
 		},
+		featLineSegments: function (state) {
+			return templates.feat[state.templateInfo.feat.selectedTemplateBase];
+		},
+		featLinesTotal: function (state, getters) {
+			var rawLines = getters.featLineSegments;
+			var rawSum = rawLines.map(function (rawLine) {
+				return getLengthFromLineCoords(rawLine);
+			});
+			var result = rawSum.reduce(function (prev, cur) {
+				return prev + cur;
+			});
+			console.log({rawLines,rawSum,result})
+			return result;
+		},
 		naiveHalfSlotLengths: function (state, getters) {
 			return {
 				up: getBaselineHalfSlots(getters.upTemplate, state.artists.up),
@@ -124,7 +143,7 @@ var store = new Vuex.Store({
 		},
 		adjustedHalfSlotLengths: function (state, getters) {
 			var result = {};
-			Object.keys(state.templateInfo).forEach(function (floorName) {
+			limitedFloorNames.forEach(function (floorName) {
 				var adjustments = state.templateInfo[floorName].adjustments;
 				var halfSlotCount = state.artists[floorName].length;
 				// guaranteeing there's something there:
@@ -157,7 +176,7 @@ var store = new Vuex.Store({
 		},
 		snappedFusedSlots: function (state, getters) {
 			var snappedSlots = JSON.parse(JSON.stringify(getters.fusedHalfSlots));
-			Object.keys(snappedSlots).forEach(function (floorName) {
+			limitedFloorNames.forEach(function (floorName) {
 				var templateInfo = state.templateInfo[floorName];
 				if (templateInfo.snapOn) {
 					snappedSlots[floorName] = snapAllShortSegments(
@@ -171,7 +190,7 @@ var store = new Vuex.Store({
 		},
 		snappedFusedSlotsFlat: function (state, getters) { // draw the svgs from this
 			var snappedSlots = {}
-			Object.keys(getters.snappedFusedSlots).forEach(function (floorName) {
+			limitedFloorNames.forEach(function (floorName) {
 				var lineSegmentFragments = getters.snappedFusedSlots[floorName];
 				lineSegmentFragments.forEach(function (lineSegment) {
 					lineSegment.forEach(function (line) {
@@ -185,7 +204,7 @@ var store = new Vuex.Store({
 		snappedFusedSlotsNeedingLabels: function (state, getters) {
 			var lineArrayArray = getters.snappedFusedSlots;
 			var result = {};
-			Object.keys(getters.snappedFusedSlots).forEach(function (floorName) {
+			limitedFloorNames.forEach(function (floorName) {
 				floorResults = [];
 				lineArrayArray[floorName].forEach(function (lines) {
 					if (lines.length > 1) {
@@ -238,7 +257,7 @@ var store = new Vuex.Store({
 				up: getters.naiveHalfSlotLengths.up[0].size,
 				down: getters.naiveHalfSlotLengths.down[0].size,
 			}
-			Object.keys(getters.snappedFusedSlotsFlat).forEach(function (floorName) {
+			limitedFloorNames.forEach(function (floorName) {
 				var floor = getters.snappedFusedSlotsFlat[floorName];
 				floor.forEach(function (lineSegment) {
 					result[floorName][lineSegment.name].slotTotal = result[floorName][lineSegment.name].slotTotal || 0;
@@ -321,7 +340,7 @@ var store = new Vuex.Store({
 					result += '&t=' + tu + ',' + td;
 				}
 				// custom adjustments:
-				Object.keys(state.templateInfo).forEach(function (floorName) {
+				limitedFloorNames.forEach(function (floorName) {
 					var halfSlotCount = state.artists[floorName].length;
 					var shortName = 'a' + floorName[0];
 					var adjustments = state.templateInfo[floorName].adjustments[halfSlotCount];
@@ -390,7 +409,7 @@ var store = new Vuex.Store({
 			state.templateInfo[floorName].adjustments[halfSlotCount] = array;
 		},
 		IMPORT_ADJUSTMENTS: function (state, data) {
-			Object.keys(data).forEach(function (floorName) {
+			limitedFloorNames.forEach(function (floorName) {
 				var halfSlotCount = state.artists[floorName].length;
 				state.templateInfo[floorName].adjustments[halfSlotCount] = data[floorName];
 			})

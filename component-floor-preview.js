@@ -102,6 +102,12 @@ Vue.component('floor-preview', {
 		snappedLineSegments: function () {
 			return this.$store.getters.snappedFusedSlotsFlat[this.floorName];
 		},
+		lineSegmentsFeat: function () {
+			return this.$store.getters.featLineSegments;
+		},
+		showFeaturedExtras: function () {
+			return this.$store.state.advanced.featuredExtras;
+		},
 		ghostCircles: function () {
 			return this.$store.getters.naiveHalfSlotEdges[this.floorName];
 		},
@@ -130,8 +136,25 @@ Vue.component('floor-preview', {
 		processedRectangles: function () {
 			var result = [];
 			var rectWidth = this.rectWidth
-			var lineSegments = this.naiveLineSegments;
-			lineSegments = this.snappedLineSegments;
+			var lineSegments = this.snappedLineSegments;
+			lineSegments.forEach(function (line) {
+				var rect = lineToLeftRectangle(line, rectWidth);
+				var rectPoints = rect.x1 + ',' + rect.y1 + ' ' +
+					rect.x2 + ',' + rect.y2 + ' ' +
+					rect.x3 + ',' + rect.y3 + ' ' +
+					rect.x4 + ',' + rect.y4;
+				var insert = {
+					points: rectPoints,
+					artist: line.name
+				};
+				result.push(insert);
+			})
+			return result;
+		},
+		processedRectanglesFeat: function () {
+			var result = [];
+			var rectWidth = this.rectWidth
+			var lineSegments = this.lineSegmentsFeat;
 			lineSegments.forEach(function (line) {
 				var rect = lineToLeftRectangle(line, rectWidth);
 				var rectPoints = rect.x1 + ',' + rect.y1 + ' ' +
@@ -1658,6 +1681,11 @@ Vue.component('floor-preview', {
 <polyline
 	v-for="rect in processedRectangles"
 	:class="getArtistColorByName(rect.artist)"
+	:points="rect.points"
+/>
+<polyline
+	v-if="showFeaturedExtras"
+	v-for="rect in processedRectanglesFeat"
 	:points="rect.points"
 />
 <circle

@@ -58,7 +58,7 @@ var rawTemplates = {
 </g>
 	`,
 	down: `
-	<g id="d00">
+<g id="d00">
 	<line class="st3" x1="135.8" y1="343.7" x2="135.8" y2="392.6"/>
 	<line class="st3" x1="135.8" y1="392.6" x2="80.8" y2="392.6"/>
 	<line class="st3" x1="51.2" y1="392.6" x2="51.2" y2="369.6"/>
@@ -68,12 +68,48 @@ var rawTemplates = {
 	<line class="st3" x1="167.6" y1="41.8" x2="167.6" y2="107.3"/>
 	<line class="st3" x1="167.6" y1="110.8" x2="167.6" y2="305.5"/>
 </g>
+	`,
+	feat: `
+	<g id="defaultA">
+	<line class="st9" x1="41.9" y1="383.7" x2="34.7" y2="365.3"/>
+	<line class="st9" x1="34.7" y1="365.3" x2="34.7" y2="265.2"/>
+	<line class="st9" x1="34.9" y1="233.5" x2="34.9" y2="132.4"/>
+	<line class="st9" x1="34.9" y1="132.4" x2="43.2" y2="114"/>
+</g>
+<g id="defaultB">
+	<line class="st9" x1="41.9" y1="383.7" x2="34.7" y2="365.3"/>
+	<line class="st9" x1="34.7" y1="365.3" x2="34.7" y2="265.2"/>
+	<line class="st9" x1="34.9" y1="233.5" x2="34.9" y2="132.4"/>
+	<line class="st9" x1="34.9" y1="132.4" x2="43.2" y2="114"/>
+	<line class="st9" x1="36.2" y1="433.8" x2="36.2" y2="389.8"/>
+</g>
+<g id="test0A">
+	<line class="st9" x1="41.9" y1="383.7" x2="34.7" y2="365.3"/>
+	<line class="st9" x1="34.7" y1="365.3" x2="34.7" y2="265.2"/>
+	<line class="st9" x1="34.9" y1="233.5" x2="34.9" y2="132.4"/>
+	<line class="st9" x1="34.9" y1="132.4" x2="43.2" y2="114"/>
+	<line class="st9" x1="50.1" y1="113.2" x2="68" y2="73.5"/>
+</g>
+<g id="test0B">
+	<line class="st9" x1="41.9" y1="383.7" x2="34.7" y2="365.3"/>
+	<line class="st9" x1="34.7" y1="365.3" x2="34.7" y2="265.2"/>
+	<line class="st9" x1="34.9" y1="233.5" x2="34.9" y2="132.4"/>
+	<line class="st9" x1="34.9" y1="132.4" x2="43.2" y2="114"/>
+	<line class="st9" x1="50.1" y1="113.2" x2="68" y2="73.5"/>
+	<line class="st9" x1="36.2" y1="433.8" x2="36.2" y2="389.8"/>
+</g>
+<g id="test1">
+	<line class="st9" x1="139.4" y1="130.2" x2="183.8" y2="149"/>
+	<line class="st9" x1="183.8" y1="149" x2="183.8" y2="174.9"/>
+	<line class="st9" x1="183.8" y1="178.1" x2="183.8" y2="329.4"/>
+</g>
 	`
 }
 
 var templates = {
 	up: {},
 	down: {},
+	feat: {},
 }
 
 Object.keys(rawTemplates).forEach(function (floorName) {

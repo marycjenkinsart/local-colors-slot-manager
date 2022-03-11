@@ -46,6 +46,20 @@ Vue.component('name-manager', {
 		manageMe: function () {
 			return this.$store.state.manage.which === this.floorName;
 		},
+		featTemplateFloorInfo: function () {
+			return this.$store.state.templateInfo['feat'];
+		},
+		featTemplateBaseOptions: function () {
+			return Object.keys(templates['feat']);
+		},
+		featLinesTotalInches: function () {
+			var raw = this.$store.getters.featLinesTotal;
+			var inches = templateNumberToInches(raw).toFixed(0);
+			return inches;
+		},
+		showFeaturedExtras: function () {
+			return this.$store.state.advanced.featuredExtras;
+		},
 		templateFloorInfo: function () {
 			return this.$store.state.templateInfo[this.floorName];
 		},
@@ -74,6 +88,11 @@ Vue.component('name-manager', {
 			var inchesPar = 12 * 12;
 			var actualSize = 2 * templateNumberToInches(this.halfSlotSize);
 			return (100 * actualSize / inchesPar).toFixed(0);
+		},
+		featuredSizeOverParPercent: function () {
+			var featSize = this.featLinesTotalInches;
+			var fullSlotSize = 2 * templateNumberToInches(this.halfSlotSize);
+			return (100 * featSize / fullSlotSize).toFixed(0);
 		},
 		forbiddenNewNames: function () {
 			var unique = this.nameList.filter(getUnique);
@@ -448,6 +467,12 @@ Vue.component('name-manager', {
 				value: value,
 			});
 		},
+		setSelectedFeatTemplateBase: function (value) {
+			this.$store.dispatch('setSelectedTemplateBase',{
+				floorName: 'feat',
+				value: value,
+			});
+		},
 	},
 	template: /*html*/`
 <div class="name-manager">
@@ -672,11 +697,20 @@ Vue.component('name-manager', {
 					</template>
 				</tbody>
 			</table>
+			<div>
+				<div
+					class="unflat"
+				>Full slot size: {{fullSlotSizeInches}}" ({{(fullSlotSizeInches / 12).toFixed(1)}}')</div>
+				<div>{{halfSlotSizeOverParPercent}}% of the minimum 144" (12')</div>
+			</div>
 			<div
-				class="unflat"
-			>Full slot size: {{fullSlotSizeInches}}" ({{(fullSlotSizeInches / 12).toFixed(1)}}')</div>
-			<div
-			>{{halfSlotSizeOverParPercent}}% of the minimum 144" (12')</div>
+				v-if="floorName === 'up' && showFeaturedExtras"
+			>
+				<div
+					class="unflat"
+				>Featured slot size: {{featLinesTotalInches}}" ({{(featLinesTotalInches / 12).toFixed(1)}}')"</div>
+				<div>{{featuredSizeOverParPercent}}% of the full slot par: +{{featLinesTotalInches - fullSlotSizeInches}}" (+{{((featLinesTotalInches - fullSlotSizeInches) / 12).toFixed(1)}}')</div>
+			</div>
 			<div
 				class="manager-inner-inner"
 			>
@@ -722,6 +756,25 @@ Vue.component('name-manager', {
 								<option
 									v-for="templateName in templateBaseOptions"
 								>{{templateName}}</option>
+							</select>
+						</label>
+					</p>
+					<p
+						v-if="floorName === 'up' && showFeaturedExtras"
+					>
+						<label>
+							<span
+								:class="legacyModeOn ? 'pretend-disabled' : ''"
+								title="Choose which wall flow to use for featured space)"
+							>Template base (featured): </span>
+							<select
+								:disabled="legacyModeOn"
+								:value="featTemplateFloorInfo.selectedTemplateBase"
+								@input="setSelectedFeatTemplateBase($event.target.value)"
+							>
+								<option
+									v-for="featTemplateName in featTemplateBaseOptions"
+								>{{featTemplateName}}</option>
 							</select>
 						</label>
 					</p>
