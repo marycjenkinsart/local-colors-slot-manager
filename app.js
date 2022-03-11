@@ -799,14 +799,22 @@ var app = new Vue({
 			}
 		}
 		var flags = patchedQueryData.x.split(',');
+		// v2 detection
+		var upCheck = JSON.stringify(defaultData.u)
+		=== JSON.stringify(patchedQueryData.u);
+		var downCheck = JSON.stringify(defaultData.d)
+		=== JSON.stringify(patchedQueryData.d);
+		if (flags.includes('v2')) { // explicitly v2
+			self.$store.dispatch('setLegacyMode', false);
+		} else if (upCheck && downCheck) { // default data is being used = use v2
+			self.$store.dispatch('setLegacyMode', false);
+		} else { // artist data (up/down) but no v2 flag = use legacy mode
+			self.$store.dispatch('setLegacyMode', true);
+		}
+		// other flags
 		var self = this;
 		flags.forEach(function (flag) {
 			// if not marked, assume legacy mode (aka v1: rigid svg templates)
-			if (flag.includes('v2')) {
-				self.$store.dispatch('setLegacyMode', false);
-			} else {
-				self.$store.dispatch('setLegacyMode', true);
-			}
 			if (flag.includes('snap')) {
 				var splits = flag.replace('snap','').split('-');
 				self.$store.dispatch('changeCornerSnapThreshold', {
