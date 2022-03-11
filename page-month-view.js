@@ -205,6 +205,7 @@ var monthViewPage = Vue.component('month-view', {
 			document.execCommand("copy");
 		},
 		manageThis: function (value) {
+			this.moveArtistToOtherFloorCancel();
 			this.$store.dispatch('manageThis',value);
 		},
 	},

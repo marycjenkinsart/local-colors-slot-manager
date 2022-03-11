@@ -601,7 +601,7 @@ Vue.component('name-manager', {
 			<p>
 				<label>
 					<span
-						title="Turns on colored labels"
+						title="Turns on colored labels in the list below"
 					>Colors: </span>
 					<input
 						v-model="listColors"
