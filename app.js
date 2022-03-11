@@ -805,11 +805,11 @@ var app = new Vue({
 		var downCheck = JSON.stringify(defaultData.d)
 		=== JSON.stringify(patchedQueryData.d);
 		if (flags.includes('v2')) { // explicitly v2
-			self.$store.dispatch('setLegacyMode', false);
+			this.$store.dispatch('setLegacyMode', false);
 		} else if (upCheck && downCheck) { // default data is being used = use v2
-			self.$store.dispatch('setLegacyMode', false);
+			this.$store.dispatch('setLegacyMode', false);
 		} else { // artist data (up/down) but no v2 flag = use legacy mode
-			self.$store.dispatch('setLegacyMode', true);
+			this.$store.dispatch('setLegacyMode', true);
 		}
 		// other flags
 		var self = this;
