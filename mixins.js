@@ -44,9 +44,12 @@ var mixins = {
 			return result;
 		},
 		overParSummaryDisplay: function (top, bot) {
-			var overPar = top.toFixed(0);
-			var par = bot.toFixed(1);
-			var result = 'due: ' + par + '"\nhas: ' + overPar + '"';
+			var overPar = templateNumberToInches(top).toFixed(0);
+			var overParFeet = (overPar / 12).toFixed(1);
+			var par = templateNumberToInches(bot).toFixed(1);
+			var parFeet = (par / 12).toFixed(1);
+			var result = 'target: ' + par + '" (' + parFeet + '\')'
+				+ '\nhas: ' + overPar + '" (' + overParFeet + '\')';
 			var percent = (100 * top / bot - 100).toFixed(1);
 			percent = result > 0 ? '+' + Math.abs(result) : '-' + Math.abs(percent);
 			result = result + '\n(' + percent + '%)';

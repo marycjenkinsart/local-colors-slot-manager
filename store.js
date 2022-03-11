@@ -3,9 +3,9 @@ var defaultSnapInches = 18;
 var store = new Vuex.Store({
 	state: {
 		advanced: {
-			advancedModeOn: false,
+			advancedModeOn: true,
 			legacyMode: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
-			showCircles: false,
+			showCircles: true,
 		},
 		templateInfo: {
 			up: {
@@ -383,6 +383,12 @@ var store = new Vuex.Store({
 		UPDATE_ARTISTS_OBJECT: function (state, data) {
 			state.artists = data;
 		},
+		RESET_ADJUSTMENTS: function (state, floorName) {
+			var halfSlotCount = state.artists[floorName].length;
+			var array = JSON.parse(JSON.stringify(state.templateInfo[floorName].adjustments[halfSlotCount]));
+			array.fill(0);
+			state.templateInfo[floorName].adjustments[halfSlotCount] = array;
+		},
 		IMPORT_ADJUSTMENTS: function (state, data) {
 			Object.keys(data).forEach(function (floorName) {
 				var halfSlotCount = state.artists[floorName].length;
@@ -437,6 +443,9 @@ var store = new Vuex.Store({
 		},
 		updateArtistsObject: function (context, data) {
 			context.commit('UPDATE_ARTISTS_OBJECT', data);
+		},
+		resetAdjustments: function (context, floorName) {
+			context.commit('RESET_ADJUSTMENTS', floorName);
 		},
 		importAdjustments: function (context, data) {
 			context.commit('IMPORT_ADJUSTMENTS', data);

@@ -67,7 +67,10 @@ Vue.component('name-manager', {
 		halfSlotSize: function () {
 			return this.$store.getters.naiveHalfSlotLengths[this.floorName][0].size;
 		},
-		halfSlotSizeOverPar: function () {
+		fullSlotSizeInches: function () {
+			return templateNumberToInches(this.halfSlotSize * 2).toFixed(0);
+		},
+		halfSlotSizeOverParPercent: function () {
 			var inchesPar = 12 * 12;
 			var actualSize = 2 * templateNumberToInches(this.halfSlotSize);
 			return (100 * actualSize / inchesPar).toFixed(0);
@@ -144,6 +147,9 @@ Vue.component('name-manager', {
 		},
 	},
 	methods: {
+		resetAdjustments: function () {
+			this.$store.dispatch('resetAdjustments',this.floorName);
+		},
 		setAdjustment: function (index, value) {
 			var newAdjustments = JSON.parse(JSON.stringify(this.adjustments));
 			newAdjustments[index] = value;
@@ -668,9 +674,9 @@ Vue.component('name-manager', {
 			</table>
 			<div
 				class="unflat"
-			>Full slot size: {{getDisplayInches(halfSlotSize * 2).replace('+','')}}</div>
+			>Full slot size: {{fullSlotSizeInches}}" ({{(fullSlotSizeInches / 12).toFixed(1)}}')</div>
 			<div
-			>({{halfSlotSizeOverPar}}% of the minumum 12')</div>
+			>{{halfSlotSizeOverParPercent}}% of the minimum 144" (12')</div>
 			<div
 				class="manager-inner-inner"
 			>
@@ -797,6 +803,12 @@ Vue.component('name-manager', {
 										</td>
 										<td
 											class="center"
+											:class="
+												nameList[index] === nameList[index+1]
+												? 'pretend-disabled'
+												: ''
+											"
+										
 											style="width: 35px;"
 										>
 											{{adjustment}}"
@@ -820,6 +832,13 @@ Vue.component('name-manager', {
 								</template>
 							</tbody>
 						</table>
+						<button
+							class="unflat"
+							title="Set each value to 0"
+							v-if="showCircles"
+							:disabled="legacyModeOn"
+							@click="resetAdjustments"
+						>Reset edge tuning</button>
 					</p>
 				</div>
 			</div>

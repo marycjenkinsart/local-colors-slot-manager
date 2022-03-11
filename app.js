@@ -760,7 +760,7 @@ var app = new Vue({
 		var defaultData = {
 			l: '1969,12,0',
 			f: '',
-			u: 'artist1-1,artist2,artist3-1,artist4,artist5',
+			u: 'GUEST-1,artist1,artist2-1,artist3,artist4',
 			d: 'Artist1,Artist2,Artist3,Artist4,Artist5-1',
 			au: '',
 			ad: '',
