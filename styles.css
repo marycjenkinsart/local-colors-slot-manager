@@ -131,6 +131,9 @@ table, th, td {
 .center {
 	text-align: center;
 }
+.right {
+	text-align: right;
+}
 
 .flat {
 	padding-top: 0px;

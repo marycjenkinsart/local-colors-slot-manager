@@ -126,7 +126,6 @@ var store = new Vuex.Store({
 			var result = rawSum.reduce(function (prev, cur) {
 				return prev + cur;
 			});
-			console.log({rawLines,rawSum,result})
 			return result;
 		},
 		naiveHalfSlotLengths: function (state, getters) {

@@ -697,19 +697,72 @@ Vue.component('name-manager', {
 					</template>
 				</tbody>
 			</table>
-			<div>
-				<div
-					class="unflat"
-				>Full slot size: {{fullSlotSizeInches}}" ({{(fullSlotSizeInches / 12).toFixed(1)}}')</div>
-				<div>{{halfSlotSizeOverParPercent}}% of the minimum 144" (12')</div>
-			</div>
 			<div
-				v-if="floorName === 'up' && showFeaturedExtras"
+				class="unflat"
 			>
-				<div
-					class="unflat"
-				>Featured slot size: {{featLinesTotalInches}}" ({{(featLinesTotalInches / 12).toFixed(1)}}')"</div>
-				<div>{{featuredSizeOverParPercent}}% of the full slot par: +{{featLinesTotalInches - fullSlotSizeInches}}" (+{{((featLinesTotalInches - fullSlotSizeInches) / 12).toFixed(1)}}')</div>
+				<table
+					class="bare-table"
+				>
+					<tbody>
+						<tr>
+							<td class="right">Full slot:</td>
+							<td>{{fullSlotSizeInches}}"</td>
+							<td>({{(fullSlotSizeInches / 12).toFixed(1)}}')</td>
+						</tr>
+						<tr>
+							<td
+								class="right"
+								:class="fullSlotSizeInches > 144 ? 'green' : 'red'"
+							></td>
+							<td>
+								<span>144"</span>
+								<span
+									:class="fullSlotSizeInches > 144 ? 'green' : 'red'"
+								>+{{fullSlotSizeInches - 144}}"</span>
+							</td>
+							<td>
+								<span>(12'</span>
+								<span
+									:class="fullSlotSizeInches > 144 ? 'green' : 'red'"
+								>+{{((fullSlotSizeInches - 144) / 12).toFixed(1)}}'</span><span>)</span>
+							</td>
+							<td
+								:class="fullSlotSizeInches > 144 ? 'green' : 'red'"
+							>{{halfSlotSizeOverParPercent}}%</td>
+						</tr>
+						<tr
+							v-if="floorName === 'up' && showFeaturedExtras"
+						>
+							<td class="right">Featured:</td>
+							<td>
+								<span>{{featLinesTotalInches}}"</span>
+							</td>
+							<td>
+								<span>({{(featLinesTotalInches / 12).toFixed(1)}}')</span>
+							</td>
+						</tr>
+						<tr
+							v-if="floorName === 'up' && showFeaturedExtras"
+						>
+							<td class="right green"></td>
+							<td>
+								<span>{{fullSlotSizeInches}}"</span>
+								<span
+									:class="fullSlotSizeInches > 144 ? 'green' : 'red'"
+								>+{{featLinesTotalInches - fullSlotSizeInches}}"</span>
+							</td>
+							<td>
+								<span>({{(fullSlotSizeInches / 12).toFixed(1)}}'</span>
+								<span
+									:class="fullSlotSizeInches > 144 ? 'green' : 'red'"
+								>+{{((featLinesTotalInches - fullSlotSizeInches) / 12).toFixed(1)}}'</span><span>)</span>
+							</td>
+							<td
+								:class="fullSlotSizeInches > 144 ? 'green' : 'red'"
+							>{{featuredSizeOverParPercent}}%</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 			<div
 				class="manager-inner-inner"
