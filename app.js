@@ -201,15 +201,15 @@ var makeAdjustmentsUncompact = function (string, length) {
 		var array = string.split(',');
 		array.forEach(function (item) {
 			if (item.includes('x')) {
-				var count = parseInt(item.replace('x',''));
+				var count = parseInt(item.replace('x',''),10);
 				for (let index = 0; index < count; index++) {
 					result.push(0);
 				}
 			} else if (item.includes('-')) {
-				var insert = parseInt(item);
+				var insert = parseInt(item,10);
 				result.push(insert);
 			} else {
-				var insert = parseInt(item);
+				var insert = parseInt(item,10);
 				result.push(insert);
 			}
 		})

@@ -51,7 +51,7 @@ var mixins = {
 			var result = 'target: ' + par + '" (' + parFeet + '\')'
 				+ '\nhas: ' + overPar + '" (' + overParFeet + '\')';
 			var percent = (100 * top / bot - 100).toFixed(1);
-			percent = result > 0 ? '+' + Math.abs(result) : '-' + Math.abs(percent);
+			percent = parseInt(result,10) > 0 ? '+' + Math.abs(result) : '-' + Math.abs(percent);
 			result = result + '\n(' + percent + '%)';
 			return result;
 		},

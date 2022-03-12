@@ -89,7 +89,7 @@ var store = new Vuex.Store({
 					'Jan', 'Feb', 'Mar', 'April', 'May', 'June',
 					'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
 				]
-				var monthName = monthMap[parseInt(month) - 1] || 'ERROR';
+				var monthName = monthMap[parseInt(month,10) - 1] || 'ERROR';
 				result = monthName + ' ' + year
 				if (version > 1) {
 					result += ' v' + version;
@@ -306,8 +306,8 @@ var store = new Vuex.Store({
 			if (state.advanced.legacyMode === false) {
 				flags.push('v2');
 			}
-			var snapUp = parseInt(state.templateInfo.up.snapInches);
-			var snapDown = parseInt(state.templateInfo.down.snapInches);
+			var snapUp = parseInt(state.templateInfo.up.snapInches,10);
+			var snapDown = parseInt(state.templateInfo.down.snapInches,10);
 			if (
 				snapUp !== defaultSnapInches
 				|| snapDown !== defaultSnapInches
