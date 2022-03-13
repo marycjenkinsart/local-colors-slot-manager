@@ -353,8 +353,14 @@ var store = new Vuex.Store({
 			return result;
 		},
 		compactURL: function (state, getters) {
-			var viewURL = "https://marycjenkinsart.github.io/local-colors-slot-manager/#/view?";
-			return viewURL + getters.compactEverything;
+			var prefix = "https://marycjenkinsart.github.io/local-colors-slot-manager/"
+			var infix = "?v2";
+			// the "infix" does nothing apart from ensuring the client treats the URL as a fresh destination
+			// otherwise caches can interfere with the preview's apperance (without anything appearing to be broken)
+			// VERY IMPORTANT:
+			// if something changes in the app that has the potential to change the preview, iterate the infix!!
+			var suffix = "#/view?"
+			return prefix + infix + suffix + getters.compactEverything;
 		},
 	},
 	mutations: {
