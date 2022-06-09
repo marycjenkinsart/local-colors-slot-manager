@@ -7,6 +7,10 @@ var routes = [
 		path: '/view',
 		component: previewPage
 	},
+	{
+		path: '/history',
+		component: historyPage
+	},
 ];
 
 var router = new VueRouter({

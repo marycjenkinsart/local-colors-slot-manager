@@ -73,6 +73,31 @@ var store = new Vuex.Store({
 				'Adam',
 			],
 		},
+		potentialState: {
+			guest: {
+				present: true,
+				withFeatured: false,
+			},
+			featured: [
+				{
+					name:'Teri',
+					type: '2D',
+					origSlotSize: 1,
+				}
+			],
+			up: [
+				{ name: 'Brianna', slotSize: 1, displaySlotSize: '1' },
+				{ name: 'Pam', slotSize: 1, displaySlotSize: '1' },
+				{ name: 'Lorraine', slotSize: 1, displaySlotSize: '1' },
+				{ name: 'Blaine', slotSize: 1, displaySlotSize: '1' },
+			],
+			down: [
+				{ name: 'Macy', slotSize: 1, displaySlotSize: '1' },
+				{ name: 'J. Clay', slotSize: 0.5, displaySlotSize: '½' },
+				{ name: 'Jeff M.', slotSize: 1, displaySlotSize: '1' },
+				{ name: 'Mary', slotSize: 1, displaySlotSize: '1' },
+			]
+		}
 	},
 	getters: {
 		longLabel: function (state) {
@@ -349,7 +374,7 @@ var store = new Vuex.Store({
 					}
 				})
 			}
-			var result = makeSpacesUnderscores(result)
+			result = makeSpacesUnderscores(result)
 			return result;
 		},
 		compactURL: function (state, getters) {
