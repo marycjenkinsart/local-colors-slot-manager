@@ -4,6 +4,10 @@ var routes = [
 		component: monthViewPage
 	},
 	{
+		path: '/hub',
+		component: hubPage
+	},
+	{
 		path: '/view',
 		component: previewPage
 	},

@@ -69,6 +69,11 @@ Vue.component('map-preview', {
 	mixins: [
 		mixins,
 	],
+	data: function () {
+		return {
+			secretClickCount: 0,
+		};
+	},
 	computed: {
 		artists: function () {
 			return this.$store.state.artists;
@@ -158,6 +163,20 @@ Vue.component('map-preview', {
 		},
 	},
 	methods: {
+		clickedOnLabel: function () {
+			var currentPath = this.$route.path;
+			if (currentPath === '/view') {
+				this.secretClickCount += 1;
+			};
+			console.log(this.$route);
+			if (this.secretClickCount === 5) {
+				this.secretClickCount = 0;
+				this.$router.push({
+					path: '/hub',
+					query: this.$route.query,
+				});
+			};
+		},
 		origins: function (floor) {
 			var result = offsets[floor]
 			if (this.manage.which === floor) {
@@ -198,6 +217,7 @@ Vue.component('map-preview', {
 				:y="otherCoords.rotationLabel.y"
 			>
 				<tspan
+					@click="clickedOnLabel"
 					class="ust11 ust12 bigfont"
 				>Preview: {{longLabel}}</tspan>
 			</text>

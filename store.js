@@ -73,11 +73,13 @@ var store = new Vuex.Store({
 				'Adam',
 			],
 		},
+		history: {
+			fullHistory: makeFullHistory(),
+			selectedFloor: 'up',
+			highlightedName: '',
+			insertName: '',
+		},
 		potentialState: {
-			guest: {
-				present: true,
-				withFeatured: false,
-			},
 			featured: [
 				{
 					name:'Teri',
@@ -97,7 +99,17 @@ var store = new Vuex.Store({
 				{ name: 'Jeff M.', slotSize: 1, displaySlotSize: '1' },
 				{ name: 'Mary', slotSize: 1, displaySlotSize: '1' },
 			]
-		}
+		},
+		wizard: {
+			guest: {
+				present: true,
+				withFeatured: false,
+			},
+			// placedNames: {
+			// 	up: ['test'],
+			// 	down: [],
+			// },
+		},
 	},
 	getters: {
 		longLabel: function (state) {
@@ -390,6 +402,15 @@ var store = new Vuex.Store({
 	},
 	mutations: {
 		// this is what actually changes the state
+		HISTORY_SET_HIGHLIGHTED_NAME: function (state, string) {
+			state.history.highlightedName = string;
+		},
+		HISTORY_SET_INSERT_NAME: function (state, string) {
+			state.history.insertName = string;
+		},
+		HISTORY_SET_SELECTED_FLOOR: function (state, string) {
+			state.history.selectedFloor = string;
+		},
 		SET_LEGACY_MODE: function (state, bool) {
 			state.advanced.legacyMode = bool;
 			// TODO: rename things to be more consistent, e.g. this one and the below
@@ -457,7 +478,16 @@ var store = new Vuex.Store({
 	actions: {
 		// only one additional thing can be passed besides 'context'
 		// you'll have to pack multiples in an object :(
-		setLegacyMode: function (context, bool) {
+		historySetHighlightedName: function (context, string) {
+			context.commit('HISTORY_SET_HIGHLIGHTED_NAME', string);
+		},
+		historySetInsertName: function (context, string) {
+			context.commit('HISTORY_SET_INSERT_NAME', string);
+		},
+		historySetSelectedFloor: function (context, string) {
+			context.commit('HISTORY_SET_SELECTED_FLOOR', string);
+		},
+			setLegacyMode: function (context, bool) {
 			context.commit('SET_LEGACY_MODE', bool);
 		},
 		setAdvancedMode: function (context, bool) {

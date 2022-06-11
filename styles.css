@@ -75,6 +75,9 @@ ul, ol {
 li {
 	padding: 0 0 4px 0;
 }
+hr {
+	margin: 24px 0px 4px 0px;
+}
 
 /* *-*-*-*   TABLES   *-*-*-*  */
 
@@ -132,6 +135,15 @@ table, th, td {
 .selected-to-insert {
 	background-color: rgb(24, 24, 24);
 	color: #fff;
+}
+.history-header-text {
+	color: #bbb;
+	font-size: .8rem;
+}
+.history-header-box {
+	background-color: #eee;
+	font-size: .8rem;
+	color: #bbb;
 }
 button.insertable-highlighted {
 	background-color: rgb(24, 24, 24);
@@ -198,8 +210,56 @@ button.insertable:hover {
 	white-space: nowrap;
 }
 
+.bold {
+	font-weight: 800;
+}
 .pretend-disabled {
 	color: rgba(0,0,0,.4);
+}
+.gray {
+	color: #777;
+}
+
+/* *-*-*-*   FLEX CARDS   *-*-*-*  */
+
+.flex-cards {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+.flex-card {
+	margin: 10px 0px;
+	flex: 0 1 48%;
+}
+.card-head {
+	font-weight: 600;
+	background-color:#910000;
+	color: #fff;
+	padding: 12px 12px 8px 12px;
+	border-radius: 12px 12px 0 0;
+}
+.card-body {
+	padding: 8px 12px 4px 12px;
+	background-color: #ddd;
+	border-radius: 0 0 12px 12px;
+}
+/* verify best practices for below */
+@media screen and (min-width: 600px) {
+    .flex-card {
+		flex: 0 1 31%;
+    }
+}
+.impressive-button {
+	font-size: 1.1rem;
+	padding: 8px 16px;
+	margin: 8px 0px;
+	font-weight: 500;
+}
+.full-width {
+	width: 100%;
+}
+.half-width {
+	width: 49%;
 }
 
 /* *-*-*-*   SPECIFICS   *-*-*-*  */

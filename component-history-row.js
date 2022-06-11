@@ -11,14 +11,6 @@ Vue.component('history-row', {
 			type: Array,
 			require: true,
 		},
-		insertName: {
-			type: String,
-			require: false,
-		},
-		highlightName: {
-			type: String,
-			require: false,
-		},
 		featured: {
 			type: Array,
 			require: false,
@@ -26,9 +18,16 @@ Vue.component('history-row', {
 		hoverNames: {
 			type: Boolean,
 			require: false
+		},
+		pale: {
+			type: Boolean,
+			require: false
 		}
 	},
 	computed: {
+		highlightedName: function () {
+			return this.$store.state.history.highlightedName;
+		},
 		fancyNames: function () {
 			return makeFancy(this.names);
 		},
@@ -50,15 +49,16 @@ Vue.component('history-row', {
 		},
 		classByName: function (name) {
 			var result = '';
-			if (this.insertName === name) {
-				result = 'selected-to-insert';
-			} else if (this.highlightName === name) {
+			if (this.highlightedName === name) {
 				result = 'selected';
 			} else {
 				result = 'not-selected';
 			}
 			return result;
-		}
+		},
+		setHighlightedName: function (name) {
+			this.$store.dispatch('historySetHighlightedName', name);
+		},
 	},
 	template: /*html*/`
 	<table
@@ -67,12 +67,13 @@ Vue.component('history-row', {
 		<tr>
 			<td
 				class="historyLabel"
+				:class="pale ? 'history-header-text' : ''"
 			>{{label}}</td>
 			<template
 				v-for="(artist, index) in fancyNames"
 			>
 				<td
-					:class="classByName(artist.name)"	
+					:class="pale ? 'history-header-box' : classByName(artist.name)"	
 					@click="clickedOn({name: artist.name, index: artist.slotIndex})"
 					:colspan="Math.floor(artist.slotSize * 2)"
 				>
@@ -83,6 +84,7 @@ Vue.component('history-row', {
 				</template>
 			<td
 				class="historyFeatured"
+				:class="pale ? 'history-header-text' : ''"
 			>{{featuredString}}</td>
 		</tr>
 	</table>

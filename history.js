@@ -1,3 +1,5 @@
+/* *-*-*-*   CREATING HISTORY DATA FROM ARCHIVED LINKS   *-*-*-*  */
+
 var webAppHistory = [
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2#/view?l=2022,5&u=GUEST-1,J._Clay-1,Bill,Mary&d=Brianna,Pam,Lorraine,Blaine&f=Jeff_M.-2D-2&x=v2&t=u01,',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2#/view?l=2022,4&u=GUEST-1,Pam,Jan,Blaine,Lorraine&d=Mary,Jeff_M.,J._Clay-1,Bill&f=Brianna-3D&x=v2&t=u01,',
@@ -63,4 +65,119 @@ var makeFullHistory = function () {
 		return b.rotationLabel.year - a.rotationLabel.year;
 	})
 	return fullHistory;
+};
+
+/* *-*-*-*   INTERACTING WITH A NEW HISTORY ROW   *-*-*-*  */
+
+var test = ['test', 'test', null, null, 'test'];
+var literalTest = ['test', 'test', 'empty#3', 'empty#4', 'test'];
+var miniTest = ['test']
+
+var clearNameAtIndex = function (array, index) {
+	var newArray = array.slice();
+	newArray[index] = null;
+	// console.log(`Cleared name at index ${index}`)
+	return newArray;
+};
+var clearWholeNameAtIndex = function (array, sourceIndex) {
+	var newArray = array.slice();
+	// console.log('clearWholeNameAtIndex ' + sourceIndex)
+	var indices = findPlacedIndicesFromIndexInArray(newArray, sourceIndex);
+	indices.forEach(function (index) {
+		newArray = clearNameAtIndex(newArray, index);
+		// console.log('clearing index ' + index)
+	})
+	return newArray;
+};
+var insertNameAtIndex = function (array, index, name) {
+	var newArray = array.slice();
+	newArray[index] = name;
+	// console.log(`Inserted ${name} at index ${index}`)
+	return newArray;
+};
+var insertWholeNameAtIndex = function (array, index, name, length) {
+	var newArray = array.slice();
+	newArray = clearNameFromArray(newArray,name);
+	var currIndex = index;
+	for (let i = 0; i < length; i++) {
+		// console.log("clearing name at index " + currIndex)
+		if (currIndex !== null) {
+			newArray = clearWholeNameAtIndex(newArray, currIndex);
+			currIndex = incrementIndexInArray(newArray, currIndex);
+		}
+	}
+	var currIndex = index;
+	for (let i = 0; i < length; i++) {
+		// console.log("inserting name at index " + currIndex)
+		if (currIndex !== null) {
+			newArray = insertNameAtIndex(newArray, currIndex, name);
+			currIndex = incrementIndexInArray(newArray, currIndex);
+		}
+	}
+	// It didn't work unless these were separate steps ¯\_(ツ)_/¯
+	return newArray;
+};
+var incrementIndexInArray = function (array, index) {
+	var newIndex = index + 1;
+	if (newIndex === array.length) {
+		newIndex = 0;
+	}
+	if (index === newIndex) {
+		newIndex = null;
+	}
+	return newIndex;
+};
+var decrementIndexInArray = function (array, index) {
+	var newIndex = index - 1;
+	if (newIndex === - 1) {
+		newIndex = array.length - 1;
+	}
+	if (index === newIndex) {
+		newIndex = null;
+	}
+	return newIndex;
+};
+var findPlacedIndicesFromIndexInArray = function (array, index) {
+	// NOTE: You must use the padded, dummy data array for this or it will wrap early
+	if (array.length <= index) {
+		console.error('findPlacedIndicesFromIndexInArray received an out of bound index!');
+		console.error({array: array, index: index});
+		return
+	} else {
+		var pc = incrementIndexInArray(array, index);
+		if (pc === null) {
+			// console.error('incrementIndexInArray returned null; array is 1 item long!')
+			// console.error({array: array, index: index});
+		} else {
+			var result = [index];
+			var targetName = array[index];
+			if (!!targetName) {
+				var nextName = array[pc];
+				while (nextName === targetName) {
+					result.push(pc);
+					pc = incrementIndexInArray(array, pc);
+					nextName = array[pc];
+				}
+				var pc = decrementIndexInArray(array, index);
+				var nextName = array[pc];
+					while (nextName === targetName) {
+					result.push(pc);
+					pc = decrementIndexInArray(array, pc);
+					nextName = array[pc];
+				}
+			}
+		}
+		return result;
+	}
+};
+var clearNameFromArray = function (newArray, name) {
+	var newArray = newArray.slice();
+	if (newArray.includes(name)) {
+		var snipe = newArray.findIndex(function (item) { return item === name });
+		while (snipe !== -1) {
+			newArray = clearWholeNameAtIndex(newArray, snipe);
+			snipe = newArray.findIndex(function (item) { return item === name });
+		}
+	}
+	return newArray;
 };
