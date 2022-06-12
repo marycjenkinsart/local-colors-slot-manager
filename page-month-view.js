@@ -213,7 +213,7 @@ var monthViewPage = Vue.component('month-view', {
 <div
 	id="month-view"
 >
-	<h1 class="flat">LC Rotation Manager</h1>
+	<my-header></my-header>
 	<h2>
 		<span>Rotation: {{longLabel}}</span>
 	</h2>

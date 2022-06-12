@@ -1,4 +1,7 @@
 var hubPage = Vue.component('hub-page', {
+	mixins: [
+		mixinsHistory,
+	],
 	data: function () {
 		return {}
 	},
@@ -35,24 +38,6 @@ var hubPage = Vue.component('hub-page', {
 		}
 	},
 	methods: {
-		makeShortLabel: function (label) {
-			var monthMap = [
-				'Jan', 'Feb', 'Mar', 'April', 'May', 'June',
-				'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
-			];
-			var result = '';
-			if (!!label.custom) {
-				result = label.custom;
-			} else {
-				result = monthMap[label.month-1]
-					+ ' '
-					+ label.year;
-				if (label.version !== 1) {
-					result = result + ' v' + label.version
-				}
-			}
-			return result;
-		},
 		goToHistoryViewer: function () {
 			this.$router.push({
 				path: '/history',
@@ -61,8 +46,10 @@ var hubPage = Vue.component('hub-page', {
 		},
 	},
 	template: /*html*/`
-<div>
-	<h1 class="flat">LC Rotation Manager</h1>
+<div
+	id="hub"
+>
+	<my-header></my-header>
 	<p>
 		<span>Import data is from:</span>
 		<span

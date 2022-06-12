@@ -1,4 +1,7 @@
 Vue.component('history-placement', {
+	mixins: [
+		mixinsHistory,
+	],
 	data: function () {
 		return {
 			placedNames: {
@@ -10,24 +13,6 @@ Vue.component('history-placement', {
 	computed: {
 		visibleButtons: function () {
 			return this.filteredUnplacedNames[this.selectedFloor];
-		},
-		selectedFloor: function () {
-			return this.$store.state.history.selectedFloor;
-		},
-		insertName: function () {
-			return this.$store.state.history.insertName;
-		},
-		fullHistory: function () {
-			return this.$store.state.history.fullHistory;
-		},
-		highlightedName: function () {
-			return this.$store.state.history.highlightedName;
-		},
-		potentialState: function () {
-			return this.$store.state.potentialState;
-		},
-		autoGuest: function () {
-			return this.$store.state.wizard.guest;
 		},
 		guestInRotation: function () {
 			var guest = this.autoGuest;
@@ -175,20 +160,6 @@ Vue.component('history-placement', {
 		},
 	},
 	methods: {
-		setHighlightedName: function (name) {
-			this.$store.dispatch('historySetHighlightedName', name);
-		},
-		setInsertName: function (name) {
-			this.$store.dispatch('historySetInsertName', name);
-		},
-		highlightName: function (name) {
-			this.setInsertName('');
-			if (this.highlightedName === name) {
-				this.setHighlightedName('');
-			} else {
-				this.setHighlightedName(name);
-			}
-		},
 		highlightNameToInsert: function (name) {
 			if (this.insertName === name) {
 				this.setInsertName('');
@@ -264,7 +235,7 @@ Vue.component('history-placement', {
 	><strong>All done!</strong></span>
 	<button
 		v-for="artist in visibleButtons"
-		@click="highlightNameToInsert(artist.name)"
+		@click="ToInsert(artist.name)"
 		class="insertion-button"
 		:class="artist.name === insertName ? 'insertable-highlighted' : 'insertable'"
 	>{{artist.displayName}}</button>

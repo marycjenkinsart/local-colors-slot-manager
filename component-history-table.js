@@ -1,11 +1,8 @@
 Vue.component('history-table', {
+	mixins: [
+		mixinsHistory,
+	],
 	computed: {
-		fullHistory: function () {
-			return this.$store.state.history.fullHistory;
-		},
-		selectedFloor: function () {
-			return this.$store.state.history.selectedFloor;
-		},
 		workingHistory: function () {
 			var monthMap = [
 				'Jan', 'Feb', 'Mar', 'April', 'May', 'June',
@@ -32,13 +29,7 @@ Vue.component('history-table', {
 		},
 	},
 	methods: {
-		setHighlightedName: function (name) {
-			this.$store.dispatch('historySetHighlightedName', name);
-		},
-		setInsertName: function (name) {
-			this.$store.dispatch('historySetInsertName', name);
-		},
-		highlightName: function (name) {
+		highlightNameAttempt: function (name) {
 			this.setInsertName('');
 			if (this.highlightedName === name) {
 				this.setHighlightedName('');
@@ -50,7 +41,7 @@ Vue.component('history-table', {
 	template: /*html*/`
 <div>
 	<history-row
-		@clicked-on-name="highlightName($event.name)"
+		@clicked-on-name="highlightNameAttempt($event.name)"
 		v-for="(item, key) in workingHistory"
 		:key="key"
 		:names="item.names"

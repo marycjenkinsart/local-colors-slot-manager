@@ -1,6 +1,7 @@
 Vue.component('history-row', {
 	mixins: [
 		mixins,
+		mixinsHistory,
 	],
 	props: {
 		label: {
@@ -15,19 +16,12 @@ Vue.component('history-row', {
 			type: Array,
 			require: false,
 		},
-		hoverNames: {
-			type: Boolean,
-			require: false
-		},
 		pale: {
 			type: Boolean,
 			require: false
 		}
 	},
 	computed: {
-		highlightedName: function () {
-			return this.$store.state.history.highlightedName;
-		},
 		fancyNames: function () {
 			return makeFancy(this.names);
 		},
@@ -55,9 +49,6 @@ Vue.component('history-row', {
 				result = 'not-selected';
 			}
 			return result;
-		},
-		setHighlightedName: function (name) {
-			this.$store.dispatch('historySetHighlightedName', name);
 		},
 	},
 	template: /*html*/`

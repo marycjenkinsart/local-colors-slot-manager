@@ -1,4 +1,7 @@
 Vue.component('history-header', {
+	mixins: [
+		mixinsHistory,
+	],
 	data: function () {
 		return {
 			historyRowHeader: {
@@ -22,9 +25,6 @@ Vue.component('history-header', {
 		};
 	},
 	computed: {
-		selectedFloor: function () {
-			return this.$store.state.history.selectedFloor;
-		},
 	},
 	template: /*html*/`
 	<history-row

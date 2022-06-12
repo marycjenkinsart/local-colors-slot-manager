@@ -1,21 +1,9 @@
 var historyPage = Vue.component('history', {
-	computed: {
-		selectedFloor: function () {
-			return this.$store.state.history.selectedFloor;
-		},
-	},
+	mixins: [
+		mixinsHistory,
+	],
+	computed: {},
 	methods: {
-		setHighlightedName: function (name) {
-			this.$store.dispatch('historySetHighlightedName', name);
-		},
-		setInsertName: function (name) {
-			this.$store.dispatch('historySetInsertName', name);
-		},
-		setFloor: function (string) {
-			this.setHighlightedName('');
-			this.setInsertName('');
-			this.$store.dispatch('historySetSelectedFloor', string);
-		},
 		goToHub: function () {
 			this.setHighlightedName('');
 			this.setInsertName('');
@@ -26,8 +14,10 @@ var historyPage = Vue.component('history', {
 		},
 	},
 	template: /*html*/`
-<div>
-	<h1 class="flat">LC Rotation Manager</h1>
+<div
+	id="history"
+>
+	<my-header></my-header>
 	<p>Click a name to see that artist's position over time.</p>
 	<p>
 		<button
@@ -40,7 +30,7 @@ var historyPage = Vue.component('history', {
 		>Downstairs</button>
 		<span
 			style="font-size:1.2rem; padding-left:12px;"
-		>Now viewing <strong>{{selectedFloor}}stairs</strong></span>
+		>History for <strong>{{selectedFloor}}stairs</strong></span>
 	</p>
 	<history-header></history-header>
 	<history-table></history-table>
