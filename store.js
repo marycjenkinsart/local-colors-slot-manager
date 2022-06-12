@@ -1,7 +1,156 @@
 var defaultSnapInches = 18;
-limitedFloorNames = ['up','down'];
+
+var historyStore = {
+	state: { // get this at (e.g.) this.$store.history.fullHistory
+		fullHistory: makeFullHistory(),
+		selectedFloor: 'up',
+		highlightedName: '',
+		insertName: '',
+	},
+	mutations: {
+		HISTORY_SET_HIGHLIGHTED_NAME: function (state, string) {
+			state.highlightedName = string;
+		},
+		HISTORY_SET_INSERT_NAME: function (state, string) {
+			state.insertName = string;
+		},
+		HISTORY_SET_SELECTED_FLOOR: function (state, string) {
+			state.selectedFloor = string;
+		},
+	},
+	actions: {
+		historySetHighlightedName: function (context, string) {
+			context.commit('HISTORY_SET_HIGHLIGHTED_NAME', string);
+		},
+		historySetInsertName: function (context, string) {
+			context.commit('HISTORY_SET_INSERT_NAME', string);
+		},
+		historySetSelectedFloor: function (context, string) {
+			context.commit('HISTORY_SET_SELECTED_FLOOR', string);
+		},
+	},
+};
+
+var wizardStore = {
+	state: {
+		guest: {
+			present: true,
+			withFeatured: false,
+		},
+		placedNames: {
+			up: ['test2','test2'],
+			down: [],
+		},
+		quizResults: {
+			featured: [
+				{
+					name:'testie',
+					type: '2D',
+					origSlotSize: 1,
+				}
+			],
+			up: [
+				{ name: 'test1', slotSize: 1, displaySlotSize: '1' },
+				{ name: 'test2', slotSize: 1, displaySlotSize: '1' },
+				{ name: 'test3', slotSize: 1, displaySlotSize: '1' },
+				{ name: 'test4', slotSize: 1, displaySlotSize: '1' },
+			],
+			down: [
+				{ name: 'testA', slotSize: 1, displaySlotSize: '1' },
+				{ name: 'testB', slotSize: 0.5, displaySlotSize: '½' },
+				{ name: 'testC', slotSize: 1, displaySlotSize: '1' },
+				{ name: 'testD', slotSize: 1, displaySlotSize: '1' },
+			]
+		},
+	},
+	getters: {
+		autoInsertGuest: function (state, getters) {
+			return state.guest.present && !state.guest.withFeatured;
+		},
+		quizResultsSlotCounts: function (state, getters) {
+			var tally = {
+				up: 0,
+				down: 0,
+			};
+			var quizResults = state.quizResults;
+			Object.keys(tally).forEach(function (floor) {
+				quizResults[floor].forEach(function (artist) {
+					tally[floor] += artist.slotSize;
+				})
+			})
+			return tally;
+		},
+		namesToSlotSizes: function (state, getters) {
+			var result = {};
+			var potential = state.quizResults;
+			limitedFloorNames.forEach(function (floor) {
+				potential[floor].forEach(function (artist) {
+					result[artist.name] = artist.slotSize;
+				})
+			})
+			return result;
+		},
+		rawUnplacedNames: function (state, getters) {
+			var unplaced = {
+				'up': [],
+				'down': [],
+			}
+			var potentialState = state.quizResults;
+			limitedFloorNames.forEach(function (floor) {
+				potentialState[floor].forEach(function (item) {
+					var displayName = item.name;
+					var displaySlotSize = item.slotSize + '';
+					if (displaySlotSize !== '1') {
+						displaySlotSize = displaySlotSize
+							.replace('.5', '½')
+							.replace('0', '');
+						displayName = displayName +
+							' (' + displaySlotSize + ')';
+					}			
+					var insert = {
+						name: item.name,
+						displayName: displayName,
+						slotSize: item.slotSize,
+					};
+					unplaced[floor].push(insert);
+				})
+			})
+			return unplaced;
+		},
+		filteredUnplacedNames: function (state, getters) {
+			var orig = JSON.parse(JSON.stringify(getters.rawUnplacedNames));
+			var placedNames = JSON.parse(JSON.stringify(state.placedNames));
+			var filtered = {
+				'up': [],
+				'down': [],
+			}
+			limitedFloorNames.forEach(function (floor) {
+				orig[floor].forEach(function (item) {
+					if (!placedNames[floor].includes(item.name)){
+						filtered[floor].push(item);
+					}
+				})
+			})
+			return filtered;
+		},
+	},
+	mutations: {
+			WIZARD_SET_PLACED_NAMES: function (state, obj) {
+				state.placedNames = obj;
+			},
+		},
+	actions: {
+			wizardSetPlacedNames: function (context, obj) {
+				context.commit('WIZARD_SET_PLACED_NAMES', obj);
+			},
+		},
+};
 
 var store = new Vuex.Store({
+	modules: {
+		history: historyStore,
+		wizard: wizardStore,
+	},
 	state: {
 		advanced: {
 			advancedModeOn: false,
@@ -72,43 +221,6 @@ var store = new Vuex.Store({
 				'Jan',
 				'Adam',
 			],
-		},
-		history: {
-			fullHistory: makeFullHistory(),
-			selectedFloor: 'up',
-			highlightedName: '',
-			insertName: '',
-		},
-		potentialState: {
-			featured: [
-				{
-					name:'Teri',
-					type: '2D',
-					origSlotSize: 1,
-				}
-			],
-			up: [
-				{ name: 'Brianna', slotSize: 1, displaySlotSize: '1' },
-				{ name: 'Pam', slotSize: 1, displaySlotSize: '1' },
-				{ name: 'Lorraine', slotSize: 1, displaySlotSize: '1' },
-				{ name: 'Blaine', slotSize: 1, displaySlotSize: '1' },
-			],
-			down: [
-				{ name: 'Macy', slotSize: 1, displaySlotSize: '1' },
-				{ name: 'J. Clay', slotSize: 0.5, displaySlotSize: '½' },
-				{ name: 'Jeff M.', slotSize: 1, displaySlotSize: '1' },
-				{ name: 'Mary', slotSize: 1, displaySlotSize: '1' },
-			]
-		},
-		wizard: {
-			guest: {
-				present: true,
-				withFeatured: false,
-			},
-			// placedNames: {
-			// 	up: ['test'],
-			// 	down: [],
-			// },
 		},
 	},
 	getters: {
@@ -402,15 +514,6 @@ var store = new Vuex.Store({
 	},
 	mutations: {
 		// this is what actually changes the state
-		HISTORY_SET_HIGHLIGHTED_NAME: function (state, string) {
-			state.history.highlightedName = string;
-		},
-		HISTORY_SET_INSERT_NAME: function (state, string) {
-			state.history.insertName = string;
-		},
-		HISTORY_SET_SELECTED_FLOOR: function (state, string) {
-			state.history.selectedFloor = string;
-		},
 		SET_LEGACY_MODE: function (state, bool) {
 			state.advanced.legacyMode = bool;
 			// TODO: rename things to be more consistent, e.g. this one and the below
@@ -478,16 +581,7 @@ var store = new Vuex.Store({
 	actions: {
 		// only one additional thing can be passed besides 'context'
 		// you'll have to pack multiples in an object :(
-		historySetHighlightedName: function (context, string) {
-			context.commit('HISTORY_SET_HIGHLIGHTED_NAME', string);
-		},
-		historySetInsertName: function (context, string) {
-			context.commit('HISTORY_SET_INSERT_NAME', string);
-		},
-		historySetSelectedFloor: function (context, string) {
-			context.commit('HISTORY_SET_SELECTED_FLOOR', string);
-		},
-			setLegacyMode: function (context, bool) {
+		setLegacyMode: function (context, bool) {
 			context.commit('SET_LEGACY_MODE', bool);
 		},
 		setAdvancedMode: function (context, bool) {

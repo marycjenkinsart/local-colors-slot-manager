@@ -3,131 +3,40 @@ Vue.component('history-placement', {
 		mixinsHistory,
 	],
 	data: function () {
-		return {
-			placedNames: {
-				up: ['test'],
-				down: [],
-			}
-		};
+		return {};
 	},
 	computed: {
-		visibleButtons: function () {
-			return this.filteredUnplacedNames[this.selectedFloor];
+		placedNames: function () {
+			return this.$store.state.wizard.placedNames;
 		},
-		guestInRotation: function () {
-			var guest = this.autoGuest;
-			return guest.present && !guest.withFeatured;
+		potentialState: function () {
+			return this.$store.state.wizard.quizResults;
+		},
+		autoInsertGuest: function () {
+			return this.$store.getters.autoInsertGuest;
 		},
 		slotCounts: function () {
-			var self = this;
-			var tally = {
-				up: 0,
-				down: 0,
-			};
-			Object.keys(tally).forEach(function (floor) {
-				self.potentialState[floor].forEach(function (artist) {
-					tally[floor] += artist.slotSize;
-				})
-			})
-			return tally;
-		},
-		halfSlotCounts: function () {
-			var tally = this.slotCounts;
-			return {
-				up: tally.up * 2,
-				down: tally.down * 2,
-			};
-		},
-		displaySlotSizes: function () {
-			var tally = this.slotCounts;
-			var makeSlotCountPretty = function (number) {
-				var result = number + '';
-				return result.replace('.5', '½');
-			}
-			return {
-				up: makeSlotCountPretty(tally.up),
-				down: makeSlotCountPretty(tally.down),
-			}
-		},
-		rawUnplacedNames: function () {
-			var floors = ['up','down'];
-			var unplaced = {
-				'up': [],
-				'down': [],
-			}
-			var potentialState = this.potentialState;
-			floors.forEach(function (floor) {
-				potentialState[floor].forEach(function (item) {
-					var displayName = item.name;
-					var displaySlotSize = item.slotSize + '';
-					if (displaySlotSize !== '1') {
-						displaySlotSize = displaySlotSize
-							.replace('.5', '½')
-							.replace('0', '');
-						displayName = displayName +
-							' (' + displaySlotSize + ')';
-					}			
-					var insert = {
-						name: item.name,
-						displayName: displayName,
-						slotSize: item.slotSize,
-					};
-					unplaced[floor].push(insert);
-				})
-			})
-			return unplaced;
-		},
-		filteredUnplacedNames: function () {
-			var orig = JSON.parse(JSON.stringify(this.rawUnplacedNames));
-			var floors = ['up','down'];
-			var placedNames = this.placedNames;
-			var filtered = {
-				'up': [],
-				'down': [],
-			}
-			floors.forEach(function (floor) {
-				orig[floor].forEach(function (item) {
-					if (
-							!placedNames[floor].includes(item.name)
-						){
-						filtered[floor].push(item);
-					}
-				})
-			})
-			return filtered;
-		},
-		namesToSlotSizes: function () {
-			// console.log('hi')
-			var result = {};
-			var floors = ['up','down'];
-			var potential = this.potentialState;
-			floors.forEach(function (floor) {
-				potential[floor].forEach(function (artist) {
-					result[artist.name] = artist.slotSize;
-				})
-			})
-			// console.log(result);
+			var result = this.$store.getters.quizResultsSlotCounts
 			return result;
 		},
-		slotCounts: function () {
-			var self = this;
-			var tally = {
-				up: 0,
-				down: 0,
-			};
-			Object.keys(tally).forEach(function (floor) {
-				self.potentialState[floor].forEach(function (artist) {
-					tally[floor] += artist.slotSize;
-				})
-			})
-			return tally;
-		},
 		halfSlotCounts: function () {
-			var tally = this.slotCounts;
 			return {
-				up: tally.up * 2,
-				down: tally.down * 2,
+				up: this.slotCounts.up * 2,
+				down: this.slotCounts.down * 2,
 			};
+		},
+		namesToSlotSizes: function () {
+			return this.$store.getters.namesToSlotSizes;
+		},
+		displaySlotSizes: function () {
+			return {
+				up: makeSlotCountPretty(this.slotCounts.up),
+				down: makeSlotCountPretty(this.slotCounts.down),
+			}
+		},
+		visibleButtons: function () {
+			var filteredUnplacedNames = this.$store.getters.filteredUnplacedNames;
+			return filteredUnplacedNames[this.selectedFloor];
 		},
 		paddedNames: function () { // padded with null to the target length
 			var result = JSON.parse(JSON.stringify(this.placedNames));
@@ -153,7 +62,7 @@ Vue.component('history-placement', {
 		},
 		displayNames: function () { // to send to display component
 			var result = JSON.parse(JSON.stringify(this.inProgressNames));
-			if (this.guestInRotation) {
+			if (this.autoInsertGuest) {
 				result.up.unshift('GUEST');
 			};
 			return result;
@@ -223,8 +132,11 @@ Vue.component('history-placement', {
 			}
 			var finishedStuff = JSON.parse(JSON.stringify(this.placedNames));
 			finishedStuff[this.selectedFloor] = arrayWithNulls
-			this.placedNames = finishedStuff;
+			this.setPlacedNames(finishedStuff);
 		},
+		setPlacedNames: function (obj) {
+			this.$store.dispatch('wizardSetPlacedNames', obj);
+		}
 	},
 	template: /*html*/`
 <div>
@@ -235,7 +147,7 @@ Vue.component('history-placement', {
 	><strong>All done!</strong></span>
 	<button
 		v-for="artist in visibleButtons"
-		@click="ToInsert(artist.name)"
+		@click="highlightNameToInsert(artist.name)"
 		class="insertion-button"
 		:class="artist.name === insertName ? 'insertable-highlighted' : 'insertable'"
 	>{{artist.displayName}}</button>
@@ -249,18 +161,9 @@ Vue.component('history-placement', {
 		@clicked-on-name="clickNameTopRow($event)"
 		label="NEW"
 		:featured="potentialState.featured"
-		:insert-name="insertName"
-		:highlight-name="highlightedName"
+		:insertable="true"
 	>
 	</history-row>
-	<p>
-		<button
-			@click="setFloor('up')"
-		>See upstairs ({{displaySlotSizes.up}})</button>
-		<button
-			@click="setFloor('down')"
-		>See downstairs ({{displaySlotSizes.down}})</button>
-	</p>
 </div>
 `
 });

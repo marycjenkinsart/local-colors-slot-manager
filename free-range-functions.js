@@ -26,6 +26,8 @@ var inchesToTemplateNumber = function (number) {
 	return number * 72 / 100;
 };
 
+var limitedFloorNames = ['up','down'];
+
   //--------------------------//
  /*   ARTIST DATA HANDLING   */
 //--------------------------//
@@ -790,4 +792,9 @@ var compareLabelAges = function (first, second) {
 			}
 		}
 	}
+};
+
+var makeSlotCountPretty = function (number) {
+	var result = number + '';
+	return result.replace('.5', '½');
 };

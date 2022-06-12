@@ -16,10 +16,14 @@ Vue.component('history-row', {
 			type: Array,
 			require: false,
 		},
+		insertable: {
+			type: Boolean,
+			require: false
+		},
 		pale: {
 			type: Boolean,
 			require: false
-		}
+		},
 	},
 	computed: {
 		fancyNames: function () {
@@ -43,7 +47,9 @@ Vue.component('history-row', {
 		},
 		classByName: function (name) {
 			var result = '';
-			if (this.highlightedName === name) {
+			if (this.insertName === name && this.insertable) {
+				result = 'selected-to-insert';
+			} else if (this.highlightedName === name) {
 				result = 'selected';
 			} else {
 				result = 'not-selected';

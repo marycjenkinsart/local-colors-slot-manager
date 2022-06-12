@@ -14,12 +14,6 @@ var mixinsHistory = {
 		fullHistory: function () {
 			return this.$store.state.history.fullHistory;
 		},
-		potentialState: function () {
-			return this.$store.state.potentialState;
-		},
-		autoGuest: function () {
-			return this.$store.state.wizard.guest;
-		},
 	},
 	methods: {
 		setFloor: function (string) {
