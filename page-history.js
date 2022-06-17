@@ -33,7 +33,6 @@ var historyPage = Vue.component('history', {
 		>History for <strong>{{selectedFloor}}stairs</strong></span>
 	</p>
 	<history-header></history-header>
-	<history-placement></history-placement>
 	<history-table></history-table>
 	<button
 		class="impressive-button"

@@ -63,6 +63,9 @@ Vue.component('name-manager', {
 		templateFloorInfo: function () {
 			return this.$store.state.templateInfo[this.floorName];
 		},
+		snapOn: function () {
+			return this.$store.state.advanced.snapOn[this.floorName];
+		},
 		templateBaseOptions: function () {
 			return Object.keys(templates[this.floorName]);
 		},
@@ -840,7 +843,7 @@ Vue.component('name-manager', {
 							<input
 								type="checkbox"
 								:disabled="legacyModeOn"
-								:checked="templateFloorInfo.snapOn"
+								:checked="snapOn"
 								@input="toggleCornerSnap"
 							/>
 						</label>

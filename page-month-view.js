@@ -426,7 +426,6 @@ var monthViewPage = Vue.component('month-view', {
 		<map-preview
 		></map-preview>
 	</div>
-	<my-footer></my-footer>
 </div>
 `
 });

@@ -27,7 +27,7 @@ Vue.component('history-row', {
 	},
 	computed: {
 		fancyNames: function () {
-			return makeFancy(this.names);
+			return makeFloorFancy(this.names);
 		},
 		featuredString: function () {
 			var result = '';

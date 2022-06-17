@@ -18,7 +18,7 @@ var hubPage = Vue.component('hub-page', {
 		latestHistoryItemLabel: function () {
 			return this.historyItems[0].rotationLabel;
 		},
-		latestData: function () {
+		latestDataTest: function () {
 			var importData = this.importDataLabel;
 			var historyData = this.latestHistoryItemLabel;
 			// TODO: finish this
@@ -28,6 +28,7 @@ var hubPage = Vue.component('hub-page', {
 			// 1 means the import data is newer
 		},
 		historyItems: function () {
+			console.log(this.$route.query);
 			return this.$store.state.history.fullHistory;
 		},
 		displayHistoryItems: function () {
@@ -35,7 +36,13 @@ var hubPage = Vue.component('hub-page', {
 			return this.historyItems.map(function (month) {
 				return self.makeShortLabel(month.rotationLabel);
 			});
-		}
+		},
+		importedQuery: function () {
+			return this.$route.query;
+		},
+		latestHistoryQuery: function () {
+			return this.historyItems[0];
+		},
 	},
 	methods: {
 		goToHistoryViewer: function () {
@@ -51,26 +58,17 @@ var hubPage = Vue.component('hub-page', {
 >
 	<my-header></my-header>
 	<p>
-		<span>Import data is from:</span>
 		<span
 			v-if="importDataIsPresent"
-			:class="latestData >= 0 ? 'bold' : ''"
-		>{{makeShortLabel(importDataLabel)}}</span>
+			:class="latestDataTest >= 0 ? 'bold' : ''"
+		>
+			<span>Data imported:</span>
+			<span class="red">{{makeShortLabel(importDataLabel)}}</span>
+		</span>
 		<span
 			v-if="!importDataIsPresent"
 			class="red"
-		><em>not found</em></span>
-		<span
-			v-if="importDataIsPresent && latestData > 0"
-		> (latest)</span>
-		<br />
-		<span>Latest in history:</span>
-		<span
-			:class="latestData <= 0 ? 'bold' : ''"
-		>{{makeShortLabel(latestHistoryItemLabel)}}</span>
-		<span
-			v-if="latestData < 0"
-		> (latest)</span>
+		><em>No import data found</em></span>
 	</p>
 	<div
 		class="flex-cards"
@@ -83,11 +81,11 @@ var hubPage = Vue.component('hub-page', {
 				<p>Preview a specific rotation.</p>
 				<button
 					class="impressive-button"
-					v-if="importDataIsPresent && latestData >= 0"
+					v-if="importDataIsPresent && latestDataTest >= 0"
 				>Most Recent: {{makeShortLabel(importDataLabel)}}</button>
 				<button
 					class="impressive-button"
-					v-if="importDataIsPresent || latestData < 0"
+					v-if="!importDataIsPresent || latestDataTest < 0"
 				>Most Recent: {{makeShortLabel(latestHistoryItemLabel)}}</button>
 			</div>
 		</div>

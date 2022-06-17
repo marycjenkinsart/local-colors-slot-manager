@@ -32,7 +32,21 @@ var limitedFloorNames = ['up','down'];
  /*   ARTIST DATA HANDLING   */
 //--------------------------//
 
-var makeFancy = function (array) {
+// unfancy = ['GUEST','test1','test1','test2','test3','test3']
+
+// compact = 'GUEST-1,test1,test2-1,test3'
+
+// fancy = [{
+// 		"name": "test1",
+// 		"slotSize": 1,
+// 		"slotIndex": 1,
+// 		"indices": [
+// 			1,
+// 			2
+// 		]
+// 	}]
+
+var makeFloorFancy = function (array) {
 	var result = [];
 	var latest = '';
 	array.forEach(function (halfSlot, index) {
@@ -58,10 +72,9 @@ var makeFancy = function (array) {
 		})
 		artistObject.indices = indices;
 	})
-	// actually need index for actual slot being selected
 	return result;
 };
-var makeUnfancy = function (array) { // TODO: not used anywhere?
+var makeFloorUnfancy = function (array) { // TODO: unused?
 	var result = [];
 	array.forEach(function (object) {
 		var halfSlots = object.slotSize * 2;
@@ -71,10 +84,49 @@ var makeUnfancy = function (array) { // TODO: not used anywhere?
 	})
 	return result;
 };
+var makeFloorCompact = function (array) {
+	var compactFloorArray = [];
+	var fancy = makeFloorFancy(array);
+	fancy.forEach(function (item) {
+		var entry = item.name
+		var halfSlots = item.slotSize * 2;
+		if (halfSlots !== 2) {
+			entry += '-' + halfSlots;
+		}
+		compactFloorArray.push(entry);
+	})
+	var compactFloor = compactFloorArray.join(',');
+	return compactFloor;
+};
+var makeCompactFloorUnfancy = function (string) {
+	var stringSplits = string.split(',');
+	var result = [];
+	stringSplits.forEach(function (fancyItem) {
+		var innermostSplits = fancyItem.split('-');
+		var name = makeUnderscoresSpaces(innermostSplits[0]);
+		var count = parseInt(innermostSplits[1],10) || 2;
+		while (count > 0) {
+			result.push(name);
+			count -= 1;
+		}
+	})
+	return result;
+};
 
-  //---------------------------//
- /*   ROUTER QUERY HANDLING   */
-//---------------------------//
+  //---------------------------------//
+ /*   OTHER ROUTER QUERY HANDLING   */
+//---------------------------------//
+
+// LABEL
+
+//	compact = '2022,1,2,asdfasdf'
+
+//	uncompact = {
+//		month: 1,
+//		year: 2022,
+//		version: 2,
+//		custom: "asdfasdf",
+//	}
 
 var makeLabelCompact = function (obj) {
 	var customLabel = makeSpacesUnderscores(obj.custom);
@@ -113,20 +165,17 @@ var makeLabelUncompact = function (compactLabelString) {
 		return result;
 	}
 };
-var makeFloorCompact = function (array) {
-	var compactFloorArray = [];
-	var fancy = makeFancy(array);
-	fancy.forEach(function (item) {
-		var entry = item.name
-		var halfSlots = item.slotSize * 2;
-		if (halfSlots !== 2) {
-			entry += '-' + halfSlots;
-		}
-		compactFloorArray.push(entry);
-	})
-	var compactFloor = compactFloorArray.join(',');
-	return compactFloor;
-};
+
+// FEATURED
+
+// compact = 'Teri-2D-2'
+
+// unfancy = [{
+// 	name:'Teri',
+// 	type: '2D',
+// 	origSlotSize: 1,
+// }]
+
 var makeFeaturedCompact = function (featuredObject) {
 	var compactFeaturedArray = [];
 	featuredObject.forEach(function (item) {
@@ -143,20 +192,6 @@ var makeFeaturedCompact = function (featuredObject) {
 		compactFeaturedArray.push(parsedItem);
 	})
 	var result = compactFeaturedArray.join(',');
-	return result;
-};
-var makeCompactFloorUnfancy = function (string) {
-	var stringSplits = string.split(',');
-	var result = [];
-	stringSplits.forEach(function (fancyItem) {
-		var innermostSplits = fancyItem.split('-');
-		var name = makeUnderscoresSpaces(innermostSplits[0]);
-		var count = parseInt(innermostSplits[1],10) || 2;
-		while (count > 0) {
-			result.push(name);
-			count -= 1;
-		}
-	})
 	return result;
 };
 var makeCompactFeaturedUnfancy = function (string) {
@@ -179,6 +214,12 @@ var makeCompactFeaturedUnfancy = function (string) {
 	}
 	return result;
 };
+
+// TEMPLATE
+
+// adjustments: compact = 'x2,12,x1,18'
+// adjustments: uncompact = [0, 0, 12, 0, 18]
+
 var makeAdjustmentsCompact = function (_array) {
 	var result = [];
 	var zeroCount = 0;
@@ -219,6 +260,20 @@ var makeAdjustmentsUncompact = function (string, length) {
 	result.fill(0, result.length, length);
 	return result;
 };
+
+// TEMPLATE INFO
+
+// e.g. up = {
+// 	selectedTemplateBase: 'u00',
+// 	snapOn: true,
+// 	snapInches: 18,
+// 	priority: 'last',
+// 	adjustments: {},
+// }
+
+// FLAGS
+
+//
 
   //-----------------------------//
  /*   LINE & COORDINATE STUFF   */
@@ -792,6 +847,13 @@ var compareLabelAges = function (first, second) {
 			}
 		}
 	}
+};
+
+var getDifferenceInMonths = function (first, second) {
+	console.log({year:first.year,month:first.month})
+	var firstMonths = first.year * 12 + first.month;
+	var secondMonths = second.year * 12 + second.month;
+	return Math.abs(firstMonths - secondMonths);
 };
 
 var makeSlotCountPretty = function (number) {

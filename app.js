@@ -79,14 +79,8 @@ var app = new Vue({
 			}
 		})
 	},
-	computed: {
-		demo: function () {
-			this.$store.getters.artistsOverPar;
-		},
-	},
 	template: /*html*/`
 <div id="app">
 <router-view></router-view>
-<pre>{{JSON.stringify(demo,null,'   ')}}</pre>
 </div>
 `});

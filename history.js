@@ -1,6 +1,7 @@
 /* *-*-*-*   CREATING HISTORY DATA FROM ARCHIVED LINKS   *-*-*-*  */
 
 var webAppHistory = [
+	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2#/view?l=2022,6,3&u=Lorraine,Blaine,Brianna&d=Jeff_M.-1,Mary,Pam,J._Clay-1&f=Bill-2D-2&x=v2&t=u01,',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2#/view?l=2022,5&u=GUEST-1,J._Clay-1,Bill,Mary&d=Brianna,Pam,Lorraine,Blaine&f=Jeff_M.-2D-2&x=v2&t=u01,',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2#/view?l=2022,4&u=GUEST-1,Pam,Jan,Blaine,Lorraine&d=Mary,Jeff_M.,J._Clay-1,Bill&f=Brianna-3D&x=v2&t=u01,',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2#/view?l=2022,3&u=Blaine,Bill,J._Clay-1,Jeff_M.,Teri&d=Pam,Kyla,Lorraine,Jan&f=Mary-2D-2,Neena_(guest)-3D&x=v2&ad=x1,3,x1,6,x1,12',

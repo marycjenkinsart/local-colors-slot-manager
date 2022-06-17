@@ -27,7 +27,7 @@ Vue.component('floor-preview', {
 			return this.$store.state.artists[this.floorName];
 		},
 		legacyMode: function () {
-			return this.$store.state.advanced.legacyMode;
+			return this.$store.state.templateInfo.legacyMode;
 		},
 		// Still used for legacy stuff; don't excise yet
 		slot01: function () {

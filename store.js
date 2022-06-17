@@ -1,4 +1,8 @@
 var defaultSnapInches = 18;
+var snapPriority = {
+	up: 'last', // in a slot size tie, give preference to last slot(s)
+	down: 'first',
+}
 
 var historyStore = {
 	state: { // get this at (e.g.) this.$store.history.fullHistory
@@ -154,28 +158,28 @@ var store = new Vuex.Store({
 	state: {
 		advanced: {
 			advancedModeOn: false,
-			legacyMode: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
 			showCircles: false,
-			featuredExtras: false,
+			featuredExtras: false, // featured display speculation stuff (?)
+			snapOn: {
+				up: true,
+				down: true,
+			},
 		},
 		templateInfo: {
 			up: {
 				selectedTemplateBase: Object.keys(templates.up)[0],
-				snapOn: true,
 				snapInches: defaultSnapInches,
-				priority: 'last', // in a slot size tie, give preference to last slot(s)
-				adjustments: {},
+				adjustments: [],
 			},
 			down: {
 				selectedTemplateBase: Object.keys(templates.down)[0],
-				snapOn: true,
 				snapInches: defaultSnapInches,
-				priority: 'first',
-				adjustments: {},
+				adjustments: [],
 			},
 			feat: {
 				selectedTemplateBase: Object.keys(templates.feat)[0],
-			}
+			},
+			legacyMode: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
 		},
 		manage: {
 			label: false,
@@ -248,8 +252,8 @@ var store = new Vuex.Store({
 		},
 		fancyArtists: function (state) {
 			return {
-				up: makeFancy(state.artists.up),
-				down: makeFancy(state.artists.down),
+				up: makeFloorFancy(state.artists.up),
+				down: makeFloorFancy(state.artists.down),
 			};
 		},
 		uniqueArtists: function (state) {
@@ -325,12 +329,11 @@ var store = new Vuex.Store({
 		snappedFusedSlots: function (state, getters) {
 			var snappedSlots = JSON.parse(JSON.stringify(getters.fusedHalfSlots));
 			limitedFloorNames.forEach(function (floorName) {
-				var templateInfo = state.templateInfo[floorName];
-				if (templateInfo.snapOn) {
+				if (state.advanced.snapOn[floorName]) {
 					snappedSlots[floorName] = snapAllShortSegments(
 						snappedSlots[floorName],
-						inchesToTemplateNumber(templateInfo.snapInches),
-						templateInfo.priority
+						inchesToTemplateNumber(state.templateInfo[floorName].snapInches),
+						snapPriority[floorName]
 					);
 				}
 			})
@@ -472,12 +475,12 @@ var store = new Vuex.Store({
 			if (flags.includes('v2')) {
 				// custom template selection:
 				var t = {};
-				Object.keys(state.templateInfo).forEach(function (floorName) {
+				limitedFloorNames.forEach(function (floorName) {
 					var shortName = 't' + floorName[0];
 					var selected = state.templateInfo[floorName].selectedTemplateBase
-					var first = Object.keys(templates[floorName])[0];
+					var defaultTemplate = Object.keys(templates[floorName])[0];
 					if (
-						selected !== first
+						selected !== defaultTemplate
 					) {
 						t[shortName] = selected;
 					}
@@ -515,11 +518,11 @@ var store = new Vuex.Store({
 	mutations: {
 		// this is what actually changes the state
 		SET_LEGACY_MODE: function (state, bool) {
-			state.advanced.legacyMode = bool;
+			state.templateInfo.legacyMode = bool;
 			// TODO: rename things to be more consistent, e.g. this one and the below
 		},
 		TOGGLE_RIGID_VIEW: function (state) {
-			state.advanced.legacyMode = !state.advanced.legacyMode;
+			state.templateInfo.legacyMode = !state.templateInfo.legacyMode;
 		},
 		TOGGLE_ADVANCED_MODE: function (state) {
 			state.advanced.advancedModeOn = !state.advanced.advancedModeOn;
@@ -537,8 +540,7 @@ var store = new Vuex.Store({
 			state.advanced.showCircles = !state.advanced.showCircles;
 		},
 		TOGGLE_CORNER_SNAP: function (state, floorName) {
-			var floor = state.templateInfo[floorName];
-			floor.snapOn = !floor.snapOn;
+			state.advanced.snapOn[floorName] = !state.advanced.snapOn[floorName];
 		},
 		CHANGE_CORNER_SNAP_THRESHOLD: function (state, args) {
 			var floorName = args.floorName;
