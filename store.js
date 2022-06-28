@@ -1,9 +1,3 @@
-var defaultSnapInches = 18;
-var snapPriority = {
-	up: 'last', // in a slot size tie, give preference to last slot(s)
-	down: 'first',
-}
-
 var historyStore = {
 	state: { // get this at (e.g.) this.$store.history.fullHistory
 		fullHistory: makeFullHistory(),
@@ -150,16 +144,24 @@ var wizardStore = {
 		},
 };
 
+var loadedStore = {
+	state: {},
+	getters: {},
+	mutations: {},
+	actions: {},
+};
+
 var store = new Vuex.Store({
 	modules: {
 		history: historyStore,
 		wizard: wizardStore,
+		loaded: loadedStore,
 	},
 	state: {
 		advanced: {
 			advancedModeOn: false,
 			showCircles: false,
-			featuredExtras: false, // featured display speculation stuff (?)
+			featuredExtras: false, // featured display speculation stuff
 			snapOn: {
 				up: true,
 				down: true,
@@ -455,7 +457,7 @@ var store = new Vuex.Store({
 			}
 			// flags stuff -- DETECT LEGACY MODE HERE
 			var flags = [];
-			if (state.advanced.legacyMode === false) {
+			if (state.templateInfo.legacyMode === false) {
 				flags.push('v2');
 			}
 			var snapUp = parseInt(state.templateInfo.up.snapInches,10);

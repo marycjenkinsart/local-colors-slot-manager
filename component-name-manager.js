@@ -41,7 +41,7 @@ Vue.component('name-manager', {
 			return this.$store.state.advanced.advancedModeOn;
 		},
 		legacyModeOn: function () {
-			return this.$store.state.advanced.legacyMode;
+			return this.$store.state.templateInfo.legacyMode;
 		},
 		manageMe: function () {
 			return this.$store.state.manage.which === this.floorName;

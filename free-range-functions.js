@@ -1,4 +1,11 @@
-  //-------------------//
+var defaultSnapInches = 18;
+
+var snapPriority = {
+	up: 'last', // in a slot size tie, give preference to last slot(s)
+	down: 'first',
+};
+
+//-------------------//
  /*   GENERIC STUFF   */
 //-------------------//
 
@@ -240,6 +247,7 @@ var makeAdjustmentsCompact = function (_array) {
 };
 var makeAdjustmentsUncompact = function (string, length) {
 	var result = [];
+	string = string || '';
 	if (string.length > 0) {
 		var array = string.split(',');
 		array.forEach(function (item) {
@@ -274,6 +282,144 @@ var makeAdjustmentsUncompact = function (string, length) {
 // FLAGS
 
 //
+
+  //---------------------------------//
+ /*   ROUTER QUERY INTERPRETATION   */
+//---------------------------------//
+
+// https://marycjenkinsart.github.io/local-colors-slot-manager/?v2#/view?
+// l=2022,3&u=Blaine,Bill,J._Clay-1,Jeff_M.,Teri&d=Pam,Kyla,Lorraine,Jan&f=Mary-2D-2,Neena_(guest)-3D&x=v2&ad=x1,3,x1,6,x1,12
+
+var makeQueryObjectFromLink = function (string) {
+	var result = {};
+	var fullSplits = string.split('#');
+	string = string.replace(fullSplits[0],'').replace('#/view?','');
+	var querySplits = string.split('&');
+	querySplits.forEach(function (segment) {
+		var splits = segment.split('=');
+		result[splits[0]] = splits[1];
+	})
+	return result;
+};
+
+var emptyRotationObject = {
+	originalQuery: {},
+	rotationLabel:  {
+		year: 1969,
+		month: 1,
+		version: 255,
+		custom: 'Rotation label not found',
+	},
+	artists: {
+		up: ['upArtist'],
+		down: ['downArtist'],
+		feat: [],
+	},
+	templateInfo: {
+		up: {
+			selectedTemplateBase: Object.keys(templates.up)[0],
+			snapInches: defaultSnapInches,
+			adjustments: [],
+		},
+		down: {
+			selectedTemplateBase: Object.keys(templates.down)[0],
+			snapInches: defaultSnapInches,
+			adjustments: [],
+		},
+		feat: {
+			selectedTemplateBase: Object.keys(templates.feat)[0],
+		},
+		legacyMode: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
+	},
+	info: {
+		appVersion: null,
+		querySource: 'not specified',
+		queryIncomplete: null,
+		parseSuccessful: null,
+		warnings: [],
+	},
+};
+
+var makeRotationObjectFromQuery = function (queryObject) {
+	// setting things up
+	var result = JSON.parse(JSON.stringify(emptyRotationObject));
+	result.originalQuery = JSON.parse(JSON.stringify(queryObject));
+	console.log('Original query object:');
+	console.log(queryObject);
+	// parse label
+	if (queryObject.l) {
+		result.rotationLabel = makeLabelUncompact(queryObject.l);
+	} else {
+		queryIncomplete = true;
+		result.info.warnings.push('No label found in query!');
+	}
+	// parse featured
+	if (queryObject.f) {
+		result.artists.feat = makeCompactFeaturedUnfancy(queryObject.f);
+	} else {
+		queryIncomplete = true;
+		result.info.warnings.push('No featured artists found in query!');
+	}
+	// parse upstairs
+	if (queryObject.u) {
+		result.artists.up = makeCompactFloorUnfancy(queryObject.u);
+	} else {
+		queryIncomplete = true;
+		result.info.warnings.push('No upstairs artists found in query!');
+	}
+	// parse downstairs
+	if (queryObject.d) {
+		result.artists.down = makeCompactFloorUnfancy(queryObject.d);
+	} else {
+		queryIncomplete = true;
+		result.info.warnings.push('No downstairs artists found in query!');
+	}
+	// populate adjustments
+	var upHalfSlots = result.artists.up.length;
+	result.templateInfo.up.adjustments =
+		makeAdjustmentsUncompact(queryObject.au, upHalfSlots);
+	var downHalfSlots = result.artists.down.length;
+	result.templateInfo.up.adjustments =
+		makeAdjustmentsUncompact(queryObject.ad, downHalfSlots);
+	// populate templates (if encoded in query)
+	if (queryObject.t) {
+		var splits = queryObject.t.split(',');
+		if (splits[0].length > 0) {
+			result.templateInfo.up.selectedTemplateBase = splits[0];
+		}
+		if (splits[1].length > 0) {
+			result.templateInfo.down.selectedTemplateBase = splits[1];
+		}
+	}
+	// determine app version
+	var upExists = !!queryObject.u;
+	var downExists = !!queryObject.d;
+	if (!upExists || !downExists) { // failed to find bare minimum query data = use v2
+		result.info.appVersion = 'v2';
+	} else { // otherwise assume v1
+		result.info.appVersion = 'v1';
+	}
+	// determine flags
+	if (queryObject.x) {
+		var flags = queryObject.x.split(',');
+		if (flags.includes('v2')) { // explicitly v2 (overrides above)
+			result.info.appVersion = 'v2';
+		}
+		flags.forEach(function (flag) {
+			if (flag.includes('snap')) {
+				var fSplits = flag.replace('snap','').split('-');
+				result.templateInfo.up.snapInches = fSplits[0];
+				result.templateInfo.down.snapInches = fSplits[1];
+			}
+		})
+	}
+	// wrapup stuff
+	if (result.info.appVersion === 'v1') {
+		result.templateInfo.legacyMode = true;
+	}
+	result.info.parseSuccessful = true;
+	return result;
+};
 
   //-----------------------------//
  /*   LINE & COORDINATE STUFF   */
