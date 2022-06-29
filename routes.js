@@ -15,6 +15,10 @@ var routes = [
 		path: '/history',
 		component: historyPage
 	},
+	{
+		path: '/wizard',
+		component: wizardPage
+	},
 ];
 
 var router = new VueRouter({

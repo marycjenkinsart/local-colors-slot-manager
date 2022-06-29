@@ -145,7 +145,44 @@ var wizardStore = {
 };
 
 var loadedStore = {
-	state: {},
+	state: {
+		rotation: {
+			rotationLabel:  {
+				year: 1969,
+				month: 1,
+				version: 255,
+				custom: '',
+			},
+			artists: {
+				up: ['upArtist','upArtist','test','test'],
+				down: ['downArtist','downArtist','test2','test2'],
+				feat: [],
+			},
+			templateInfo: {
+				up: {
+					selectedTemplateBase: Object.keys(templates.up)[0],
+					snapInches: defaultSnapInches,
+					adjustments: [],
+				},
+				down: {
+					selectedTemplateBase: Object.keys(templates.down)[0],
+					snapInches: defaultSnapInches,
+					adjustments: [],
+				},
+				feat: {
+					selectedTemplateBase: Object.keys(templates.feat)[0],
+				},
+				legacyMode: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
+			},
+			meta: {
+				appVersion: 'loaded test',
+				querySource: 'not specified',
+				queryIncomplete: false,
+				parseSuccessful: true,
+				warnings: [],
+			},
+		}
+	},
 	getters: {},
 	mutations: {},
 	actions: {},

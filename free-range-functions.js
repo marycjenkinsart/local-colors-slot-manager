@@ -331,7 +331,7 @@ var emptyRotationObject = {
 		},
 		legacyMode: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
 	},
-	info: {
+	meta: {
 		appVersion: null,
 		querySource: 'not specified',
 		queryIncomplete: null,
@@ -351,35 +351,35 @@ var makeRotationObjectFromQuery = function (queryObject) {
 		result.rotationLabel = makeLabelUncompact(queryObject.l);
 	} else {
 		queryIncomplete = true;
-		result.info.warnings.push('No label found in query!');
+		result.meta.warnings.push('No label found in query!');
 	}
 	// parse featured
 	if (queryObject.f) {
 		result.artists.feat = makeCompactFeaturedUnfancy(queryObject.f);
 	} else {
 		queryIncomplete = true;
-		result.info.warnings.push('No featured artists found in query!');
+		result.meta.warnings.push('No featured artists found in query!');
 	}
 	// parse upstairs
 	if (queryObject.u) {
 		result.artists.up = makeCompactFloorUnfancy(queryObject.u);
 	} else {
 		queryIncomplete = true;
-		result.info.warnings.push('No upstairs artists found in query!');
+		result.meta.warnings.push('No upstairs artists found in query!');
 	}
 	// parse downstairs
 	if (queryObject.d) {
 		result.artists.down = makeCompactFloorUnfancy(queryObject.d);
 	} else {
 		queryIncomplete = true;
-		result.info.warnings.push('No downstairs artists found in query!');
+		result.meta.warnings.push('No downstairs artists found in query!');
 	}
 	// populate adjustments
 	var upHalfSlots = result.artists.up.length;
 	result.templateInfo.up.adjustments =
 		makeAdjustmentsUncompact(queryObject.au, upHalfSlots);
 	var downHalfSlots = result.artists.down.length;
-	result.templateInfo.up.adjustments =
+	result.templateInfo.down.adjustments =
 		makeAdjustmentsUncompact(queryObject.ad, downHalfSlots);
 	// populate templates (if encoded in query)
 	if (queryObject.t) {
@@ -395,15 +395,15 @@ var makeRotationObjectFromQuery = function (queryObject) {
 	var upExists = !!queryObject.u;
 	var downExists = !!queryObject.d;
 	if (!upExists || !downExists) { // failed to find bare minimum query data = use v2
-		result.info.appVersion = 'v2';
+		result.meta.appVersion = 'v2';
 	} else { // otherwise assume v1
-		result.info.appVersion = 'v1';
+		result.meta.appVersion = 'v1';
 	}
 	// determine flags
 	if (queryObject.x) {
 		var flags = queryObject.x.split(',');
 		if (flags.includes('v2')) { // explicitly v2 (overrides above)
-			result.info.appVersion = 'v2';
+			result.meta.appVersion = 'v2';
 		}
 		flags.forEach(function (flag) {
 			if (flag.includes('snap')) {
@@ -414,10 +414,10 @@ var makeRotationObjectFromQuery = function (queryObject) {
 		})
 	}
 	// wrapup stuff
-	if (result.info.appVersion === 'v1') {
+	if (result.meta.appVersion === 'v1') {
 		result.templateInfo.legacyMode = true;
 	}
-	result.info.parseSuccessful = true;
+	result.meta.parseSuccessful = true; // probably lol
 	return result;
 };
 
