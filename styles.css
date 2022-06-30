@@ -291,6 +291,13 @@ button.insertable:hover {
 	padding: 4px 8px;
 }
 
+.manager-box-modest {
+	padding: 8px 12px;
+	background-color: #ddd;
+	width: 100%;
+	margin-top: 6px;
+}
+
 .round-and-shadow {
 	border-radius: 8px;
 	box-shadow: 3px 3px 5px rgba(0,0,0,.5);

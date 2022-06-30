@@ -31,6 +31,9 @@ var historyStore = {
 
 var wizardStore = {
 	state: {
+		currentQuestionIndex: 0,
+		quizAnswers: JSON.parse(JSON.stringify(defaultQuizAnswers)),
+		// INSERTION STUFF BELOW
 		guest: {
 			present: true,
 			withFeatured: false,
@@ -62,6 +65,19 @@ var wizardStore = {
 		},
 	},
 	getters: {
+		originalRotation: function (state, getters, rootState) {
+			return rootState.loaded.rotation;
+		},
+		originalLongLabel: function (state, getters, rootState) {
+			return getLongLabel(rootState.loaded.rotation.rotationLabel);
+		},
+		currentQuizQuestion: function (state) {
+			return wizardQuiz[state.currentQuestionIndex];
+		},
+		currentForm: function (state, getters) {
+			return getters.currentQuizQuestion.formName;
+		},
+		// INSERTION STUFF BELOW
 		autoInsertGuest: function (state, getters) {
 			return state.guest.present && !state.guest.withFeatured;
 		},
@@ -133,30 +149,70 @@ var wizardStore = {
 		},
 	},
 	mutations: {
-			WIZARD_SET_PLACED_NAMES: function (state, obj) {
-				state.placedNames = obj;
-			},
+		WIZARD_SET_CURRENT_QUESTION_INDEX: function (state, value) {
+			state.currentQuestionIndex = value;
 		},
+		WIZARD_SET_QUIZ_ANSWER: function (state, args) {
+			var result = JSON.parse(JSON.stringify(state.quizAnswers));
+			result[args.name] = args.value;
+			state.quizAnswers = result;
+		},
+		// INSERTION STUFF BELOW
+		WIZARD_SET_PLACED_NAMES: function (state, obj) {
+			state.placedNames = obj;
+		},
+	},
 	actions: {
-			wizardSetPlacedNames: function (context, obj) {
-				context.commit('WIZARD_SET_PLACED_NAMES', obj);
-			},
+		wizardSetCurrentQuestionIndex: function (context, value) {
+			context.commit('WIZARD_SET_CURRENT_QUESTION_INDEX', value);
 		},
+		wizardSetQuizAnswer: function (context, args) {
+			context.commit('WIZARD_SET_QUIZ_ANSWER', args);
+		},
+		wizardSetQuizAnswerBool: function (context, args) {
+			console.log(args);
+			var newValue = args.value;
+			if (newValue === 'true') { newValue = true };
+			if (newValue === 'false') { newValue = false };
+			context.commit('WIZARD_SET_QUIZ_ANSWER', {
+				name: args.name,
+				value: newValue,
+			});
+		},
+		wizardResetQuizAnswer: function (context, name) {
+			var newValue = defaultQuizAnswers[name];
+			context.commit('WIZARD_SET_QUIZ_ANSWER', {
+				name: name,
+				value: newValue,
+			});
+		},
+		// INSERTION STUFF BELOW
+		wizardSetPlacedNames: function (context, obj) {
+			context.commit('WIZARD_SET_PLACED_NAMES', obj);
+		},
+	},
 };
 
 var loadedStore = {
 	state: {
 		rotation: {
 			rotationLabel:  {
+				mergedMonth: 23629,
 				year: 1969,
 				month: 1,
 				version: 255,
 				custom: '',
 			},
 			artists: {
-				up: ['upArtist','upArtist','test','test'],
-				down: ['downArtist','downArtist','test2','test2'],
-				feat: [],
+				up: ['Alice','Alice','Bob','Bob'],
+				down: ['Charlie','Charlie','Dianna','Dianna','Edgar'],
+				feat: [
+					{
+						name:'Frank',
+						type: '2D',
+						origSlotSize: 1,
+					}
+				],
 			},
 			templateInfo: {
 				up: {
@@ -183,7 +239,16 @@ var loadedStore = {
 			},
 		}
 	},
-	getters: {},
+	getters: {
+		originalFancyArtists: function (state, getters, rootState) {
+			var rotationObject = rootState.loaded.rotation;
+			return {
+				up: makeFloorFancy(rotationObject.artists.up),
+				down: makeFloorFancy(rotationObject.artists.down),
+				feat: JSON.parse(JSON.stringify(rotationObject.artists.feat)),
+			};
+		},
+	},
 	mutations: {},
 	actions: {},
 };
@@ -268,26 +333,7 @@ var store = new Vuex.Store({
 	},
 	getters: {
 		longLabel: function (state) {
-			var labelObject = state.rotationLabel;
-			var year = labelObject.year || 1970;
-			var month = labelObject.month || 13;
-			var version = labelObject.version || 1;
-			var custom = labelObject.custom || '';
-			var result = '';
-			if (custom.length) {
-				result = custom;
-			} else {
-				var monthMap = [
-					'Jan', 'Feb', 'Mar', 'April', 'May', 'June',
-					'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
-				]
-				var monthName = monthMap[parseInt(month,10) - 1] || 'ERROR';
-				result = monthName + ' ' + year
-				if (version > 1) {
-					result += ' v' + version;
-				}
-			}
-			return result;
+			return getLongLabel(state.rotationLabel);
 		},
 		fancyArtists: function (state) {
 			return {

@@ -995,6 +995,28 @@ var compareLabelAges = function (first, second) {
 	}
 };
 
+var getLongLabel = function (labelObject) {
+	var year = labelObject.year || 1970;
+	var month = labelObject.month || 13;
+	var version = labelObject.version || 1;
+	var custom = labelObject.custom || '';
+	var result = '';
+	if (custom.length) {
+		result = custom;
+	} else {
+		var monthMap = [
+			'Jan', 'Feb', 'Mar', 'April', 'May', 'June',
+			'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
+		]
+		var monthName = monthMap[parseInt(month,10) - 1] || 'ERROR';
+		result = monthName + ' ' + year
+		if (version > 1) {
+			result += ' v' + version;
+		}
+	}
+	return result;
+};
+
 var getDifferenceInMonths = function (first, second) {
 	console.log({year:first.year,month:first.month})
 	var firstMonths = first.year * 12 + first.month;
@@ -1004,5 +1026,5 @@ var getDifferenceInMonths = function (first, second) {
 
 var makeSlotCountPretty = function (number) {
 	var result = number + '';
-	return result.replace('.5', '½');
+	return result.replace('.5', '½').replace('0','');
 };
