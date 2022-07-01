@@ -7,6 +7,14 @@ var historyStore = {
 		highlightedName: '',
 		insertName: '',
 	},
+	getters: {
+		fullHistory: function (state) {
+			return state.fullHistory;
+		},
+		practicalHistory: function (state) {
+			return state.fullHistory; // TODO figure this part out properly
+		},
+	},
 	mutations: {
 		HISTORY_SET_FULL_HISTORY: function (state, obj) {
 			state.fullHistory = obj;

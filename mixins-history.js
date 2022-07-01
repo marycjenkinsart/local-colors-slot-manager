@@ -12,7 +12,10 @@ var mixinsHistory = {
 			return this.$store.state.history.insertName;
 		},
 		fullHistory: function () {
-			return this.$store.state.history.fullHistory;
+			return this.$store.getters.fullHistory;
+		},
+		practicalHistory: function () {
+			return this.$store.getters.practicalHistory;
 		},
 	},
 	methods: {
