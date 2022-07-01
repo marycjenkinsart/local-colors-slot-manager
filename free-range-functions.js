@@ -1026,5 +1026,22 @@ var getDifferenceInMonths = function (first, second) {
 
 var makeSlotCountPretty = function (number) {
 	var result = number + '';
-	return result.replace('.5', '½').replace('0','');
+	result = result.replace('.5', '½')
+	if (number === 0.5) {
+		result = result.replace('0','');
+	}
+	return result;
+};
+
+var makePrintName = function (name, slotSize) {
+	var printName = name;
+	if (slotSize !== 1) {
+		var printSlot = makeSlotCountPretty(slotSize);
+		printName += ' (' + printSlot + ')';
+	}
+	return printName;
+};
+
+var makeFeaturedPrintName = function (name, type) {
+	return name += ' (' + type + ')';
 };

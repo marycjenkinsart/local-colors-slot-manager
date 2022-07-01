@@ -13,7 +13,7 @@ Vue.component('history-placement', {
 			return this.$store.state.wizard.quizResults;
 		},
 		autoInsertGuest: function () {
-			return this.$store.getters.autoInsertGuest;
+			return this.potentialState.insertGuest;
 		},
 		slotCounts: function () {
 			var result = this.$store.getters.quizResultsSlotCounts
@@ -160,7 +160,7 @@ Vue.component('history-placement', {
 		:names="displayNames[selectedFloor]"
 		@clicked-on-name="clickNameTopRow($event)"
 		label="NEW"
-		:featured="potentialState.featured"
+		:featured="potentialState.feat"
 		:insertable="true"
 	>
 	</history-row>

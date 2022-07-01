@@ -43,7 +43,7 @@ var wizardStore = {
 			down: [],
 		},
 		quizResults: {
-			featured: [
+			feat: [
 				{
 					name:'testie',
 					type: '2D',
@@ -157,9 +157,65 @@ var wizardStore = {
 			result[args.name] = args.value;
 			state.quizAnswers = result;
 		},
+		WIZARD_ASSIGN_LIMBO_TO_FLOOR: function (state, args) {
+			var result = JSON.parse(JSON.stringify(state.quizAnswers));
+			result.newArtistsNewFloor[args.name] = args.floor;
+			state.quizAnswers = result;
+		},
+		WIZARD_TOGGLE_DEPARTURE_BY_NAME: function (state, name) {
+			var result = state.quizAnswers.departingArtists.slice();
+			if (result.includes(name)) {
+				result = result.filter(function (item) {
+					return item !== name;
+				});
+			} else {
+				result.push(name);
+			}
+			state.quizAnswers.departingArtists = result;
+		},
+		WIZARD_TOGGLE_ARRIVAL_BY_NAME: function (state, name) {
+			var result = state.quizAnswers.arrivingArtists.slice();
+			if (result.includes(name)) {
+				result = result.filter(function (item) {
+					return item !== name;
+				});
+			} else {
+				result.push(name);
+			}
+			state.quizAnswers.arrivingArtists = result;
+		},
+		WIZARD_TOGGLE_SLOT_SIZE_CHANGE_BY_NAME: function (state, name) {
+			var result = state.quizAnswers.artistSlotSizeChanges.slice();
+			if (result.includes(name)) {
+				result = result.filter(function (item) {
+					return item !== name;
+				});
+			} else {
+				result.push(name);
+			}
+			state.quizAnswers.artistSlotSizeChanges = result;
+		},
+		WIZARD_TOGGLE_FLOOR_OVERRIDE_BY_NAME: function (state, name) {
+			var result = state.quizAnswers.artistFloorAssignmentOverrides.slice();
+			if (result.includes(name)) {
+				result = result.filter(function (item) {
+					return item !== name;
+				});
+			} else {
+				result.push(name);
+			}
+			state.quizAnswers.artistFloorAssignmentOverrides = result;
+		},
+		WIZARD_SUBMIT_QUIZ_RESULTS: function (state, object) {
+			state.placedNames = { up: [], down: [] };
+			state.quizResults = object;
+		},
 		// INSERTION STUFF BELOW
 		WIZARD_SET_PLACED_NAMES: function (state, obj) {
 			state.placedNames = obj;
+		},
+		WIZARD_RESET_PLACED_NAMES: function (state, floor) {
+			state.placedNames[floor] = [];
 		},
 	},
 	actions: {
@@ -170,7 +226,6 @@ var wizardStore = {
 			context.commit('WIZARD_SET_QUIZ_ANSWER', args);
 		},
 		wizardSetQuizAnswerBool: function (context, args) {
-			console.log(args);
 			var newValue = args.value;
 			if (newValue === 'true') { newValue = true };
 			if (newValue === 'false') { newValue = false };
@@ -186,9 +241,30 @@ var wizardStore = {
 				value: newValue,
 			});
 		},
+		wizardToggleDepartureByName: function (context, name) {
+			context.commit('WIZARD_TOGGLE_DEPARTURE_BY_NAME', name);
+		},
+		wizardToggleArrivalByName: function (context, name) {
+			context.commit('WIZARD_TOGGLE_ARRIVAL_BY_NAME', name);
+		},
+		wizardToggleSlotSizeChangeByName: function (context, name) {
+			context.commit('WIZARD_TOGGLE_SLOT_SIZE_CHANGE_BY_NAME', name);
+		},
+		wizardToggleFloorOverrideByName: function (context, name) {
+			context.commit('WIZARD_TOGGLE_FLOOR_OVERRIDE_BY_NAME', name);
+		},
+		wizardAssignLimboToFloor: function (context, args) {
+			context.commit('WIZARD_ASSIGN_LIMBO_TO_FLOOR', args);
+		},
+		wizardSubmitQuizResults: function (context, object) {
+			context.commit('WIZARD_SUBMIT_QUIZ_RESULTS', object);
+		},
 		// INSERTION STUFF BELOW
 		wizardSetPlacedNames: function (context, obj) {
 			context.commit('WIZARD_SET_PLACED_NAMES', obj);
+		},
+		wizardResetPlacedNames: function (context, floor) {
+			context.commit('WIZARD_RESET_PLACED_NAMES',floor);
 		},
 	},
 };
@@ -204,8 +280,8 @@ var loadedStore = {
 				custom: '',
 			},
 			artists: {
-				up: ['Alice','Alice','Bob','Bob'],
-				down: ['Charlie','Charlie','Dianna','Dianna','Edgar'],
+				up: ['GUEST','Alice','Alice','Bob','Bob'],
+				down: ['Charlie','Charlie','Dianne','Dianne','Edgar'],
 				feat: [
 					{
 						name:'Frank',

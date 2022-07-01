@@ -112,6 +112,17 @@ table, th, td {
 	width: 30%;
 }
 
+.progress-bar-table {
+	width: 100%;
+	table-layout: fixed;
+}
+.progress-bar-select {
+	background-color: rgb(148, 148, 208);
+}
+.progress-bar-complete {
+	background-color: rgb(182, 182, 219);
+}
+
 /* *-*-*-*   HISTORY VIEWER   *-*-*-*  */
 
 
@@ -265,6 +276,10 @@ button.insertable:hover {
 }
 .half-width {
 	width: 49%;
+}
+
+.strikethrough {
+	text-decoration-line: line-through;
 }
 
 /* *-*-*-*   SPECIFICS   *-*-*-*  */

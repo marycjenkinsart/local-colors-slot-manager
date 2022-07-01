@@ -12,6 +12,31 @@ var forbiddenChars = [
 	'\\',
 ];
 
+var forbiddenAnalysis = function (string) {
+	string = string || '';
+	var result = {
+		valid: null,
+		forbiddenChars: [],
+		message: '',
+	}
+	forbiddenChars.forEach(function (testChar) {
+		if (string.includes(testChar)) {
+			result.valid = false;
+			result.forbiddenChars.push(testChar);
+		}
+	})
+	if (result.valid === false) {
+		result.message = 'Forbidden character(s) found: ';
+		result.forbiddenChars.forEach(function (char) {
+			result.message += char;
+		})
+	}
+	if (result.valid === null) {
+		result.valid = true;
+	}
+	return result;
+};
+
 var mixins = {
 	methods: {
 		// All of these need to be component methods so they can be used directly in the template

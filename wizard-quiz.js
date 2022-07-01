@@ -12,8 +12,6 @@ var defaultQuizAnswers = {
 	artistSlotSizeChanges: [],
 	newArtistsNewFloor: {},
 	artistFloorAssignmentOverrides: [],
-	placedUpNames: [],
-	placedDownNames: [],
 };
 
 var getQuizIndexFromID = function (id) {
@@ -29,7 +27,8 @@ var wizardQuiz = [
 		category: "Start",
 		title: "Welcome to the rotation wizard!",
 		subtitle: [
-			"The wizard will start with this rotation data."
+			"In the future you will be able to choose which rotation data to edit, but for now, to start from different rotation data, you will need to launch the wizard from a different URL link.",
+			"NOTE: If you need to prepare a scenario more specific than what this questonnaire can accomodate, you can switch to the advanced editor after the wizard is done."
 		],
 		dataNames: [],
 		alsoReset: [],
@@ -46,14 +45,20 @@ var wizardQuiz = [
 				enabled: "dummyTrue",
 				action: "dummyNada",
 				goTo: 10,
+			},
+			{
+				label: "Debug",
+				enabled: "dummyTrue",
+				action: "dummyNada",
+				goTo: 80,
 			}
 		],
 	},
 	{
 		questionID: 10,
 		category: "Label",
-		title: "The new rotation is for what month?",
-		subtitle: [],
+		title: "This new rotation will be for what month?",
+		subtitle: ["The version number will be incremented automatically, if appropriate."],
 		dataNames: [
 			"rotationMergedMonth",
 		],
@@ -78,7 +83,7 @@ var wizardQuiz = [
 		questionID: 20,
 		category: "Floor swap",
 		title: "Should the floors get swapped for this rotation?",
-		subtitle: ["Floors are swapped for most normal rotations. When means all upstairs artists will go downstairs and vice versa."],
+		subtitle: ["Floors are swapped for most normal (sequential) rotations."],
 		dataNames: [
 			"swapFloors",
 		],
@@ -131,7 +136,7 @@ var wizardQuiz = [
 		questionID: 31,
 		category: "Guest info",
 		title: "Is the guest artist sharing the featured space?",
-		subtitle: [],
+		subtitle: ["If sharing the featured space, the guest artist will not be given hanging space in the 2D rotation."],
 		formName: "selectGuestSharesFeatured",
 		dataNames: [
 			"guestSharesFeatured",
@@ -157,7 +162,7 @@ var wizardQuiz = [
 		category: "Featured artist",
 		title: "Who is featured this month?",
 		subtitle: [
-			"(For scenarios more complicated than these, you will need to use the advanced editor when the wizard is done.)"
+			"If none of the below options apply, you will need to use the advanced editor when the wizard is done. Pick the option most like your current scenario to make things easier in the meantime."
 		],
 		formName: "selectFeaturedType",
 		dataNames: [
@@ -178,7 +183,6 @@ var wizardQuiz = [
 			{
 				label: "Next",
 				enabled: "dummyTrue",
-				// enabled: "featuredCategoryIsSet",
 				action: "lockAnswers",
 				goTo: 50,
 				goToComputed: "featuredArtistBranch",
@@ -189,7 +193,7 @@ var wizardQuiz = [
 		questionID: 41,
 		category: "Featured artist",
 		title: "Who from the 2D rotation is featured?",
-		subtitle: ["This artist will not be included in the 2D rotation (because they are featured)."],
+		subtitle: ["2D artists will not be included in the 2D rotation while they are featured, but they will be able to return to the 2D rotation afterward."],
 		formName: "selectFeatured2DName",
 		dataNames: [
 			"featured2DName",
@@ -204,7 +208,6 @@ var wizardQuiz = [
 			},
 			{
 				label: "Next",
-				// enabled: "dummyTrue",
 				enabled: "featArtistIsSet2D",
 				action: "lockAnswers",
 				goTo: 50,
@@ -215,7 +218,7 @@ var wizardQuiz = [
 		questionID: 43,
 		category: "Featured artist",
 		title: "What is the featured artist's name?",
-		subtitle: [],
+		subtitle: ["NOTE: Even if this is a 2D artist, this artist will not participate in the 2D rotations after they are featured."],
 		formName: "selectFeatured3DName",
 		dataNames: [
 			"featured3DName",
@@ -230,8 +233,7 @@ var wizardQuiz = [
 			},
 			{
 				label: "Next",
-				// enabled: "dummyTrue",
-				enabled: "featArtistIsSet3D",
+				enabled: "featArtist3DValidated",
 				action: "lockAnswers",
 				goTo: 50,
 			}
@@ -258,7 +260,7 @@ var wizardQuiz = [
 			},
 			{
 				label: "Next",
-				enabled: "dummyTrue",
+				enabled: "groupThemeValidated",
 				action: "lockAnswers",
 				goTo: 50,
 			}
@@ -269,7 +271,7 @@ var wizardQuiz = [
 		category: "Comings and goings",
 		title: "Are there any existing 2D artists who will not be in this 2D rotation?",
 		subtitle: [
-			"(E.g. artists who have left the gallery)"
+			"Select any 2D artist that is leaving the gallery."
 		],
 		formName: "selectDepartingArtists",
 		dataNames: [
@@ -295,7 +297,10 @@ var wizardQuiz = [
 		questionID: 60,
 		category: "Comings and goings",
 		title: "Are there any new 2D artists?",
-		subtitle: [],
+		subtitle: [
+			"Leave box blank to skip.",
+			"New artists should not have the exact name as a current artist; use an initial if you must to make sure their labels are different, which will keep their slots from fusing on the map. (An automatic check will be implemented later.)"
+		],
 		formName: "selectArrivingArtists",
 		dataNames: [
 			"arrivingArtists",
@@ -320,12 +325,14 @@ var wizardQuiz = [
 		questionID: 70,
 		category: "Comings and goings",
 		title: "Are any 2D artists changing from a full space to a half space (or vice versa)?",
-		subtitle: [],
+		subtitle: ["Click a name to toggle their slot size between full and ½."],
 		formName: "selectArtistSlotSizeChanges",
 		dataNames: [
 			"artistSlotSizeChanges",
 		],
-		alsoReset: [],
+		alsoReset: [
+			"newArtistsNewFloor"
+		],
 		navButtons: [
 			{
 				label: "Back",
@@ -337,7 +344,8 @@ var wizardQuiz = [
 				label: "Next",
 				enabled: "dummyTrue",
 				action: "lockAnswers",
-				goTo: 80,
+				goTo: 90,
+				goToComputed: "limboArtistsBranch"
 			}
 		],
 	},
@@ -346,7 +354,7 @@ var wizardQuiz = [
 		category: "Floor assignments",
 		title: "The following artist(s) must be newly added to a floor. Which floor?",
 		subtitle: [
-			"NOTE: the order of artists on each floor will be changed later."
+			"Try to put them with dissimilar artists.",
 		],
 		formName: "selectNewArtistsNewFloor",
 		dataNames: [
@@ -362,8 +370,7 @@ var wizardQuiz = [
 			},
 			{
 				label: "Next",
-				enabled: "dummyTrue",
-				// enabled: "newArtistsFloorIsSet",
+				enabled: "newArtistsFloorIsSet",
 				action: "lockAnswers",
 				goTo: 90,
 			}
@@ -375,7 +382,6 @@ var wizardQuiz = [
 		title: "Final artist-floor assignments:",
 		subtitle: [
 			"The wizard has done its work, but you may need to make manual overrides now. If so, click an artist's name to send them to the other floor.",
-			"Reminder: avoid putting similar artists on the same floor, and try to keep the artist count per floor fairly even.",
 		],
 		formName: "selectArtistFloorAssignmentOverrides",
 		dataNames: [
@@ -415,7 +421,7 @@ var wizardQuiz = [
 			{
 				label: "Next",
 				enabled: "dummyTrue",
-				action: "generateAssignmentData",
+				action: "submitQuizResults",
 				goTo: 100,
 			}
 		],
@@ -428,9 +434,7 @@ var wizardQuiz = [
 			"If you notice an artist has been upstairs twice in a row, make sure they rotate this time! Click \"BACK\" if necessary to make adjustments before trying again."
 		],
 		formName: "insertUpstairsSlots",
-		dataNames: [
-			"placedUpNames",
-		],
+		dataNames: [],
 		alsoReset: [],
 		navButtons: [
 			{
@@ -441,9 +445,8 @@ var wizardQuiz = [
 			},
 			{
 				label: "Next",
-				enabled: "dummyTrue",
-				// enabled: "upstairsSlotsAreSet",
-				action: "lockAnswers",
+				enabled: "allFreeUpstairsNamesPlaced",
+				action: "setSelectedFloorToDownstairs",
 				goTo: 101,
 			}
 		],
@@ -456,21 +459,18 @@ var wizardQuiz = [
 			"If you notice an artist has been downstairs twice in a row, make sure they rotate this time! Click \"BACK\" if necessary to make adjustments before trying again."
 		],
 		formName: "insertDownstairsSlots",
-		dataNames: [
-			"placedDownNames",
-		],
+		dataNames: [],
 		alsoReset: [],
 		navButtons: [
 			{
 				label: "Back",
 				enabled: "dummyTrue",
-				action: "initializeQ",
+				action: "setSelectedFloorToUpstairs",
 				goTo: 100,
 			},
 			{
 				label: "Next",
-				enabled: "dummyTrue",
-				// enabled: "downstairsSlotsAreSet",
+				enabled: "allFreeDownstairsNamesPlaced",
 				action: "lockAnswers",
 				goTo: 110,
 			}
@@ -490,13 +490,12 @@ var wizardQuiz = [
 			{
 				label: "Back",
 				enabled: "dummyTrue",
-				action: "initializeQ",
+				action: "resetDownstairsPlacedNames",
 				goTo: 101,
 			},
 			{
 				label: "Next",
 				enabled: "dummyTrue",
-				// enabled: "downstairsSlotsAreSet",
 				action: "dummyNada",
 				goTo: 120,
 			}
@@ -525,7 +524,7 @@ var wizardQuiz = [
 	}
 ];
 
-var wizardQuizChapters = function () {
+var makeWizardQuizChapters = function () {
 	var result = [];
 	wizardQuiz.forEach(function (question) {
 		if (!result.includes(question.category)) {
@@ -534,3 +533,5 @@ var wizardQuizChapters = function () {
 	})
 	return result;
 };
+
+var wizardQuizChapters = makeWizardQuizChapters();
