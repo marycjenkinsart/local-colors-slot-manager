@@ -58,7 +58,6 @@ var detectDuplicateRecord = function (historyArray, testRotation) {
 	testRotation.meta = 'stripped';
 	testRotationString =  JSON.stringify(testRotation)
 	var result = historyStrings.includes(testRotationString);
-	console.log({historyStrings,testRotationString, result});
 	return result;
 };
 
@@ -81,8 +80,6 @@ var makeFullHistory = function () {
 		fullHistory.push(historyRecord);
 	})
 	fullHistory = sortHistoryRecords(fullHistory);
-	console.log('fullHistory:');
-	console.log(fullHistory);
 	return fullHistory;
 };
 

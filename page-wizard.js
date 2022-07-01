@@ -593,6 +593,12 @@ var wizardPage = Vue.component('wizard', {
 			this.$store.dispatch('historySetSelectedFloor','down');
 		},
 		dummyNada: function () {},
+		returnToHub: function () {
+			this.$router.push({
+				path: '/hub',
+				query: this.$route.query,
+			});
+		},
 	},
 	template: /*html*/`
 <div
@@ -621,8 +627,9 @@ var wizardPage = Vue.component('wizard', {
 			>
 				<h3
 					class="flat"
-				>{{originalLongLabel}}</h3>
+				>Currently loaded data:</h3>
 				<p>
+					Label: <strong>{{originalLongLabel}}</strong><br/>
 					Upstairs: <strong>{{displayOrigArtists.up}}</strong><br/>
 					Downstairs: <strong>{{displayOrigArtists.down}}</strong><br/>
 					Featured: <strong>{{displayOrigArtists.feat}}</strong>

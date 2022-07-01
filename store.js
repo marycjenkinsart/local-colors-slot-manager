@@ -272,9 +272,6 @@ var loadedStore = {
 	// of interest
 	state: {
 		importWarningFromURL: '',
-		queryObjects: {
-			// `originalFromURL` and `currentQuery` are added when app is loaded
-		},
 		altRotations: {
 			// `originalFromURL` is added when app is loaded
 		},
@@ -331,9 +328,6 @@ var loadedStore = {
 		rotation: function (state, getters) {
 			return state.current;
 		},
-		originalQueryObject: function (state, getters) {
-			return state.queryObject.originalFromURL;
-		},
 		importWarningFromURL: function (state, getters) {
 			return state.importWarningFromURL;
 		},
@@ -376,11 +370,6 @@ var loadedStore = {
 	actions: {
 		loadRotation: function (context, obj) {
 			context.commit('LOAD_ROTATION', obj);
-		},
-		setQueryObject: function (context, args) {
-			newObject = JSON.parse(JSON.stringify(context.state.queryObjects));
-			newObject[args.label] = JSON.parse(JSON.stringify(args.query));
-			context.commit('UPDATE_QUERY_OBJECTS', newObject);
 		},
 		setAltRotation: function (context, args) {
 			newObject = JSON.parse(JSON.stringify(context.state.altRotations));

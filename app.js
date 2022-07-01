@@ -15,21 +15,13 @@ var app = new Vue({
 		} else {
 			loadMessage = ""
 		}
-		this.$store.dispatch('setQueryObject', {
-			label: 'originalFromURL',
-			query: query,
-		});
-		this.$store.dispatch('setQueryObject', {
-			label: 'currentQuery',
-			query: query,
-		});
 		this.$store.dispatch('setImportWarningFromURL', loadMessage);
-		this.$store.dispatch('loadRotation', imported);
 		this.$store.dispatch('setAltRotation', {
 			label: 'originalFromURL',
 			rotation: imported,
 		});
 		this.$store.dispatch('historyAddSingleHistoryItem', imported);
+		this.$store.dispatch('loadRotation', imported);
 		// var actualQueryData = this.$route.query;
 		// var patchedQueryData = {};
 		// var artistsFromQuery = {};

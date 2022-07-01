@@ -27,7 +27,7 @@ var wizardQuiz = [
 		category: "Start",
 		title: "Welcome to the rotation wizard!",
 		subtitles: [
-			"In the future you will be able to choose which rotation data to edit, but for now, to start from different rotation data, you will need to launch the wizard from a different URL link.",
+			"The wizard will walk you through the creation of a new rotation based on the currently loaded data.",
 		],
 		dataNames: [],
 		alsoReset: [],
@@ -35,8 +35,8 @@ var wizardQuiz = [
 		navButtons: [
 			{
 				label: "Back",
-				enabled: "dummyFalse",
-				action: "dummyNada",
+				enabled: "dummyTrue",
+				action: "returnToHub",
 				goTo: 0,
 			},
 			{

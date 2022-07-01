@@ -36,17 +36,39 @@ var hubPage = Vue.component('hub-page', {
 				return self.makeShortLabel(month.rotationLabel);
 			});
 		},
-		importedQuery: function () {
-			return this.$route.query;
-		},
-		latestHistoryQuery: function () {
-			return this.historyItems[0];
-		},
 	},
 	methods: {
+		loadAndGoToView: function (rotationObject) {
+			this.$store.dispatch('loadRotation', rotationObject);
+			this.$router.push({
+				path: '/view',
+				query: rotationObject.originalQuery,
+			});
+		},
+		goToViewLatestHistory: function () {
+			this.loadAndGoToView(this.historyItems[0]);
+		},
+		goToViewImport: function () {
+			this.$router.push({
+				path: '/view',
+				query: this.$route.query,
+			});
+		},
 		goToHistoryViewer: function () {
 			this.$router.push({
 				path: '/history',
+				query: this.$route.query,
+			});
+		},
+		goToAdvancedEditMode: function () {
+			this.$router.push({
+				path: '/',
+				query: this.$route.query,
+			});
+		},
+		goToWizard: function () {
+			this.$router.push({
+				path: '/wizard',
 				query: this.$route.query,
 			});
 		},
@@ -81,19 +103,35 @@ var hubPage = Vue.component('hub-page', {
 				<button
 					class="impressive-button"
 					v-if="importDataIsPresent && latestDataTest >= 0"
+					@click="goToViewImport"
 				>Most Recent: {{makeShortLabel(importDataLabel)}}</button>
 				<button
 					class="impressive-button"
 					v-if="!importDataIsPresent || latestDataTest < 0"
-				>Most Recent: {{makeShortLabel(latestHistoryItemLabel)}}</button>
+					@click="goToViewLatestHistory"
+				>Most Recent*: {{makeShortLabel(latestHistoryItemLabel)}}</button>
+				<p
+				v-if="!importDataIsPresent || latestDataTest < 0"
+				>*Latest data from history</p>
+				<p>To return to the hub from the preview screen, click the rotation title five times.</p>
 			</div>
 		</div>
 		<div class="flex-card">
 			<div class="card-head">
-				<span>Edit</span>
+				<span>Edit Mode</span>
 			</div>
 			<div class="card-body">
-				<p>Create a new layout (or edit an old one).</p>
+				<p>Edit the current rotation.</p>
+				<p>
+					<button
+						class="impressive-button"
+						@click="goToWizard"
+					>Rotation wizard</button>
+					<button
+						class="impressive-button"
+						@click="goToAdvancedEditMode"
+					>Advanced editor</button>
+				</p>
 			</div>
 		</div>
 		<div class="flex-card">

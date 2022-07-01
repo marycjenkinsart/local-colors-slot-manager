@@ -9,7 +9,7 @@ Vue.component('history-table', {
 				'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
 			]
 			var floor = this.selectedFloor;
-			return this.practicalistory.map(function (item) {
+			return this.practicalHistory.map(function (item) {
 				var label = item.rotationLabel;
 				var shortYear = label.year + '';
 				// var shortLabel = label.year + '-' + label.month;
