@@ -247,6 +247,9 @@ var loadedStore = {
 	// of interest
 	state: {
 		importWarningFromURL: '',
+		queryObjects: {},
+		altRotations: {},
+		// originalFromURL is added to the two above (when the app is loaded)
 		current: {
 			rotationLabel:  {
 				mergedMonth: 23629,
@@ -300,6 +303,9 @@ var loadedStore = {
 		rotation: function (state, getters) {
 			return state.current;
 		},
+		originalQueryObject: function (state, getters) {
+			return state.queryObject.originalFromURL;
+		},
 		importWarningFromURL: function (state, getters) {
 			return state.importWarningFromURL;
 		},
@@ -320,6 +326,12 @@ var loadedStore = {
 		LOAD_ROTATION: function (state, obj) {
 			state.current = obj;
 		},
+		UPDATE_QUERY_OBJECTS: function (state, obj) {
+			state.queryObjects = obj;			
+		},
+		UPDATE_ALT_ROTATIONS: function (state, obj) {
+			state.altRotations = obj;			
+		},
 		SET_IMPORT_WARNING_FROM_URL: function (state, message) {
 			state.importWarningFromURL = message;
 		},
@@ -336,6 +348,16 @@ var loadedStore = {
 	actions: {
 		loadRotation: function (context, obj) {
 			context.commit('LOAD_ROTATION', obj);
+		},
+		setQueryObject: function (context, args) {
+			newObject = JSON.parse(JSON.stringify(context.state.queryObjects));
+			newObject[args.label] = JSON.parse(JSON.stringify(args.query));
+			context.commit('UPDATE_QUERY_OBJECTS', newObject);
+		},
+		setAltRotation: function (context, args) {
+			newObject = JSON.parse(JSON.stringify(context.state.altRotations));
+			newObject[args.label] = JSON.parse(JSON.stringify(args.rotation));
+			context.commit('UPDATE_ALT_ROTATIONS', newObject);
 		},
 		setImportWarningFromURL: function (context, message) {
 			context.commit('SET_IMPORT_WARNING_FROM_URL', message);
@@ -487,63 +509,6 @@ var store = new Vuex.Store({
 		advanced: advancedStore,
 	},
 	state: {
-		rotation: {
-			rotationLabel: {
-				year: 1970,
-				month: 1,
-				version: 255,
-				custom: 'Default Label Value',
-			},
-			artists: {
-				'feat': [ // can be more than one! or zero!
-					{
-						name:'Teri',
-						type: '2D',
-						origSlotSize: 1,
-					},
-				],
-				'up': [
-					'GUEST',
-					'Bill',
-					'Bill',
-					'J. Clay',
-					'Jeff M.',
-					'Jeff M.',
-					'Emily',
-					'Emily',
-					'Blaine',
-					'Blaine',
-				],
-				'down': [
-					'Adam',
-					'Nuha',
-					'Nuha',
-					'Pam',
-					'Pam',
-					'Mary',
-					'Mary',
-					'Jan',
-					'Jan',
-					'Adam',
-				],
-			},
-			templateInfo: {
-				up: {
-					selectedTemplateBase: Object.keys(templates.up)[0],
-					snapInches: defaultSnapInches,
-					adjustments: [],
-				},
-				down: {
-					selectedTemplateBase: Object.keys(templates.down)[0],
-					snapInches: defaultSnapInches,
-					adjustments: [],
-				},
-				feat: {
-					selectedTemplateBase: Object.keys(templates.feat)[0],
-				},
-				legacyMode: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
-			},
-		},
 		guestNameString: 'GUEST',
 	},
 	getters: {
@@ -797,7 +762,7 @@ var store = new Vuex.Store({
 		},
 		compactURL: function (state, getters) {
 			var prefix = "https://marycjenkinsart.github.io/local-colors-slot-manager/"
-			var infix = "?v2";
+			var infix = "?v2.1";
 			// the "infix" does nothing apart from ensuring the client treats the URL as a fresh destination
 			// otherwise caches can interfere with the preview's apperance (without anything appearing to be broken)
 			// VERY IMPORTANT:

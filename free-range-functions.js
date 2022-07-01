@@ -345,8 +345,6 @@ var makeRotationObjectFromQuery = function (queryObject, querySource) {
 	// setting things up
 	var result = JSON.parse(JSON.stringify(emptyRotationObject));
 	result.originalQuery = JSON.parse(JSON.stringify(queryObject));
-	console.log('Original query object:');
-	console.log(queryObject);
 	// parse label
 	if (queryObject.l) {
 		result.rotationLabel = makeLabelUncompact(queryObject.l);

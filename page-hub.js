@@ -28,7 +28,6 @@ var hubPage = Vue.component('hub-page', {
 			// 1 means the import data is newer
 		},
 		historyItems: function () {
-			console.log(this.$route.query);
 			return this.$store.state.history.fullHistory;
 		},
 		displayHistoryItems: function () {

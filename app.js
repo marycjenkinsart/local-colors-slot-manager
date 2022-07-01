@@ -3,9 +3,9 @@ var app = new Vue({
 	store: store, // available to all children as this.$store(.state.etc)
 	router: router,
 	created: function () {
-		var imported = makeRotationObjectFromQuery(this.$route.query, 'from URL');
+		var query = JSON.parse(JSON.stringify(this.$route.query));
+		var imported = makeRotationObjectFromQuery(query, 'from URL');
 		var loadMessage = "Something broke fairly early; not sure what. Sorry!";
-		console.log(imported.meta)
 		if (!imported.meta.parseSuccessful) {
 			loadMessage = "The URL query processing broke partway. You found a bug!"
 			console.warn(loadMessage);
@@ -14,10 +14,17 @@ var app = new Vue({
 			console.warn(loadMessage);
 		} else {
 			loadMessage = ""
-			console.log(loadMessage);
 		}
+		this.$store.dispatch('setQueryObject', {
+			label: 'originalFromURL',
+			query: query,
+		});
 		this.$store.dispatch('setImportWarningFromURL', loadMessage);
 		this.$store.dispatch('loadRotation', imported);
+		this.$store.dispatch('setAltRotation', {
+			label: 'originalFromURL',
+			rotation: imported,
+		});
 		// var actualQueryData = this.$route.query;
 		// var patchedQueryData = {};
 		// var artistsFromQuery = {};
