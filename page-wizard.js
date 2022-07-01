@@ -81,7 +81,7 @@ var wizardPage = Vue.component('wizard', {
 		displayFancyArtists: function () {
 			var fancyObject = JSON.parse(JSON.stringify(this.originalFancyArtists));
 			var result = {};
-			['up','down'].forEach(function (floorName) {
+			limitedFloorNames.forEach(function (floorName) {
 				var floorObject = JSON.parse(JSON.stringify(fancyObject[floorName]));
 				var currArtist = floorObject.shift();
 				var floorString = makePrintName(currArtist.name, currArtist.slotSize);
@@ -104,7 +104,7 @@ var wizardPage = Vue.component('wizard', {
 			return this.$store.state.wizard.currentQuestionIndex;
 		},
 		currentQuestion: function () {
-			return wizardQuiz[this.currentQuestionIndex];
+			return this.$store.getters.currentQuizQuestion;
 		},
 		dummyTrue: function () {
 			return true;
@@ -116,8 +116,7 @@ var wizardPage = Vue.component('wizard', {
 			var defaultGoTo = 40;
 			var extraQGoTo = 31;
 			var doExtraQ = this.$store.state.wizard.quizAnswers.guestPresent;
-			var result = doExtraQ ? extraQGoTo : defaultGoTo;
-			return result;
+			return doExtraQ ? extraQGoTo : defaultGoTo;
 		},
 		featuredArtistBranch: function () {
 			var result = 50;
@@ -140,8 +139,7 @@ var wizardPage = Vue.component('wizard', {
 			return !!this.$store.state.wizard.quizAnswers.featured2DName;
 		},
 		featArtist3DForbiddenReport: function () {
-			var report = forbiddenAnalysis(this.featured3DName);
-			return report;
+			return forbiddenAnalysis(this.featured3DName);
 		},
 		featArtist3DValidated: function () {
 			var noForbiddenChars = this.featArtist3DForbiddenReport.valid;
@@ -172,11 +170,7 @@ var wizardPage = Vue.component('wizard', {
 			return this.groupThemeForbiddenReport.valid;
 		},
 		groupThemeValidationMessage: function () {
-			var result = '';
-			if (!this.groupThemeValidated) {
-				result = this.groupThemeForbiddenReport.message;
-			}
-			return result;
+			return !this.groupThemeValidated ? this.groupThemeForbiddenReport.message : '';
 		},
 		newArtistNameForbiddenReport: function () {
 			var result = forbiddenAnalysis(this.newArtistName);
@@ -186,14 +180,10 @@ var wizardPage = Vue.component('wizard', {
 			return this.newArtistName && this.newArtistNameForbiddenReport.valid;
 		},
 		newArtistValidationMessage: function () {
-			var result = '';
-			if (!this.newArtistNameValidated) {
-				result = this.newArtistNameForbiddenReport.message;
-			}
-			return result;
+			return !this.newArtistNameValidated ? this.newArtistNameForbiddenReport.message : '' ;
 		},
 		originalRotation: function () {
-			return this.$store.state.loaded.rotation;
+			return this.$store.getters.originalRotation;
 		},
 		originalLongLabel: function () {
 			return this.$store.getters.originalLongLabel;
@@ -248,21 +238,21 @@ var wizardPage = Vue.component('wizard', {
 				})
 				var postFeaturedCount = working.artists.up.length + working.artists.down.length;
 				var featuredCountDif = (preFeaturedCount - postFeaturedCount);
-				newFeatured = {
+				newFeatured = [{
 					name: featured2DName,
 					type: '2D',
 					origSlotSize: featuredCountDif / 2,
-				};
+				}];
 			} else if (featuredType === '3D' && featured3DName) {
-				newFeatured = {
+				newFeatured = [{
 					name: featured3DName,
 					type: '3D',
-				};
+				}];
 			} else if (featuredType === 'group') {
-				newFeatured = {
+				newFeatured = [{
 					name: featuredGroupTheme || 'no theme',
 					type: 'group',
-				};
+				}];
 			}
 			// making advanced artist info for various other steps
 			var fusedArtistTable = [];
@@ -278,7 +268,7 @@ var wizardPage = Vue.component('wizard', {
 					}
 				})
 			}
-			['up','down'].forEach(function (floorName) {
+			limitedFloorNames.forEach(function (floorName) {
 				working.artists[floorName].forEach(function (artistName) {
 					if (fusedArtistTable[artistName]) {
 						fusedArtistTable[artistName].slotSize += 0.5;
@@ -407,16 +397,11 @@ var wizardPage = Vue.component('wizard', {
 			// auto version increment (must check with history)
 		},
 		insertGuest: function () {
-			var result = this.workingRotation.quizResults.insertGuest;
-			return result;
+			return this.workingRotation.quizResults.insertGuest;
 		},
 		departingArtistsString: function () {
-			var result = 'no one';
 			var departing = this.$store.state.wizard.quizAnswers.departingArtists;
-			if (departing.length > 0) {
-				result = departing.join(', ');
-			}
-			return result;
+			return departing.length > 0 ? departing.join(', ') : 'no one';
 		},
 		departingCheckboxes: function () {
 			var result = {};
@@ -448,7 +433,7 @@ var wizardPage = Vue.component('wizard', {
 		limboSlotTotals: function () {
 			var result = { up: 0, down: 0 };
 			var selfself = this;
-			['up','down'].forEach(function (floorName) {
+			limitedFloorNames.forEach(function (floorName) {
 				selfself.limboLists[floorName].forEach(function (artistName) {
 					result[floorName] += selfself.slotSizeOptions[artistName] || 1;
 				})
@@ -497,13 +482,20 @@ var wizardPage = Vue.component('wizard', {
 				down: findAdded(orig.down, working.down) || [],
 			};
 		},
+		afterOverridesFeaturedString: function () {
+			var result = [];
+			this.workingRotation.quizResults.feat.forEach(function (artist) {
+				result.push(makeFeaturedPrintName(artist.name, artist.type));
+			})
+			return result.join(', ');
+		},
 		afterOverridesList: function () {
 			return this.workingRotation.quizOptions.afterOverridesList;
 		},
 		afterOverridesSlotTotals: function () {
 			var result = { up: 0, down: 0 };
 			var selfself = this;
-			['up','down'].forEach(function (floorName) {
+			limitedFloorNames.forEach(function (floorName) {
 				selfself.afterOverridesList[floorName].forEach(function (artistName) {
 					result[floorName] += selfself.slotSizeOptions[artistName] || 1;
 				})
@@ -614,7 +606,7 @@ var wizardPage = Vue.component('wizard', {
 	>
 		<h3>{{currentQuestion.title}}</h3>
 		<p
-			v-for="subtitle in currentQuestion.subtitle"
+			v-for="subtitle in currentQuestion.subtitles"
 		>{{subtitle}}</p>
 		<div
 			v-if="currentForm === 'wizardStart'"
@@ -638,6 +630,12 @@ var wizardPage = Vue.component('wizard', {
 			<div
 				class="manager-box-modest"
 			>
+				<h3 class="flat">Original data:</h3>
+				<p>
+					Year: <strong>{{originalRotation.rotationLabel.year}}</strong><br/>
+					Month: <strong>{{originalRotation.rotationLabel.month}}</strong>
+				</p>
+				<h3>New rotation:</h3>
 				<p>
 					Year: <strong>{{workingRotation.rotationLabel.year}}</strong><br/>
 					Month: <strong>{{workingRotation.rotationLabel.month}}</strong>
@@ -676,6 +674,18 @@ var wizardPage = Vue.component('wizard', {
 							v-model="swapFloors"
 						> <span>Swap</span>
 					</label>
+				</p>
+				<p
+					v-if="swapFloors"
+				>
+					Upstairs → <strong>downstairs</strong><br/>
+					Downstairs → <strong>upstairs</strong>
+				</p>
+				<p
+					v-if="!swapFloors"
+				>
+					Upstairs → upstairs<br/>
+					Downstairs → downstairs
 				</p>
 			</div>
 		</div>
@@ -928,7 +938,9 @@ var wizardPage = Vue.component('wizard', {
 			<div
 				class="manager-box-modest"
 			>
-				<h3 class="flat">Limbo:</h3>
+				<h3
+					class="flat"
+				>Limbo:</h3>
 				<p
 					v-if="limboLists.limbo.length === 0"
 				>All done!</p>
@@ -956,7 +968,7 @@ var wizardPage = Vue.component('wizard', {
 					<span
 						v-for="artistName in addedLimboLists.up"
 					>
-						<span>+</span>
+						<span> +</span>
 						<button
 							class="red"
 							style="font-size: 1rem;"
@@ -970,7 +982,7 @@ var wizardPage = Vue.component('wizard', {
 					<span
 						v-for="artistName in addedLimboLists.down"
 					>
-						<span>+</span>
+						<span> +</span>
 						<button
 							class="red"
 							style="font-size: 1rem;"
@@ -986,7 +998,9 @@ var wizardPage = Vue.component('wizard', {
 			<div
 				class="manager-box-modest"
 			>
-				<h3>Upstairs ({{afterOverridesSlotTotals.up}}):</h3>
+				<h3
+					class="flat"
+				>Upstairs ({{afterOverridesSlotTotals.up}}):</h3>
 				<p>
 					<button
 						class="big_button"
@@ -1022,10 +1036,12 @@ var wizardPage = Vue.component('wizard', {
 			<div
 				class="manager-box-modest"
 			>
+				<h3
+					class="flat"
+				>Wizard results:</h3>
 				<p>
 					<span>Featured:</span>
-					<span>{{this.workingRotation.quizResults.feat.name}}</span>
-					<span> ({{this.workingRotation.quizResults.feat.type}})</span>
+					<span>{{afterOverridesFeaturedString}}</span>
 				<br/>
 				Guest in 2D rotation: {{insertGuest ? 'YES' : 'NO'}}<br/>
 				Upstairs: {{afterOverridesList.up.join(', ')}}<br/>

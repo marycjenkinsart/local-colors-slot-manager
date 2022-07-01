@@ -34,35 +34,11 @@ var wizardStore = {
 		currentQuestionIndex: 0,
 		quizAnswers: JSON.parse(JSON.stringify(defaultQuizAnswers)),
 		// INSERTION STUFF BELOW
-		guest: {
-			present: true,
-			withFeatured: false,
-		},
 		placedNames: {
-			up: ['test2','test2'],
+			up: [],
 			down: [],
 		},
-		quizResults: {
-			feat: [
-				{
-					name:'testie',
-					type: '2D',
-					origSlotSize: 1,
-				}
-			],
-			up: [
-				{ name: 'test1', slotSize: 1, displaySlotSize: '1' },
-				{ name: 'test2', slotSize: 1, displaySlotSize: '1' },
-				{ name: 'test3', slotSize: 1, displaySlotSize: '1' },
-				{ name: 'test4', slotSize: 1, displaySlotSize: '1' },
-			],
-			down: [
-				{ name: 'testA', slotSize: 1, displaySlotSize: '1' },
-				{ name: 'testB', slotSize: 0.5, displaySlotSize: '½' },
-				{ name: 'testC', slotSize: 1, displaySlotSize: '1' },
-				{ name: 'testD', slotSize: 1, displaySlotSize: '1' },
-			]
-		},
+		quizResults: {},
 	},
 	getters: {
 		originalRotation: function (state, getters, rootState) {
@@ -287,6 +263,11 @@ var loadedStore = {
 						name:'Frank',
 						type: '2D',
 						origSlotSize: 1,
+					},
+					{
+						name:'Gracie',
+						type: '2D',
+						origSlotSize: 1,
 					}
 				],
 			},
@@ -307,8 +288,8 @@ var loadedStore = {
 				legacyMode: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
 			},
 			meta: {
-				appVersion: 'loaded test',
-				querySource: 'not specified',
+				appVersion: 'v2',
+				querySource: 'loaded data test',
 				queryIncomplete: false,
 				parseSuccessful: true,
 				warnings: [],

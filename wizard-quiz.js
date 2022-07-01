@@ -26,9 +26,8 @@ var wizardQuiz = [
 		questionID: 0,
 		category: "Start",
 		title: "Welcome to the rotation wizard!",
-		subtitle: [
+		subtitles: [
 			"In the future you will be able to choose which rotation data to edit, but for now, to start from different rotation data, you will need to launch the wizard from a different URL link.",
-			"NOTE: If you need to prepare a scenario more specific than what this questonnaire can accomodate, you can switch to the advanced editor after the wizard is done."
 		],
 		dataNames: [],
 		alsoReset: [],
@@ -45,12 +44,6 @@ var wizardQuiz = [
 				enabled: "dummyTrue",
 				action: "dummyNada",
 				goTo: 10,
-			},
-			{
-				label: "Debug",
-				enabled: "dummyTrue",
-				action: "dummyNada",
-				goTo: 80,
 			}
 		],
 	},
@@ -58,7 +51,7 @@ var wizardQuiz = [
 		questionID: 10,
 		category: "Label",
 		title: "This new rotation will be for what month?",
-		subtitle: ["The version number will be incremented automatically, if appropriate."],
+		subtitles: ["The version number will be incremented automatically, if appropriate."],
 		dataNames: [
 			"rotationMergedMonth",
 		],
@@ -83,7 +76,7 @@ var wizardQuiz = [
 		questionID: 20,
 		category: "Floor swap",
 		title: "Should the floors get swapped for this rotation?",
-		subtitle: ["Floors are swapped for most normal (sequential) rotations."],
+		subtitles: ["Floors are swapped for most normal (sequential) rotations."],
 		dataNames: [
 			"swapFloors",
 		],
@@ -108,7 +101,7 @@ var wizardQuiz = [
 		questionID: 30,
 		category: "Guest info",
 		title: "Is there a guest artist this month?",
-		subtitle: [],
+		subtitles: [],
 		dataNames: [
 			"guestPresent",
 		],
@@ -136,7 +129,7 @@ var wizardQuiz = [
 		questionID: 31,
 		category: "Guest info",
 		title: "Is the guest artist sharing the featured space?",
-		subtitle: ["If sharing the featured space, the guest artist will not be given hanging space in the 2D rotation."],
+		subtitles: ["If sharing the featured space, the guest artist will not be given hanging space in the 2D rotation."],
 		formName: "selectGuestSharesFeatured",
 		dataNames: [
 			"guestSharesFeatured",
@@ -161,7 +154,7 @@ var wizardQuiz = [
 		questionID: 40,
 		category: "Featured artist",
 		title: "Who is featured this month?",
-		subtitle: [
+		subtitles: [
 			"If none of the below options apply, you will need to use the advanced editor when the wizard is done. Pick the option most like your current scenario to make things easier in the meantime."
 		],
 		formName: "selectFeaturedType",
@@ -193,7 +186,7 @@ var wizardQuiz = [
 		questionID: 41,
 		category: "Featured artist",
 		title: "Who from the 2D rotation is featured?",
-		subtitle: ["2D artists will not be included in the 2D rotation while they are featured, but they will be able to return to the 2D rotation afterward."],
+		subtitles: ["2D artists will not be included in the 2D rotation while they are featured, but they will be able to return to the 2D rotation afterward."],
 		formName: "selectFeatured2DName",
 		dataNames: [
 			"featured2DName",
@@ -218,7 +211,7 @@ var wizardQuiz = [
 		questionID: 43,
 		category: "Featured artist",
 		title: "What is the featured artist's name?",
-		subtitle: ["NOTE: Even if this is a 2D artist, this artist will not participate in the 2D rotations after they are featured."],
+		subtitles: ["NOTE: Even if this is a 2D artist, this artist will not participate in the 2D rotations after they are featured."],
 		formName: "selectFeatured3DName",
 		dataNames: [
 			"featured3DName",
@@ -243,7 +236,7 @@ var wizardQuiz = [
 		questionID: 44,
 		category: "Featured artist",
 		title: "Does this group show have a theme?",
-		subtitle: [
+		subtitles: [
 			"Type the theme name. (Leave blank if no theme.)"
 		],
 		formName: "selectFeaturedGroupTheme",
@@ -270,7 +263,7 @@ var wizardQuiz = [
 		questionID: 50,
 		category: "Comings and goings",
 		title: "Are there any existing 2D artists who will not be in this 2D rotation?",
-		subtitle: [
+		subtitles: [
 			"Select any 2D artist that is leaving the gallery."
 		],
 		formName: "selectDepartingArtists",
@@ -297,9 +290,9 @@ var wizardQuiz = [
 		questionID: 60,
 		category: "Comings and goings",
 		title: "Are there any new 2D artists?",
-		subtitle: [
+		subtitles: [
 			"Leave box blank to skip.",
-			"New artists should not have the exact name as a current artist; use an initial if you must to make sure their labels are different, which will keep their slots from fusing on the map. (An automatic check will be implemented later.)"
+			"New artists should not have the exact name as an existing artist; use an initial if you must to make sure their labels are different, which will keep their slots from fusing on the map."
 		],
 		formName: "selectArrivingArtists",
 		dataNames: [
@@ -325,7 +318,7 @@ var wizardQuiz = [
 		questionID: 70,
 		category: "Comings and goings",
 		title: "Are any 2D artists changing from a full space to a half space (or vice versa)?",
-		subtitle: ["Click a name to toggle their slot size between full and ½."],
+		subtitles: ["Click a name to toggle their slot size between full and ½."],
 		formName: "selectArtistSlotSizeChanges",
 		dataNames: [
 			"artistSlotSizeChanges",
@@ -353,8 +346,8 @@ var wizardQuiz = [
 		questionID: 80,
 		category: "Floor assignments",
 		title: "The following artist(s) must be newly added to a floor. Which floor?",
-		subtitle: [
-			"Try to put them with dissimilar artists.",
+		subtitles: [
+			"If you change your mind, click the red name in the assignment list return the name to \"limbo\".",
 		],
 		formName: "selectNewArtistsNewFloor",
 		dataNames: [
@@ -380,7 +373,7 @@ var wizardQuiz = [
 		questionID: 90,
 		category: "Floor assignments",
 		title: "Final artist-floor assignments:",
-		subtitle: [
+		subtitles: [
 			"The wizard has done its work, but you may need to make manual overrides now. If so, click an artist's name to send them to the other floor.",
 		],
 		formName: "selectArtistFloorAssignmentOverrides",
@@ -407,7 +400,7 @@ var wizardQuiz = [
 		questionID: 99,
 		category: "Floor assignments",
 		title: "Artists have been assigned to their floors!",
-		subtitle: [],
+		subtitles: [],
 		formName: "showArtistFloorAssignments",
 		dataNames: [],
 		alsoReset: [],
@@ -430,9 +423,7 @@ var wizardQuiz = [
 		questionID: 100,
 		category: "Slot assignments",
 		title: "Assign upstairs artists to slots.",
-		subtitle: [
-			"If you notice an artist has been upstairs twice in a row, make sure they rotate this time! Click \"BACK\" if necessary to make adjustments before trying again."
-		],
+		subtitles: [],
 		formName: "insertUpstairsSlots",
 		dataNames: [],
 		alsoReset: [],
@@ -455,9 +446,7 @@ var wizardQuiz = [
 		questionID: 101,
 		category: "Slot assignments",
 		title: "Assign downstairs artists to slots.",
-		subtitle: [
-			"If you notice an artist has been downstairs twice in a row, make sure they rotate this time! Click \"BACK\" if necessary to make adjustments before trying again."
-		],
+		subtitles: [],
 		formName: "insertDownstairsSlots",
 		dataNames: [],
 		alsoReset: [],
@@ -480,7 +469,7 @@ var wizardQuiz = [
 		questionID: 110,
 		category: "Finishing up",
 		title: "Final preview!",
-		subtitle: [
+		subtitles: [
 			"If anything needs to be adjusted, click \"BACK\"."
 		],
 		formName: "showFinalPreview",
@@ -490,7 +479,7 @@ var wizardQuiz = [
 			{
 				label: "Back",
 				enabled: "dummyTrue",
-				action: "resetDownstairsPlacedNames",
+				action: "setSelectedFloorToDownstairs",
 				goTo: 101,
 			},
 			{
@@ -505,7 +494,7 @@ var wizardQuiz = [
 		questionID: 120,
 		category: "Complete!",
 		title: "All done!",
-		subtitle: [],
+		subtitles: [],
 		formName: "copyResult",
 		navButtons: [
 			{
