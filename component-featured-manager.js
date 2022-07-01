@@ -18,7 +18,10 @@ Vue.component('featured-manager', {
 			return this.$store.state.artists;
 		},
 		uniqueArtists: function () {
-			return this.$store.getters.uniqueArtists;
+			return {
+				up: this.artists.up.filter(getUnique),
+				down: this.artists.down.filter(getUnique),
+			};
 		},
 		manageMe: function () {
 			return this.$store.state.manage.which === 'feat';

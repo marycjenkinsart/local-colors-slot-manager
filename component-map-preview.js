@@ -55,11 +55,11 @@ var offsets = {
 };
 
 var otherCoords = {
-	rotationLabel: {
+	svgRotationLabel: {
 		x: 305.9999 + undoUSLetterSize.x,
 		y: 67.5836 + undoUSLetterSize.y,
 	},
-	featuredLabel: {
+	svgFeaturedLabel: {
 		x: 320 + undoUSLetterSize.x,
 		y: 590 + undoUSLetterSize.y,
 	}
@@ -78,8 +78,12 @@ Vue.component('map-preview', {
 		artists: function () {
 			return this.$store.state.artists;
 		},
+		rotationLabel: function () {
+			return this.$store.state.rotationLabel;
+		},
+		// the above should be the only place these things come from!!
 		longLabel: function () {
-			return this.$store.getters.longLabel;
+			return getLongLabel(this.rotationLabel);
 		},
 		manage: function () {
 			return this.$store.state.manage;
@@ -213,8 +217,8 @@ Vue.component('map-preview', {
 			v-if="overallView"
 		>
 			<text
-				:x="otherCoords.rotationLabel.x"
-				:y="otherCoords.rotationLabel.y"
+				:x="otherCoords.svgRotationLabel.x"
+				:y="otherCoords.svgRotationLabel.y"
 			>
 				<tspan
 					@click="clickedOnLabel"
@@ -223,12 +227,12 @@ Vue.component('map-preview', {
 			</text>
 			<text>
 				<tspan
-					:x="otherCoords.featuredLabel.x"
-					:y="otherCoords.featuredLabel.y"
+					:x="otherCoords.svgFeaturedLabel.x"
+					:y="otherCoords.svgFeaturedLabel.y"
 					class="jl ust11 ust12 ust13"
 				>{{featuredLabelString}}</tspan>
 				<tspan
-					:x="otherCoords.featuredLabel.x"
+					:x="otherCoords.svgFeaturedLabel.x"
 					dy="1.2em"
 					class="jl ust11 ust12 ust13"
 				>{{featuredBodyString}}</tspan>

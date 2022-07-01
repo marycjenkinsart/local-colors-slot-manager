@@ -44,9 +44,6 @@ var wizardStore = {
 		originalRotation: function (state, getters, rootState) {
 			return rootState.loaded.rotation;
 		},
-		originalLongLabel: function (state, getters, rootState) {
-			return getLongLabel(rootState.loaded.rotation.rotationLabel);
-		},
 		currentQuizQuestion: function (state) {
 			return wizardQuiz[state.currentQuestionIndex];
 		},
@@ -88,15 +85,7 @@ var wizardStore = {
 			var potentialState = state.quizResults;
 			limitedFloorNames.forEach(function (floor) {
 				potentialState[floor].forEach(function (item) {
-					var displayName = item.name;
-					var displaySlotSize = item.slotSize + '';
-					if (displaySlotSize !== '1') {
-						displaySlotSize = displaySlotSize
-							.replace('.5', '½')
-							.replace('0', '');
-						displayName = displayName +
-							' (' + displaySlotSize + ')';
-					}			
+					var displayName = makePrintName(item.name, item.slotSize);
 					var insert = {
 						name: item.name,
 						displayName: displayName,
@@ -297,13 +286,8 @@ var loadedStore = {
 		}
 	},
 	getters: {
-		originalFancyArtists: function (state, getters, rootState) {
-			var rotationObject = rootState.loaded.rotation;
-			return {
-				up: makeFloorFancy(rotationObject.artists.up),
-				down: makeFloorFancy(rotationObject.artists.down),
-				feat: JSON.parse(JSON.stringify(rotationObject.artists.feat)),
-			};
+		artists: function (state, getters) {
+			return state.rotation.artists;
 		},
 	},
 	mutations: {},
@@ -346,14 +330,13 @@ var store = new Vuex.Store({
 			label: false,
 			which: '',
 		},
+		guestNameString: 'GUEST',
 		rotationLabel: {
 			year: 1970,
 			month: 1,
 			version: 255,
 			custom: 'Default Label Value',
-			editing: false,
 		},
-		guestNameString: 'GUEST',
 		artists: {
 			'feat': [ // can be more than one! or zero!
 				{
@@ -398,20 +381,17 @@ var store = new Vuex.Store({
 				down: makeFloorFancy(state.artists.down),
 			};
 		},
-		uniqueArtists: function (state) {
-			return {
-				up: state.artists.up.filter(getUnique),
-				down: state.artists.down.filter(getUnique),
-			};
+		templateInfo: function (state, getters) {
+			return state.templateInfo;
 		},
-		upTemplate: function (state) {
-			return templates.up[state.templateInfo.up.selectedTemplateBase];
+		upTemplate: function (state, getters) {
+			return templates.up[getters.templateInfo.up.selectedTemplateBase];
 		},
-		downTemplate: function (state) {
-			return templates.down[state.templateInfo.down.selectedTemplateBase];
+		downTemplate: function (state, getters) {
+			return templates.down[getters.templateInfo.down.selectedTemplateBase];
 		},
-		featLineSegments: function (state) {
-			return templates.feat[state.templateInfo.feat.selectedTemplateBase];
+		featLineSegments: function (state, getters) {
+			return templates.feat[getters.templateInfo.feat.selectedTemplateBase];
 		},
 		featLinesTotal: function (state, getters) {
 			var rawLines = getters.featLineSegments;
@@ -438,7 +418,7 @@ var store = new Vuex.Store({
 		adjustedHalfSlotLengths: function (state, getters) {
 			var result = {};
 			limitedFloorNames.forEach(function (floorName) {
-				var adjustments = state.templateInfo[floorName].adjustments;
+				var adjustments = getters.templateInfo[floorName].adjustments;
 				var halfSlotCount = state.artists[floorName].length;
 				// guaranteeing there's something there:
 				adjustments[halfSlotCount] = adjustments[halfSlotCount] || [];
@@ -474,7 +454,7 @@ var store = new Vuex.Store({
 				if (state.advanced.snapOn[floorName]) {
 					snappedSlots[floorName] = snapAllShortSegments(
 						snappedSlots[floorName],
-						inchesToTemplateNumber(state.templateInfo[floorName].snapInches),
+						inchesToTemplateNumber(getters.templateInfo[floorName].snapInches),
 						snapPriority[floorName]
 					);
 				}
@@ -584,7 +564,7 @@ var store = new Vuex.Store({
 				down: down,
 			};
 		},
-		compactEverything: function (state) {
+		compactEverything: function (state, getters) {
 			var compactLabel = makeLabelCompact(state.rotationLabel);
 			var up = makeFloorCompact(state.artists.up);
 			var down = makeFloorCompact(state.artists.down);
@@ -597,11 +577,11 @@ var store = new Vuex.Store({
 			}
 			// flags stuff -- DETECT LEGACY MODE HERE
 			var flags = [];
-			if (state.templateInfo.legacyMode === false) {
+			if (getters.templateInfo.legacyMode === false) {
 				flags.push('v2');
 			}
-			var snapUp = parseInt(state.templateInfo.up.snapInches,10);
-			var snapDown = parseInt(state.templateInfo.down.snapInches,10);
+			var snapUp = parseInt(getters.templateInfo.up.snapInches,10);
+			var snapDown = parseInt(getters.templateInfo.down.snapInches,10);
 			if (
 				snapUp !== defaultSnapInches
 				|| snapDown !== defaultSnapInches
@@ -619,7 +599,7 @@ var store = new Vuex.Store({
 				var t = {};
 				limitedFloorNames.forEach(function (floorName) {
 					var shortName = 't' + floorName[0];
-					var selected = state.templateInfo[floorName].selectedTemplateBase
+					var selected = getters.templateInfo[floorName].selectedTemplateBase
 					var defaultTemplate = Object.keys(templates[floorName])[0];
 					if (
 						selected !== defaultTemplate
@@ -636,7 +616,7 @@ var store = new Vuex.Store({
 				limitedFloorNames.forEach(function (floorName) {
 					var halfSlotCount = state.artists[floorName].length;
 					var shortName = 'a' + floorName[0];
-					var adjustments = state.templateInfo[floorName].adjustments[halfSlotCount];
+					var adjustments = getters.templateInfo[floorName].adjustments[halfSlotCount];
 					var shortValue = makeAdjustmentsCompact(adjustments);
 					if (shortValue.length > 0) {
 						result += '&' + shortName + '=' + shortValue;
@@ -658,13 +638,8 @@ var store = new Vuex.Store({
 		},
 	},
 	mutations: {
-		// this is what actually changes the state
-		SET_LEGACY_MODE: function (state, bool) {
-			state.templateInfo.legacyMode = bool;
-			// TODO: rename things to be more consistent, e.g. this one and the below
-		},
-		TOGGLE_RIGID_VIEW: function (state) {
-			state.templateInfo.legacyMode = !state.templateInfo.legacyMode;
+		UDPATE_TEMPLATE_INFO: function (state, obj) {
+			state.templateInfo = obj;
 		},
 		TOGGLE_ADVANCED_MODE: function (state) {
 			state.advanced.advancedModeOn = !state.advanced.advancedModeOn;
@@ -684,58 +659,72 @@ var store = new Vuex.Store({
 		TOGGLE_CORNER_SNAP: function (state, floorName) {
 			state.advanced.snapOn[floorName] = !state.advanced.snapOn[floorName];
 		},
-		CHANGE_CORNER_SNAP_THRESHOLD: function (state, args) {
-			var floorName = args.floorName;
-			var value = args.value;
-			state.templateInfo[floorName].snapInches = value;
-		},
-		SET_SELECTED_TEMPLATE_BASE: function (state, args) {
-			var floorName = args.floorName;
-			var value = args.value;
-			state.templateInfo[floorName].selectedTemplateBase = value;
-		},
 		UPDATE_LABEL_OBJECT: function (state, data) {
 			state.rotationLabel = data;
 		},
 		UPDATE_ARTISTS_OBJECT: function (state, data) {
 			state.artists = data;
 		},
-		RESET_ADJUSTMENTS: function (state, floorName) {
-			var halfSlotCount = state.artists[floorName].length;
-			var array = JSON.parse(JSON.stringify(state.templateInfo[floorName].adjustments[halfSlotCount]));
-			array.fill(0);
-			state.templateInfo[floorName].adjustments[halfSlotCount] = array;
+	},
+	actions: {
+		// templateInfo stuff
+		setLegacyMode: function (context, bool) {
+			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			templateInfo.legacyMode = bool;
+			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
 		},
-		IMPORT_ADJUSTMENTS: function (state, data) {
+		changeCornerSnapThreshold: function (context, args) {
+			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			var floorName = args.floorName;
+			var value = args.value;
+			templateInfo[floorName].snapInches = value;
+			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
+		},
+		togglelegacyMode: function (context) {
+			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			templateInfo.legacyMode = !templateInfo.legacyMode;
+			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
+		},
+		setSelectedTemplateBase: function (context, args) {
+			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			var floorName = args.floorName;
+			var value = args.value;
+			templateInfo[floorName].selectedTemplateBase = value;
+			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
+		},
+		importAdjustments: function (context, data) {
+			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
 			limitedFloorNames.forEach(function (floorName) {
-				var halfSlotCount = state.artists[floorName].length;
-				state.templateInfo[floorName].adjustments[halfSlotCount] = data[floorName];
+				var halfSlotCount = context.state.artists[floorName].length;
+				context.getters.templateInfo[floorName].adjustments[halfSlotCount] = data[floorName];
 			})
+			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
 		},
-		UPDATE_ADJUSTMENTS: function (state, data) {
+		resetAdjustments: function (context, floorName) {
+			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			var halfSlotCount = context.state.artists[floorName].length;
+			var array = JSON.parse(JSON.stringify(templateInfo[floorName].adjustments[halfSlotCount]));
+			array.fill(0);
+			templateInfo[floorName].adjustments[halfSlotCount] = array;
+			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
+		},
+		updateAdjustments: function (context, data) {
+			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
 			var floorName = data.floorName;
 			var newAdjustments = data.adjustments;
 			var halfSlotCount = data.halfSlotCount;
 			// couldn't figure out how else to trigger observability:
-			var adjustments = JSON.parse(JSON.stringify(state.templateInfo[floorName].adjustments));
+			var adjustments = templateInfo[floorName].adjustments;
 			adjustments[halfSlotCount] = newAdjustments;
-			state.templateInfo[floorName].adjustments = adjustments;
+			templateInfo[floorName].adjustments = adjustments;
+			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
 		},
-	},
-	actions: {
-		// only one additional thing can be passed besides 'context'
-		// you'll have to pack multiples in an object :(
-		setLegacyMode: function (context, bool) {
-			context.commit('SET_LEGACY_MODE', bool);
-		},
+		//
 		setAdvancedMode: function (context, bool) {
 			context.commit('SET_ADVANCED_MODE', bool);
 		},
 		toggleAdvancedMode: function (context) {
 			context.commit('TOGGLE_ADVANCED_MODE');
-		},
-		togglelegacyMode: function (context) {
-			context.commit('TOGGLE_RIGID_VIEW');
 		},
 		setManageLabel: function (context, bool) {
 			context.commit('SET_MANAGE_LABEL', bool);
@@ -749,26 +738,11 @@ var store = new Vuex.Store({
 		toggleCornerSnap: function (context, floorName) {
 			context.commit('TOGGLE_CORNER_SNAP', floorName);
 		},
-		changeCornerSnapThreshold: function (context, args) {
-			context.commit('CHANGE_CORNER_SNAP_THRESHOLD', args);
-		},
-		setSelectedTemplateBase: function (context, args) {
-			context.commit('SET_SELECTED_TEMPLATE_BASE', args);
-		},
 		updateLabelObject: function (context, data) {
 			context.commit('UPDATE_LABEL_OBJECT', data);
 		},
 		updateArtistsObject: function (context, data) {
 			context.commit('UPDATE_ARTISTS_OBJECT', data);
-		},
-		resetAdjustments: function (context, floorName) {
-			context.commit('RESET_ADJUSTMENTS', floorName);
-		},
-		importAdjustments: function (context, data) {
-			context.commit('IMPORT_ADJUSTMENTS', data);
-		},
-		updateAdjustments: function (context, data) {
-			context.commit('UPDATE_ADJUSTMENTS', data);
 		},
 	},
 });

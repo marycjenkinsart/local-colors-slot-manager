@@ -166,6 +166,7 @@ var makeLabelUncompact = function (compactLabelString) {
 			version: parseInt(targetSplits[2],10) || 1,
 			custom: targetSplits[3] || '',
 		}
+		result.mergedMonth = result.year * 12 + result.month;
 		return result;
 	} else {
 		console.error('Label appears completely broken (or missing)!');

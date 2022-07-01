@@ -9,6 +9,8 @@ var wizardPage = Vue.component('wizard', {
 		}
 	},
 	computed: {
+		// the below is set up so these values can be kept in vuex store
+		// but also be the target of v-model
 		swapFloors: {
 			get() { return this.$store.state.wizard.quizAnswers.swapFloors; },
 			set(value) {
@@ -72,39 +74,15 @@ var wizardPage = Vue.component('wizard', {
 				});
 			},
 		},
-		currentForm: function () {
-			return this.$store.getters.currentForm;
-		},
-		originalFancyArtists: function () {
-			return this.$store.getters.originalFancyArtists;
-		},
-		displayFancyArtists: function () {
-			var fancyObject = JSON.parse(JSON.stringify(this.originalFancyArtists));
-			var result = {};
-			limitedFloorNames.forEach(function (floorName) {
-				var floorObject = JSON.parse(JSON.stringify(fancyObject[floorName]));
-				var currArtist = floorObject.shift();
-				var floorString = makePrintName(currArtist.name, currArtist.slotSize);
-				floorObject.forEach(function (artistObject) {
-					floorString += ', ' + makePrintName(artistObject.name, artistObject.slotSize);
-				})
-				result[floorName] = floorString;
-			})
-			var featString = '';
-			fancyObject.feat.forEach(function (featuredArtist) {
-				if (featString.length > 0) {
-					featString += ', ';
-				}
-				featString += makeFeaturedPrintName(featuredArtist.name, featuredArtist.type);
-			})
-			result.feat = featString;
-			return result;
-		},
+		// end magic stackoverflow stuff
 		currentQuestionIndex: function () {
 			return this.$store.state.wizard.currentQuestionIndex;
 		},
 		currentQuestion: function () {
 			return this.$store.getters.currentQuizQuestion;
+		},
+		currentForm: function () {
+			return this.$store.getters.currentForm;
 		},
 		dummyTrue: function () {
 			return true;
@@ -112,6 +90,7 @@ var wizardPage = Vue.component('wizard', {
 		dummyFalse: function () {
 			return false;
 		},
+		// computeds for goTo branches
 		guestArtistBranch: function () {
 			var defaultGoTo = 40;
 			var extraQGoTo = 31;
@@ -135,6 +114,7 @@ var wizardPage = Vue.component('wizard', {
 			var extraQGoTo = 80;
 			return this.limboLists.limbo.length === 0 ? defaultGoTo : extraQGoTo;
 		},
+		// computeds for whether buttons are enabled
 		featArtistIsSet2D: function () {
 			return !!this.$store.state.wizard.quizAnswers.featured2DName;
 		},
@@ -163,6 +143,7 @@ var wizardPage = Vue.component('wizard', {
 			var filteredUnplacedNames = this.$store.getters.filteredUnplacedNames;
 			return !filteredUnplacedNames.down.length;
 		},
+		// forbidden char reports and related stuff
 		groupThemeForbiddenReport: function () {
 			return forbiddenAnalysis(this.featuredGroupTheme);
 		},
@@ -182,11 +163,35 @@ var wizardPage = Vue.component('wizard', {
 		newArtistValidationMessage: function () {
 			return !this.newArtistNameValidated ? this.newArtistNameForbiddenReport.message : '' ;
 		},
+		// the magic
 		originalRotation: function () {
 			return this.$store.getters.originalRotation;
 		},
 		originalLongLabel: function () {
-			return this.$store.getters.originalLongLabel;
+			return getLongLabel(this.originalRotation.rotationLabel);
+		},
+		displayOrigArtists: function () {
+			var origArtists = {
+				up: makeFloorFancy(this.originalRotation.artists.up),
+				down: makeFloorFancy(this.originalRotation.artists.down),
+				feat: JSON.parse(JSON.stringify(this.originalRotation.artists.feat)),
+			};
+			var fancyObject = JSON.parse(JSON.stringify(origArtists));
+			var result = {};
+			limitedFloorNames.forEach(function (floorName) {
+				var floorObject = JSON.parse(JSON.stringify(fancyObject[floorName]));
+				result[floorName] = Object.values(floorObject)
+					.map(function (artist) {
+						return makePrintName(artist.name, artist.slotSize);
+					})
+					.join(', ')
+			})
+			result.feat = Object.values(fancyObject.feat)
+				.map(function (artist) {
+					return makeFeaturedPrintName(artist.name, artist.type);
+				})
+				.join (', ')
+			return result;
 		},
 		workingRotation: function () {
 			var orig = this.originalRotation;
@@ -618,9 +623,9 @@ var wizardPage = Vue.component('wizard', {
 					class="flat"
 				>{{originalLongLabel}}</h3>
 				<p>
-					Upstairs: <strong>{{displayFancyArtists.up}}</strong><br/>
-					Downstairs: <strong>{{displayFancyArtists.down}}</strong><br/>
-					Featured: <strong>{{displayFancyArtists.feat}}</strong>
+					Upstairs: <strong>{{displayOrigArtists.up}}</strong><br/>
+					Downstairs: <strong>{{displayOrigArtists.down}}</strong><br/>
+					Featured: <strong>{{displayOrigArtists.feat}}</strong>
 				</p>
 			</div>
 		</div>

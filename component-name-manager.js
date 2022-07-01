@@ -41,13 +41,13 @@ Vue.component('name-manager', {
 			return this.$store.state.advanced.advancedModeOn;
 		},
 		legacyModeOn: function () {
-			return this.$store.state.templateInfo.legacyMode;
+			return this.$store.getters.templateInfo.legacyMode;
 		},
 		manageMe: function () {
 			return this.$store.state.manage.which === this.floorName;
 		},
 		featTemplateFloorInfo: function () {
-			return this.$store.state.templateInfo['feat'];
+			return this.$store.getters.templateInfo['feat'];
 		},
 		featTemplateBaseOptions: function () {
 			return Object.keys(templates['feat']);
@@ -61,7 +61,7 @@ Vue.component('name-manager', {
 			return this.$store.state.advanced.featuredExtras;
 		},
 		templateFloorInfo: function () {
-			return this.$store.state.templateInfo[this.floorName];
+			return this.$store.getters.templateInfo[this.floorName];
 		},
 		snapOn: function () {
 			return this.$store.state.advanced.snapOn[this.floorName];
@@ -105,7 +105,7 @@ Vue.component('name-manager', {
 		},
 		checkForbiddenNew: function () {
 			if (
-				this.uniqueArtists.includes(this.newName.newName)
+				this.thisFloorUniqueArtists.includes(this.newName.newName)
 			) {
 				return true;
 			} else {
@@ -156,16 +156,16 @@ Vue.component('name-manager', {
 				return false;
 			}
 		},
-		uniqueArtists: function () {
-			return this.$store.getters.uniqueArtists[this.floorName];
+		thisFloorUniqueArtists: function () {
+			return this.nameList.filter(getUnique);
 		},
 		slotColors: function () {
-			var lookup = 'count' + this.uniqueArtists.length;
+			var lookup = 'count' + this.thisFloorUniqueArtists.length;
 			return colorMap[lookup];
 		},
 		adjustments: function () {
 			var halfSlotCount = 2 * this.slotCount;
-			return this.$store.state.templateInfo[this.floorName].adjustments[halfSlotCount] || [];
+			return this.$store.getters.templateInfo[this.floorName].adjustments[halfSlotCount] || [];
 		},
 	},
 	methods: {
@@ -204,10 +204,10 @@ Vue.component('name-manager', {
 			this.$store.dispatch('updateArtistsObject',artistsObject);
 		},
 		getArtistColorByName: function (name) {
-			// var uniqueArtists = this.lockColors ? this.uniqueArtists.sort() : this.uniqueArtists
+			// var thisFloorUniqueArtists = this.lockColors ? this.thisFloorUniqueArtists.sort() : this.thisFloorUniqueArtists
 			// TODO: re-enable above, but only if you make the preview maps support this, too
-			var uniqueArtists = this.uniqueArtists;
-			var colorIndex = uniqueArtists.findIndex(function (uniqueName) {
+			var unique = this.thisFloorUniqueArtists;
+			var colorIndex = unique.findIndex(function (uniqueName) {
 				return name === uniqueName;
 			});
 			var result = '';
@@ -269,11 +269,8 @@ Vue.component('name-manager', {
 		//	 }
 		//	 return result;
 		// },
-		getDisplaySlotSize: function (slotSize) {
-			var result = JSON.stringify(slotSize);
-			result = result.replace('.5', '½').replace('0','');
-			return result;
-		},
+		makeSlotCountPretty: makeSlotCountPretty,
+		makePrintName: makePrintName,
 		getArtistSlotCount: function (artistName) {
 			var tally = 0;
 			this.nameList.forEach(function (halfSlot) {
@@ -484,10 +481,7 @@ Vue.component('name-manager', {
 			<li
 				v-for="(artist, index) in fancyNameList"
 			>
-				<span class="artist-name">{{artist.name}}</span>
-				<span
-					v-if="artist.slotSize != 1"
-				> ({{getDisplaySlotSize(artist.slotSize)}})</span>
+				<span class="artist-name">{{makePrintName(artist.name, artist.slotSize)}}</span>
 			</li>
 		</ul>
 	</div>
@@ -691,7 +685,7 @@ Vue.component('name-manager', {
 								>+</button>
 								<span
 									class="medium-mini"
-								>{{getDisplaySlotSize(artist.slotSize)}} slot</span><span
+								>{{makeSlotCountPretty(artist.slotSize)}} slot</span><span
 									v-if="artist.slotSize > 1"
 									class="medium-mini"
 								>s</span>

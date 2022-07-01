@@ -16,7 +16,7 @@ var monthViewPage = Vue.component('month-view', {
 			return this.$store.state.rotationLabel;
 		},
 		longLabel: function () {
-			return this.$store.getters.longLabel;
+			return getLongLabel(this.rotationLabel);
 		},
 		artists: function () {
 			return this.$store.state.artists;
@@ -28,7 +28,10 @@ var monthViewPage = Vue.component('month-view', {
 			return this.$store.state.manage;
 		},
 		uniqueArtists: function () {
-			return this.$store.getters.uniqueArtists;
+			return {
+				up: this.artists.up.filter(getUnique),
+				down: this.artists.down.filter(getUnique),
+			};
 		},
 		moveFloor: function () {
 			var splits = this.move.name.split('-');
