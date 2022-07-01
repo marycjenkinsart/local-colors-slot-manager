@@ -8,6 +8,9 @@ var historyStore = {
 		insertName: '',
 	},
 	mutations: {
+		HISTORY_SET_FULL_HISTORY: function (state, obj) {
+			state.fullHistory = obj;
+		},
 		HISTORY_SET_HIGHLIGHTED_NAME: function (state, string) {
 			state.highlightedName = string;
 		},
@@ -19,6 +22,20 @@ var historyStore = {
 		},
 	},
 	actions: {
+		historySortRecords: function (context) {
+			var fullHistoryArray = JSON.parse(JSON.stringify(context.state.fullHistory));
+			fullHistoryArray = sortHistoryRecords(fullHistoryArray);
+			context.commit('HISTORY_SET_FULL_HISTORY', fullHistoryArray);
+		},
+		historyAddSingleHistoryItem: function (context, newHistoryItem) {
+			var fullHistoryArray = JSON.parse(JSON.stringify(context.state.fullHistory));
+			var duplicate = detectDuplicateRecord(fullHistoryArray, newHistoryItem);
+			if (!duplicate) {
+				fullHistoryArray.push(newHistoryItem);
+				fullHistoryArray = sortHistoryRecords(fullHistoryArray);
+				context.commit('HISTORY_SET_FULL_HISTORY', fullHistoryArray);
+			}
+		},
 		historySetHighlightedName: function (context, string) {
 			context.commit('HISTORY_SET_HIGHLIGHTED_NAME', string);
 		},

@@ -34,6 +34,40 @@ var makeShareableLinkIntoRawQueries = function (string) {
 	return result;
 };
 
+var sortHistoryRecords = function (historyArray) {
+	var newArray = JSON.parse(JSON.stringify(historyArray));
+	newArray.sort(function (a, b) {
+		return b.rotationLabel.version - a.rotationLabel.version;
+	})
+	newArray.sort(function (a, b) {
+		return b.rotationLabel.month - a.rotationLabel.month;
+	})
+	newArray.sort(function (a, b) {
+		return b.rotationLabel.year - a.rotationLabel.year;
+	})
+	return newArray;
+};
+
+var detectDuplicateRecord = function (historyArray, testRotation) {
+	var historyStrings = historyArray.map(function (rotation) {
+		var relevantRotation = JSON.parse(JSON.stringify(rotation));
+		relevantRotation.meta = 'stripped';
+		return JSON.stringify(relevantRotation);
+	});
+	testRotation = JSON.parse(JSON.stringify(testRotation));
+	testRotation.meta = 'stripped';
+	testRotationString =  JSON.stringify(testRotation)
+	var result = historyStrings.includes(testRotationString);
+	console.log({historyStrings,testRotationString, result});
+	return result;
+};
+
+var addRotationToHistory = function (historyArray, newRotation) {
+	var newArray = JSON.parse(JSON.stringify(historyArray));
+
+	return newArray;
+};
+
 var makeFullHistory = function () {
 	var fullHistory = [];
 	reconstructedHistory.forEach(function (link) {
@@ -46,15 +80,7 @@ var makeFullHistory = function () {
 		var historyRecord = makeRotationObjectFromQuery(rawQuery,'history, from web app rotations');
 		fullHistory.push(historyRecord);
 	})
-	fullHistory.sort(function (a, b) {
-		return b.rotationLabel.version - a.rotationLabel.version;
-	})
-	fullHistory.sort(function (a, b) {
-		return b.rotationLabel.month - a.rotationLabel.month;
-	})
-	fullHistory.sort(function (a, b) {
-		return b.rotationLabel.year - a.rotationLabel.year;
-	})
+	fullHistory = sortHistoryRecords(fullHistory);
 	console.log('fullHistory:');
 	console.log(fullHistory);
 	return fullHistory;

@@ -29,6 +29,7 @@ var app = new Vue({
 			label: 'originalFromURL',
 			rotation: imported,
 		});
+		this.$store.dispatch('historyAddSingleHistoryItem', imported);
 		// var actualQueryData = this.$route.query;
 		// var patchedQueryData = {};
 		// var artistsFromQuery = {};
