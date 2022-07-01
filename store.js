@@ -386,72 +386,74 @@ var store = new Vuex.Store({
 		advanced: advancedStore,
 	},
 	state: {
-		templateInfo: {
-			up: {
-				selectedTemplateBase: Object.keys(templates.up)[0],
-				snapInches: defaultSnapInches,
-				adjustments: [],
+		rotation: {
+			rotationLabel: {
+				year: 1970,
+				month: 1,
+				version: 255,
+				custom: 'Default Label Value',
 			},
-			down: {
-				selectedTemplateBase: Object.keys(templates.down)[0],
-				snapInches: defaultSnapInches,
-				adjustments: [],
+			artists: {
+				'feat': [ // can be more than one! or zero!
+					{
+						name:'Teri',
+						type: '2D',
+						origSlotSize: 1,
+					},
+				],
+				'up': [
+					'GUEST',
+					'Bill',
+					'Bill',
+					'J. Clay',
+					'Jeff M.',
+					'Jeff M.',
+					'Emily',
+					'Emily',
+					'Blaine',
+					'Blaine',
+				],
+				'down': [
+					'Adam',
+					'Nuha',
+					'Nuha',
+					'Pam',
+					'Pam',
+					'Mary',
+					'Mary',
+					'Jan',
+					'Jan',
+					'Adam',
+				],
 			},
-			feat: {
-				selectedTemplateBase: Object.keys(templates.feat)[0],
+			templateInfo: {
+				up: {
+					selectedTemplateBase: Object.keys(templates.up)[0],
+					snapInches: defaultSnapInches,
+					adjustments: [],
+				},
+				down: {
+					selectedTemplateBase: Object.keys(templates.down)[0],
+					snapInches: defaultSnapInches,
+					adjustments: [],
+				},
+				feat: {
+					selectedTemplateBase: Object.keys(templates.feat)[0],
+				},
+				legacyMode: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
 			},
-			legacyMode: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
 		},
 		guestNameString: 'GUEST',
-		rotationLabel: {
-			year: 1970,
-			month: 1,
-			version: 255,
-			custom: 'Default Label Value',
-		},
-		artists: {
-			'feat': [ // can be more than one! or zero!
-				{
-					name:'Teri',
-					type: '2D',
-					origSlotSize: 1,
-				},
-			],
-			'up': [
-				'GUEST',
-				'Bill',
-				'Bill',
-				'J. Clay',
-				'Jeff M.',
-				'Jeff M.',
-				'Emily',
-				'Emily',
-				'Blaine',
-				'Blaine',
-			],
-			'down': [
-				'Adam',
-				'Nuha',
-				'Nuha',
-				'Pam',
-				'Pam',
-				'Mary',
-				'Mary',
-				'Jan',
-				'Jan',
-				'Adam',
-			],
-		},
 	},
 	getters: {
 		artists: function (state, getters) {
-			return state.artists;
+			return state.rotation.artists;
 		},
 		templateInfo: function (state, getters) {
-			return state.templateInfo;
+			return state.rotation.templateInfo;
 		},
 		rotationLabel: function (state, getters) {
-			return state.rotationLabel;
+			return state.rotation.rotationLabel;
 		},
 		guestNameString: function (state, getters) {
 			return state.guestNameString || 'GUEST';
@@ -714,13 +716,13 @@ var store = new Vuex.Store({
 	},
 	mutations: {
 		UDPATE_TEMPLATE_INFO: function (state, obj) {
-			state.templateInfo = obj;
+			state.rotation.templateInfo = obj;
 		},
 		UPDATE_LABEL_OBJECT: function (state, data) {
-			state.rotationLabel = data;
+			state.rotation.rotationLabel = data;
 		},
 		UPDATE_ARTISTS_OBJECT: function (state, data) {
-			state.artists = data;
+			state.rotation.artists = data;
 		},
 	},
 	actions: {
