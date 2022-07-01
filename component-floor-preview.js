@@ -97,7 +97,7 @@ Vue.component('floor-preview', {
 			return result;
 		},
 		showCircles: function () {
-			return this.$store.state.advanced.showCircles;
+			return this.$store.getters.showCircles;
 		},
 		snappedLineSegments: function () {
 			return this.$store.getters.snappedFusedSlotsFlat[this.floorName];
@@ -106,7 +106,7 @@ Vue.component('floor-preview', {
 			return this.$store.getters.featLineSegments;
 		},
 		showFeaturedExtras: function () {
-			return this.$store.state.advanced.featuredExtras;
+			return this.$store.getters.featuredExtras;
 		},
 		ghostCircles: function () {
 			return this.$store.getters.naiveHalfSlotEdges[this.floorName];

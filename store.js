@@ -1,4 +1,6 @@
 var historyStore = {
+	// concerns the table of artist history in their slots
+	// and how it looks: what's highlighted, etc
 	state: { // get this at (e.g.) this.$store.history.fullHistory
 		fullHistory: makeFullHistory(),
 		selectedFloor: 'up',
@@ -30,6 +32,10 @@ var historyStore = {
 };
 
 var wizardStore = {
+	// concerns the wizard quiz:
+	// should start with something from elsewhere and end with
+	// a complete rotation object it can hand off;
+	// the intermediate states should be handled here and nowhere else
 	state: {
 		currentQuestionIndex: 0,
 		quizAnswers: JSON.parse(JSON.stringify(defaultQuizAnswers)),
@@ -235,6 +241,10 @@ var wizardStore = {
 };
 
 var loadedStore = {
+	// contains a complete rotation object to treat ast "loaded"
+	// but should also contain "backup" info, like what the
+	// original query was, or other queries / rotation objects
+	// of interest
 	state: {
 		rotation: {
 			rotationLabel:  {
@@ -289,22 +299,93 @@ var loadedStore = {
 	actions: {},
 };
 
+var advancedStore = {
+	// concerns the state of the "advanced" (full featured) rotation editor
+	state: {
+		advancedModeOn: false,
+		showCircles: false,
+		featuredExtras: false, // featured display speculation stuff
+		snapOn: {
+			up: true,
+			down: true,
+		},
+		manageLabel: false,
+		manageWhich: '',
+	},
+	getters: {
+		manageWhich: function (state, getters) {
+			return state.manageWhich;
+		},
+		manageLabel: function (state, getters) {
+			return state.manageLabel;
+		},
+		showCircles: function (state, getters) {
+			return state.showCircles;
+		},
+		featuredExtras: function (state, getters) {
+			return state.featuredExtras;
+		}, // TODO: create a way of changing this?
+		advancedModeOn: function (state, getters) {
+			return state.advancedModeOn;
+		},
+		snapOn: function (state, getters) {
+			return state.snapOn;
+		},
+	},
+	mutations: {
+		MANAGE_THIS: function (state, value) {
+			state.manageWhich = value;
+		},
+		SET_MANAGE_LABEL: function (state, bool) {
+			state.manageLabel = bool;
+		},
+		TOGGLE_SNAP_CIRCLES: function (state) {
+			state.showCircles = !state.showCircles;
+		},
+		SET_ADVANCED_MODE: function (state, bool) {
+			state.advancedModeOn = bool;
+		},
+		TOGGLE_ADVANCED_MODE: function (state) {
+			state.advancedModeOn = !state.advancedModeOn;
+		},
+		TOGGLE_CORNER_SNAP: function (state, floorName) {
+			var changes = state.snapOn;
+			changes[floorName] = !changes[floorName];
+			state.snapOn = changes;
+		},
+
+	},
+	actions: {
+		manageThis: function (context, value) {
+			context.commit('MANAGE_THIS', value);
+		},
+		setManageLabel: function (context, bool) {
+			context.commit('SET_MANAGE_LABEL', bool);
+		},
+		toggleSnapCircles: function (context) {
+			context.commit('TOGGLE_SNAP_CIRCLES');
+		},
+		setAdvancedMode: function (context, bool) {
+			context.commit('SET_ADVANCED_MODE', bool);
+		},
+		toggleAdvancedMode: function (context) {
+			context.commit('TOGGLE_ADVANCED_MODE');
+		},
+		toggleCornerSnap: function (context, floorName) {
+			context.commit('TOGGLE_CORNER_SNAP', floorName);
+		},
+	},
+};
+
 var store = new Vuex.Store({
+	// OG, but should be detangled asap
 	modules: {
 		history: historyStore,
 		wizard: wizardStore,
 		loaded: loadedStore,
+		advanced: advancedStore,
 	},
 	state: {
-		advanced: {
-			advancedModeOn: false,
-			showCircles: false,
-			featuredExtras: false, // featured display speculation stuff
-			snapOn: {
-				up: true,
-				down: true,
-			},
-		},
 		templateInfo: {
 			up: {
 				selectedTemplateBase: Object.keys(templates.up)[0],
@@ -320,10 +401,6 @@ var store = new Vuex.Store({
 				selectedTemplateBase: Object.keys(templates.feat)[0],
 			},
 			legacyMode: false, // whether to show the rigid, hand-tuned svg templates or the dynamic svg lines
-		},
-		manage: {
-			label: false,
-			which: '',
 		},
 		guestNameString: 'GUEST',
 		rotationLabel: {
@@ -446,7 +523,7 @@ var store = new Vuex.Store({
 		snappedFusedSlots: function (state, getters) {
 			var snappedSlots = JSON.parse(JSON.stringify(getters.fusedHalfSlots));
 			limitedFloorNames.forEach(function (floorName) {
-				if (state.advanced.snapOn[floorName]) {
+				if (getters.snapOn[floorName]) {
 					snappedSlots[floorName] = snapAllShortSegments(
 						snappedSlots[floorName],
 						inchesToTemplateNumber(getters.templateInfo[floorName].snapInches),
@@ -639,24 +716,6 @@ var store = new Vuex.Store({
 		UDPATE_TEMPLATE_INFO: function (state, obj) {
 			state.templateInfo = obj;
 		},
-		TOGGLE_ADVANCED_MODE: function (state) {
-			state.advanced.advancedModeOn = !state.advanced.advancedModeOn;
-		},
-		SET_ADVANCED_MODE: function (state, bool) {
-			state.advanced.advancedModeOn = bool;
-		},
-		SET_MANAGE_LABEL: function (state, bool) {
-			state.manage.label = bool;
-		},
-		MANAGE_THIS: function (state, value) {
-			state.manage.which = value;
-		},
-		TOGGLE_SNAP_CIRCLES: function (state) {
-			state.advanced.showCircles = !state.advanced.showCircles;
-		},
-		TOGGLE_CORNER_SNAP: function (state, floorName) {
-			state.advanced.snapOn[floorName] = !state.advanced.snapOn[floorName];
-		},
 		UPDATE_LABEL_OBJECT: function (state, data) {
 			state.rotationLabel = data;
 		},
@@ -715,24 +774,6 @@ var store = new Vuex.Store({
 			adjustments[halfSlotCount] = newAdjustments;
 			templateInfo[floorName].adjustments = adjustments;
 			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
-		},
-		setAdvancedMode: function (context, bool) {
-			context.commit('SET_ADVANCED_MODE', bool);
-		},
-		toggleAdvancedMode: function (context) {
-			context.commit('TOGGLE_ADVANCED_MODE');
-		},
-		setManageLabel: function (context, bool) {
-			context.commit('SET_MANAGE_LABEL', bool);
-		},
-		manageThis: function (context, value) {
-			context.commit('MANAGE_THIS', value);
-		},
-		toggleSnapCircles: function (context) {
-			context.commit('TOGGLE_SNAP_CIRCLES');
-		},
-		toggleCornerSnap: function (context, floorName) {
-			context.commit('TOGGLE_CORNER_SNAP', floorName);
 		},
 		updateLabelObject: function (context, data) {
 			context.commit('UPDATE_LABEL_OBJECT', data);

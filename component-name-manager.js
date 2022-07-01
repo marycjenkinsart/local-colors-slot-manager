@@ -38,16 +38,16 @@ Vue.component('name-manager', {
 			return this.$store.getters.guestNameString;
 		},
 		showCircles: function () {
-			return this.$store.state.advanced.showCircles;
+			return this.$store.getters.showCircles;
 		},
 		advancedModeOn: function () {
-			return this.$store.state.advanced.advancedModeOn;
+			return this.$store.getters.advancedModeOn;
 		},
 		legacyModeOn: function () {
 			return this.$store.getters.templateInfo.legacyMode;
 		},
 		manageMe: function () {
-			return this.$store.state.manage.which === this.floorName;
+			return this.$store.getters.manageWhich === this.floorName;
 		},
 		featTemplateFloorInfo: function () {
 			return this.$store.getters.templateInfo['feat'];
@@ -61,13 +61,13 @@ Vue.component('name-manager', {
 			return inches;
 		},
 		showFeaturedExtras: function () {
-			return this.$store.state.advanced.featuredExtras;
+			return this.$store.getters.featuredExtras;
 		},
 		templateFloorInfo: function () {
 			return this.$store.getters.templateInfo[this.floorName];
 		},
 		snapOn: function () {
-			return this.$store.state.advanced.snapOn[this.floorName];
+			return this.$store.getters.snapOn[this.floorName];
 		},
 		templateBaseOptions: function () {
 			return Object.keys(templates[this.floorName]);

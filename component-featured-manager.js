@@ -24,7 +24,7 @@ Vue.component('featured-manager', {
 			};
 		},
 		manageMe: function () {
-			return this.$store.state.manage.which === 'feat';
+			return this.$store.getters.manageWhich === 'feat';
 		},
 		checkEmptyCustomName: function () {
 			if (this.customName.length > 1) {

@@ -85,17 +85,17 @@ Vue.component('map-preview', {
 		longLabel: function () {
 			return getLongLabel(this.rotationLabel);
 		},
-		manage: function () {
-			return this.$store.state.manage;
+		manageWhich: function () {
+			return this.$store.getters.manageWhich;
 		},
 		overallView: function () {
-			return !(this.manage.which === 'up' || this.manage.which === 'down');
+			return !(this.manageWhich === 'up' || this.manageWhich === 'down');
 		},
 		otherCoords: function () {
 			return otherCoords;
 		},
 		wrapperSize: function () {
-			var lookup = svgSizes[this.manage.which] || svgSizes.combined;
+			var lookup = svgSizes[this.manageWhich] || svgSizes.combined;
 			return {
 				x: lookup.x,
 				y: lookup.y,
@@ -183,7 +183,7 @@ Vue.component('map-preview', {
 		},
 		origins: function (floor) {
 			var result = offsets[floor]
-			if (this.manage.which === floor) {
+			if (this.manageWhich === floor) {
 				result = {
 					x: offsets.solo.x,
 					y: offsets.solo.y,
@@ -200,14 +200,14 @@ Vue.component('map-preview', {
 	:viewBox="viewBoxString"
 >
 		<floor-preview
-			v-if="manage.which !== 'up'"
+			v-if="manageWhich !== 'up'"
 			floor-name="down"
 			:origin="origins('down')"
 			:canvas-size="wrapperSize"
 		>
 		</floor-preview>
 		<floor-preview
-			v-if="manage.which !== 'down'"
+			v-if="manageWhich !== 'down'"
 			floor-name="up"
 			:origin="origins('up')"
 			:canvas-size="wrapperSize"

@@ -24,8 +24,11 @@ var monthViewPage = Vue.component('month-view', {
 		guestName: function () {
 			return this.$store.getters.guestNameString;
 		},
-		manage: function () {
-			return this.$store.state.manage;
+		manageLabel: function () {
+			return this.$store.getters.manageLabel;
+		},
+		manageWhich: function () {
+			return this.$store.getters.manageWhich;
 		},
 		uniqueArtists: function () {
 			return {
@@ -222,13 +225,13 @@ var monthViewPage = Vue.component('month-view', {
 	</h2>
 	<p>
 		<button
-			:disabled="manage.label"
+			:disabled="manageLabel"
 			title="Change the label for this rotation"
 			@click="editRotationNameStart"
 		>edit rotation name</button>
 	</p>
 	<div
-		v-if="manage.label"
+		v-if="manageLabel"
 		class="manager-box"
 	>
 		<div
@@ -359,11 +362,11 @@ var monthViewPage = Vue.component('month-view', {
 				Featured
 			</span>
 			<button
-				v-show="manage.which !== 'feat'"
+				v-show="manageWhich !== 'feat'"
 				@click="manageThis('feat')"
 			>Manage</button>
 			<button
-				v-show="manage.which === 'feat'"
+				v-show="manageWhich === 'feat'"
 				@click="manageThis('')"
 			>DONE</button>
 		</h3>
@@ -376,11 +379,11 @@ var monthViewPage = Vue.component('month-view', {
 				{{displayFloor('up')}} ({{artists.up.length / 2}})
 			</span>
 			<button
-				v-show="manage.which !== 'up'"
+				v-show="manageWhich !== 'up'"
 				@click="manageThis('up')"
 			>Manage</button>
 			<button
-				v-show="manage.which === 'up'"
+				v-show="manageWhich === 'up'"
 				@click="manageThis('')"
 			>DONE</button>
 		</h3>
@@ -394,11 +397,11 @@ var monthViewPage = Vue.component('month-view', {
 			{{displayFloor('down')}} ({{artists.down.length / 2}})
 		</span>
 		<button
-			v-show="manage.which !== 'down'"
+			v-show="manageWhich !== 'down'"
 			@click="manageThis('down')"
 		>Manage</button>
 		<button
-			v-show="manage.which === 'down'"
+			v-show="manageWhich === 'down'"
 			@click="manageThis('')"
 		>DONE</button>
 	</h3>
