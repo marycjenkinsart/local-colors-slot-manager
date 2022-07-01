@@ -47,8 +47,8 @@ var wizardStore = {
 		quizResults: {},
 	},
 	getters: {
-		originalRotation: function (state, getters, rootState) {
-			return rootState.loaded.rotation;
+		originalRotation: function (state, getters) {
+			return getters.rotation;
 		},
 		currentQuizQuestion: function (state) {
 			return wizardQuiz[state.currentQuestionIndex];
@@ -246,7 +246,7 @@ var loadedStore = {
 	// original query was, or other queries / rotation objects
 	// of interest
 	state: {
-		rotation: {
+		current: {
 			rotationLabel:  {
 				mergedMonth: 23629,
 				year: 1969,
@@ -295,8 +295,90 @@ var loadedStore = {
 			},
 		}
 	},
-	mutations: {},
-	actions: {},
+	getters: {
+		rotation: function (state, getters) {
+			return state.current;
+		},
+		artists: function (state, getters) {
+			return state.current.artists;
+		},
+		templateInfo: function (state, getters) {
+			return state.current.templateInfo;
+		},
+		rotationLabel: function (state, getters) {
+			return state.current.rotationLabel;
+		},
+	},
+	mutations: {
+		UDPATE_TEMPLATE_INFO: function (state, obj) {
+			state.current.templateInfo = obj;
+		},
+		UPDATE_LABEL_OBJECT: function (state, data) {
+			state.current.rotationLabel = data;
+		},
+		UPDATE_ARTISTS_OBJECT: function (state, data) {
+			state.current.artists = data;
+		},
+	},
+	actions: {
+		setLegacyMode: function (context, bool) {
+			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			templateInfo.legacyMode = bool;
+			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
+		},
+		changeCornerSnapThreshold: function (context, args) {
+			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			var floorName = args.floorName;
+			var value = args.value;
+			templateInfo[floorName].snapInches = value;
+			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
+		},
+		togglelegacyMode: function (context) {
+			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			templateInfo.legacyMode = !templateInfo.legacyMode;
+			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
+		},
+		setSelectedTemplateBase: function (context, args) {
+			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			var floorName = args.floorName;
+			var value = args.value;
+			templateInfo[floorName].selectedTemplateBase = value;
+			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
+		},
+		importAdjustments: function (context, data) {
+			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			limitedFloorNames.forEach(function (floorName) {
+				var halfSlotCount = context.getters.artists[floorName].length;
+				context.getters.templateInfo[floorName].adjustments[halfSlotCount] = data[floorName];
+			})
+			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
+		},
+		resetAdjustments: function (context, floorName) {
+			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			var halfSlotCount = context.getters.artists[floorName].length;
+			var array = JSON.parse(JSON.stringify(templateInfo[floorName].adjustments[halfSlotCount]));
+			array.fill(0);
+			templateInfo[floorName].adjustments[halfSlotCount] = array;
+			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
+		},
+		updateAdjustments: function (context, data) {
+			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			var floorName = data.floorName;
+			var newAdjustments = data.adjustments;
+			var halfSlotCount = data.halfSlotCount;
+			// couldn't figure out how else to trigger observability:
+			var adjustments = templateInfo[floorName].adjustments;
+			adjustments[halfSlotCount] = newAdjustments;
+			templateInfo[floorName].adjustments = adjustments;
+			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
+		},
+		updateLabelObject: function (context, data) {
+			context.commit('UPDATE_LABEL_OBJECT', data);
+		},
+		updateArtistsObject: function (context, data) {
+			context.commit('UPDATE_ARTISTS_OBJECT', data);
+		},
+	},
 };
 
 var advancedStore = {
@@ -446,15 +528,6 @@ var store = new Vuex.Store({
 		guestNameString: 'GUEST',
 	},
 	getters: {
-		artists: function (state, getters) {
-			return state.rotation.artists;
-		},
-		templateInfo: function (state, getters) {
-			return state.rotation.templateInfo;
-		},
-		rotationLabel: function (state, getters) {
-			return state.rotation.rotationLabel;
-		},
 		guestNameString: function (state, getters) {
 			return state.guestNameString || 'GUEST';
 		},
@@ -714,74 +787,6 @@ var store = new Vuex.Store({
 			return prefix + infix + suffix + getters.compactEverything;
 		},
 	},
-	mutations: {
-		UDPATE_TEMPLATE_INFO: function (state, obj) {
-			state.rotation.templateInfo = obj;
-		},
-		UPDATE_LABEL_OBJECT: function (state, data) {
-			state.rotation.rotationLabel = data;
-		},
-		UPDATE_ARTISTS_OBJECT: function (state, data) {
-			state.rotation.artists = data;
-		},
-	},
-	actions: {
-		setLegacyMode: function (context, bool) {
-			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
-			templateInfo.legacyMode = bool;
-			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
-		},
-		changeCornerSnapThreshold: function (context, args) {
-			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
-			var floorName = args.floorName;
-			var value = args.value;
-			templateInfo[floorName].snapInches = value;
-			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
-		},
-		togglelegacyMode: function (context) {
-			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
-			templateInfo.legacyMode = !templateInfo.legacyMode;
-			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
-		},
-		setSelectedTemplateBase: function (context, args) {
-			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
-			var floorName = args.floorName;
-			var value = args.value;
-			templateInfo[floorName].selectedTemplateBase = value;
-			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
-		},
-		importAdjustments: function (context, data) {
-			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
-			limitedFloorNames.forEach(function (floorName) {
-				var halfSlotCount = context.getters.artists[floorName].length;
-				context.getters.templateInfo[floorName].adjustments[halfSlotCount] = data[floorName];
-			})
-			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
-		},
-		resetAdjustments: function (context, floorName) {
-			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
-			var halfSlotCount = context.getters.artists[floorName].length;
-			var array = JSON.parse(JSON.stringify(templateInfo[floorName].adjustments[halfSlotCount]));
-			array.fill(0);
-			templateInfo[floorName].adjustments[halfSlotCount] = array;
-			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
-		},
-		updateAdjustments: function (context, data) {
-			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
-			var floorName = data.floorName;
-			var newAdjustments = data.adjustments;
-			var halfSlotCount = data.halfSlotCount;
-			// couldn't figure out how else to trigger observability:
-			var adjustments = templateInfo[floorName].adjustments;
-			adjustments[halfSlotCount] = newAdjustments;
-			templateInfo[floorName].adjustments = adjustments;
-			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
-		},
-		updateLabelObject: function (context, data) {
-			context.commit('UPDATE_LABEL_OBJECT', data);
-		},
-		updateArtistsObject: function (context, data) {
-			context.commit('UPDATE_ARTISTS_OBJECT', data);
-		},
-	},
+	mutations: {},
+	actions: {},
 });
