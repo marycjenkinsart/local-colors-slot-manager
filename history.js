@@ -34,26 +34,16 @@ var makeShareableLinkIntoRawQueries = function (string) {
 	return result;
 };
 
-var makeHistoryRecordFromRawQuery = function (queriesObject, type) {
-	return {
-		rotationLabel: makeLabelUncompact(queriesObject.l),
-		feat: makeCompactFeaturedUnfancy(queriesObject.f),
-		up: makeCompactFloorUnfancy(queriesObject.u),
-		down: makeCompactFloorUnfancy(queriesObject.d),
-		type: type || 'default',
-	};
-};
-
 var makeFullHistory = function () {
 	var fullHistory = [];
-	reconstructedHistory.forEach(function (rotation) {
-		var rawQueries = makeShareableLinkIntoRawQueries(rotation);
-		var historyRecord = makeHistoryRecordFromRawQuery(rawQueries,'reconstructed');
+	reconstructedHistory.forEach(function (link) {
+		var rawQuery = makeShareableLinkIntoRawQueries(link);
+		var historyRecord = makeRotationObjectFromQuery(rawQuery,'history, from reconstructed rotations');
 		fullHistory.push(historyRecord);
 	})
-	webAppHistory.forEach(function (rotation) {
-		var rawQueries = makeShareableLinkIntoRawQueries(rotation);
-		var historyRecord = makeHistoryRecordFromRawQuery(rawQueries,'web app');
+	webAppHistory.forEach(function (link) {
+		var rawQuery = makeShareableLinkIntoRawQueries(link);
+		var historyRecord = makeRotationObjectFromQuery(rawQuery,'history, from web app rotations');
 		fullHistory.push(historyRecord);
 	})
 	fullHistory.sort(function (a, b) {
@@ -65,6 +55,8 @@ var makeFullHistory = function () {
 	fullHistory.sort(function (a, b) {
 		return b.rotationLabel.year - a.rotationLabel.year;
 	})
+	console.log('fullHistory:');
+	console.log(fullHistory);
 	return fullHistory;
 };
 

@@ -247,9 +247,12 @@ var loadedStore = {
 	// of interest
 	state: {
 		importWarningFromURL: '',
-		queryObjects: {},
-		altRotations: {},
-		// originalFromURL is added to the two above (when the app is loaded)
+		queryObjects: {
+			// `originalFromURL` and `currentQuery` are added when app is loaded
+		},
+		altRotations: {
+			// `originalFromURL` is added when app is loaded
+		},
 		current: {
 			rotationLabel:  {
 				mergedMonth: 23629,

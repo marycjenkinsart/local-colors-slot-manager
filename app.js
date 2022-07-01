@@ -19,6 +19,10 @@ var app = new Vue({
 			label: 'originalFromURL',
 			query: query,
 		});
+		this.$store.dispatch('setQueryObject', {
+			label: 'currentQuery',
+			query: query,
+		});
 		this.$store.dispatch('setImportWarningFromURL', loadMessage);
 		this.$store.dispatch('loadRotation', imported);
 		this.$store.dispatch('setAltRotation', {

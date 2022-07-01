@@ -22,8 +22,8 @@ Vue.component('history-table', {
 				// }
 				return {
 					label: shortLabel,
-					names: item[floor],
-					featured: item.feat,
+					names: item.artists[floor],
+					featured: item.artists.feat,
 				};
 			})
 		},
