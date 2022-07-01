@@ -246,6 +246,7 @@ var loadedStore = {
 	// original query was, or other queries / rotation objects
 	// of interest
 	state: {
+		importWarningFromURL: '',
 		current: {
 			rotationLabel:  {
 				mergedMonth: 23629,
@@ -299,6 +300,12 @@ var loadedStore = {
 		rotation: function (state, getters) {
 			return state.current;
 		},
+		importWarningFromURL: function (state, getters) {
+			return state.importWarningFromURL;
+		},
+		importWarningsGeneric: function (state, getters) {
+			return state.current.meta.warnings;
+		},
 		artists: function (state, getters) {
 			return state.current.artists;
 		},
@@ -310,6 +317,12 @@ var loadedStore = {
 		},
 	},
 	mutations: {
+		LOAD_ROTATION: function (state, obj) {
+			state.current = obj;
+		},
+		SET_IMPORT_WARNING_FROM_URL: function (state, message) {
+			state.importWarningFromURL = message;
+		},
 		UDPATE_TEMPLATE_INFO: function (state, obj) {
 			state.current.templateInfo = obj;
 		},
@@ -321,6 +334,12 @@ var loadedStore = {
 		},
 	},
 	actions: {
+		loadRotation: function (context, obj) {
+			context.commit('LOAD_ROTATION', obj);
+		},
+		setImportWarningFromURL: function (context, message) {
+			context.commit('SET_IMPORT_WARNING_FROM_URL', message);
+		},
 		setLegacyMode: function (context, bool) {
 			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
 			templateInfo.legacyMode = bool;

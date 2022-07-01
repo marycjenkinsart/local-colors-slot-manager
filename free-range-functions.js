@@ -341,7 +341,7 @@ var emptyRotationObject = {
 	},
 };
 
-var makeRotationObjectFromQuery = function (queryObject) {
+var makeRotationObjectFromQuery = function (queryObject, querySource) {
 	// setting things up
 	var result = JSON.parse(JSON.stringify(emptyRotationObject));
 	result.originalQuery = JSON.parse(JSON.stringify(queryObject));
@@ -351,28 +351,28 @@ var makeRotationObjectFromQuery = function (queryObject) {
 	if (queryObject.l) {
 		result.rotationLabel = makeLabelUncompact(queryObject.l);
 	} else {
-		queryIncomplete = true;
+		result.meta.queryIncomplete = true;
 		result.meta.warnings.push('No label found in query!');
 	}
 	// parse featured
 	if (queryObject.f) {
 		result.artists.feat = makeCompactFeaturedUnfancy(queryObject.f);
 	} else {
-		queryIncomplete = true;
+		result.meta.queryIncomplete = true;
 		result.meta.warnings.push('No featured artists found in query!');
 	}
 	// parse upstairs
 	if (queryObject.u) {
 		result.artists.up = makeCompactFloorUnfancy(queryObject.u);
 	} else {
-		queryIncomplete = true;
+		result.meta.queryIncomplete = true;
 		result.meta.warnings.push('No upstairs artists found in query!');
 	}
 	// parse downstairs
 	if (queryObject.d) {
 		result.artists.down = makeCompactFloorUnfancy(queryObject.d);
 	} else {
-		queryIncomplete = true;
+		result.meta.queryIncomplete = true;
 		result.meta.warnings.push('No downstairs artists found in query!');
 	}
 	// populate adjustments
@@ -419,6 +419,7 @@ var makeRotationObjectFromQuery = function (queryObject) {
 		result.templateInfo.legacyMode = true;
 	}
 	result.meta.parseSuccessful = true; // probably lol
+	result.meta.querySource = querySource || 'not specified';
 	return result;
 };
 
