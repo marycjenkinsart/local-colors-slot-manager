@@ -15,7 +15,7 @@ Vue.component('featured-manager', {
 	},
 	computed: {
 		artists: function () {
-			return this.$store.state.artists;
+			return this.$store.getters.artists;
 		},
 		uniqueArtists: function () {
 			return {

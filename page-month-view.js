@@ -12,17 +12,17 @@ var monthViewPage = Vue.component('month-view', {
 		}
 	},
 	computed: {
+		artists: function () {
+			return this.$store.getters.artists;
+		},
 		rotationLabel: function () {
-			return this.$store.state.rotationLabel;
+			return this.$store.getters.rotationLabel;
 		},
 		longLabel: function () {
 			return getLongLabel(this.rotationLabel);
 		},
-		artists: function () {
-			return this.$store.state.artists;
-		},
 		guestName: function () {
-			return this.$store.state.guestNameString || 'GUEST';
+			return this.$store.getters.guestNameString;
 		},
 		manage: function () {
 			return this.$store.state.manage;
@@ -63,7 +63,7 @@ var monthViewPage = Vue.component('month-view', {
 	},
 	methods: {
 		replaceFloor: function (floorName, floorData) {
-			var artists = JSON.parse(JSON.stringify(this.$store.state.artists));
+			var artists = JSON.parse(JSON.stringify(this.artists));
 			artists[floorName] = floorData;
 			this.replaceArtists(artists);
 		},

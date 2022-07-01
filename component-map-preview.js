@@ -76,10 +76,10 @@ Vue.component('map-preview', {
 	},
 	computed: {
 		artists: function () {
-			return this.$store.state.artists;
+			return this.$store.getters.artists;
 		},
 		rotationLabel: function () {
-			return this.$store.state.rotationLabel;
+			return this.$store.getters.rotationLabel;
 		},
 		// the above should be the only place these things come from!!
 		longLabel: function () {

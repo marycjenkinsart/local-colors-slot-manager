@@ -10,7 +10,7 @@ var hubPage = Vue.component('hub-page', {
 			return this.$store.state;
 		},
 		importDataLabel: function () {
-			return this.$store.state.rotationLabel;
+			return this.$store.getters.rotationLabel;
 		},
 		importDataIsPresent: function () {
 			return this.importDataLabel.year !== 1969;

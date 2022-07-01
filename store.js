@@ -285,11 +285,6 @@ var loadedStore = {
 			},
 		}
 	},
-	getters: {
-		artists: function (state, getters) {
-			return state.rotation.artists;
-		},
-	},
 	mutations: {},
 	actions: {},
 };
@@ -372,17 +367,17 @@ var store = new Vuex.Store({
 		},
 	},
 	getters: {
-		longLabel: function (state) {
-			return getLongLabel(state.rotationLabel);
-		},
-		fancyArtists: function (state) {
-			return {
-				up: makeFloorFancy(state.artists.up),
-				down: makeFloorFancy(state.artists.down),
-			};
+		artists: function (state, getters) {
+			return state.artists;
 		},
 		templateInfo: function (state, getters) {
 			return state.templateInfo;
+		},
+		rotationLabel: function (state, getters) {
+			return state.rotationLabel;
+		},
+		guestNameString: function (state, getters) {
+			return state.guestNameString || 'GUEST';
 		},
 		upTemplate: function (state, getters) {
 			return templates.up[getters.templateInfo.up.selectedTemplateBase];
@@ -405,8 +400,8 @@ var store = new Vuex.Store({
 		},
 		naiveHalfSlotLengths: function (state, getters) {
 			return {
-				up: getBaselineHalfSlots(getters.upTemplate, state.artists.up),
-				down: getBaselineHalfSlots(getters.downTemplate, state.artists.down),
+				up: getBaselineHalfSlots(getters.upTemplate, getters.artists.up),
+				down: getBaselineHalfSlots(getters.downTemplate, getters.artists.down),
 			};
 		},
 		naiveHalfSlots: function (state, getters) {
@@ -419,7 +414,7 @@ var store = new Vuex.Store({
 			var result = {};
 			limitedFloorNames.forEach(function (floorName) {
 				var adjustments = getters.templateInfo[floorName].adjustments;
-				var halfSlotCount = state.artists[floorName].length;
+				var halfSlotCount = getters.artists[floorName].length;
 				// guaranteeing there's something there:
 				adjustments[halfSlotCount] = adjustments[halfSlotCount] || [];
 				var emptyFrom = adjustments[halfSlotCount].length;
@@ -430,7 +425,7 @@ var store = new Vuex.Store({
 				var templateName = floorName + 'Template';
 				result[floorName] = getBaselineHalfSlots(
 					getters[templateName],
-					state.artists[floorName],
+					getters.artists[floorName],
 					adjustmentsArray,
 				)
 			})
@@ -512,7 +507,10 @@ var store = new Vuex.Store({
 			return result;
 		},
 		artistPar: function (state, getters) {
-			var fancy = getters.fancyArtists;
+			var fancy = {
+				up: makeFloorFancy(getters.artists.up),
+				down: makeFloorFancy(getters.artists.down),
+			};
 			var result = {
 				up: {},
 				down: {},
@@ -565,14 +563,14 @@ var store = new Vuex.Store({
 			};
 		},
 		compactEverything: function (state, getters) {
-			var compactLabel = makeLabelCompact(state.rotationLabel);
-			var up = makeFloorCompact(state.artists.up);
-			var down = makeFloorCompact(state.artists.down);
-			var feat = makeFeaturedCompact(state.artists.feat);
+			var compactLabel = makeLabelCompact(getters.rotationLabel);
+			var up = makeFloorCompact(getters.artists.up);
+			var down = makeFloorCompact(getters.artists.down);
+			var feat = makeFeaturedCompact(getters.artists.feat);
 			var result = 'l=' + compactLabel +
 				'&u=' + up +
 				'&d=' + down;
-			if (state.artists.feat.length > 0) {
+			if (getters.artists.feat.length > 0) {
 				result += '&f=' + feat;
 			}
 			// flags stuff -- DETECT LEGACY MODE HERE
@@ -614,7 +612,7 @@ var store = new Vuex.Store({
 				}
 				// custom adjustments:
 				limitedFloorNames.forEach(function (floorName) {
-					var halfSlotCount = state.artists[floorName].length;
+					var halfSlotCount = getters.artists[floorName].length;
 					var shortName = 'a' + floorName[0];
 					var adjustments = getters.templateInfo[floorName].adjustments[halfSlotCount];
 					var shortValue = makeAdjustmentsCompact(adjustments);
@@ -667,7 +665,6 @@ var store = new Vuex.Store({
 		},
 	},
 	actions: {
-		// templateInfo stuff
 		setLegacyMode: function (context, bool) {
 			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
 			templateInfo.legacyMode = bool;
@@ -695,14 +692,14 @@ var store = new Vuex.Store({
 		importAdjustments: function (context, data) {
 			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
 			limitedFloorNames.forEach(function (floorName) {
-				var halfSlotCount = context.state.artists[floorName].length;
+				var halfSlotCount = context.getters.artists[floorName].length;
 				context.getters.templateInfo[floorName].adjustments[halfSlotCount] = data[floorName];
 			})
 			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
 		},
 		resetAdjustments: function (context, floorName) {
 			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
-			var halfSlotCount = context.state.artists[floorName].length;
+			var halfSlotCount = context.getters.artists[floorName].length;
 			var array = JSON.parse(JSON.stringify(templateInfo[floorName].adjustments[halfSlotCount]));
 			array.fill(0);
 			templateInfo[floorName].adjustments[halfSlotCount] = array;
@@ -719,7 +716,6 @@ var store = new Vuex.Store({
 			templateInfo[floorName].adjustments = adjustments;
 			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
 		},
-		//
 		setAdvancedMode: function (context, bool) {
 			context.commit('SET_ADVANCED_MODE', bool);
 		},

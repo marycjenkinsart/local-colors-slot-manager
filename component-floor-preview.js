@@ -24,7 +24,7 @@ Vue.component('floor-preview', {
 	},
 	computed: {
 		nameList: function () {
-			return this.$store.state.artists[this.floorName];
+			return this.$store.getters.artists[this.floorName];
 		},
 		legacyMode: function () {
 			return this.$store.getters.templateInfo.legacyMode;

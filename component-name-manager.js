@@ -28,11 +28,14 @@ Vue.component('name-manager', {
 		};
 	},
 	computed: {
-		guestName: function () {
-			return this.$store.state.guestNameString || 'GUEST';
+		artists: function () {
+			return this.$store.getters.artists;
 		},
 		nameList: function () {
-			return this.$store.state.artists[this.floorName];
+			return this.artists[this.floorName];
+		},
+		guestName: function () {
+			return this.$store.getters.guestNameString;
 		},
 		showCircles: function () {
 			return this.$store.state.advanced.showCircles;
@@ -76,7 +79,7 @@ Vue.component('name-manager', {
 			return this.nameList.includes(this.guestName);
 		},
 		fancyNameList: function () {
-			return this.$store.getters.fancyArtists[this.floorName];
+			return makeFloorFancy(this.nameList);
 		},
 		artistPar: function () {
 			return this.$store.getters.artistPar[this.floorName];
@@ -199,7 +202,7 @@ Vue.component('name-manager', {
 			this.$store.dispatch('togglelegacyMode');
 		},
 		updateFloor (floor) {
-			var artistsObject = JSON.parse(JSON.stringify(this.$store.state.artists));
+			var artistsObject = JSON.parse(JSON.stringify(this.artists));
 			artistsObject[this.floorName] = floor;
 			this.$store.dispatch('updateArtistsObject',artistsObject);
 		},
