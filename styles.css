@@ -235,6 +235,10 @@ button.insertable:hover {
 .gray {
 	color: #777;
 }
+.hint {
+	font-size: .9rem;
+	color: #777;
+}
 
 /* *-*-*-*   FLEX CARDS   *-*-*-*  */
 
@@ -260,9 +264,9 @@ button.insertable:hover {
 	border-radius: 0 0 12px 12px;
 }
 /* verify best practices for below */
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 800px) {
     .flex-card {
-		flex: 0 1 31%;
+		flex: 0 1 24%;
     }
 }
 .impressive-button {

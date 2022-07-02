@@ -100,20 +100,24 @@ var hubPage = Vue.component('hub-page', {
 			</div>
 			<div class="card-body">
 				<p>Preview a specific rotation.</p>
-				<button
-					class="impressive-button"
-					v-if="importDataIsPresent && latestDataTest >= 0"
-					@click="goToViewImport"
-				>Most Recent: {{makeShortLabel(importDataLabel)}}</button>
-				<button
-					class="impressive-button"
-					v-if="!importDataIsPresent || latestDataTest < 0"
-					@click="goToViewLatestHistory"
-				>Most Recent*: {{makeShortLabel(latestHistoryItemLabel)}}</button>
+				<h3>Most Recent</h3>
+				<div>
+					<button
+						class="impressive-button"
+						v-if="importDataIsPresent && latestDataTest >= 0"
+						@click="goToViewImport"
+					>{{makeShortLabel(importDataLabel)}}</button>
+					<button
+						class="impressive-button"
+						v-if="!importDataIsPresent || latestDataTest < 0"
+						@click="goToViewLatestHistory"
+					>{{makeShortLabel(latestHistoryItemLabel)}}*</button>
+				</div>
 				<p
-				v-if="!importDataIsPresent || latestDataTest < 0"
+					v-if="!importDataIsPresent || latestDataTest < 0"
 				>*Latest data from history</p>
-				<p>To return to the hub from the preview screen, click the rotation title five times.</p>
+				<hr style="margin-top: 10px;">
+				<p class="hint">To return to the hub from the preview screen, click the rotation's title five times.</p>
 			</div>
 		</div>
 		<div class="flex-card">
@@ -121,9 +125,9 @@ var hubPage = Vue.component('hub-page', {
 				<span>Edit</span>
 			</div>
 			<div class="card-body">
-				<p>Edit the current rotation.</p>
+				<p>Edit the currently-loaded rotation.</p>
 				<h3>Rotation Wizard</h3>
-				<p>Guided questionnaire for producing simple rotations.</p>
+				<p>A guided questionnaire for producing simple rotations.</p>
 				<div>
 					<button
 						class="impressive-button"
@@ -131,7 +135,7 @@ var hubPage = Vue.component('hub-page', {
 					>Wizard</button>
 				</div>
 				<h3>Advanced Editor</h3>
-				<p>Original rotation editor for very granular control.</p>
+				<p>The original rotation editor for very granular control.</p>
 				<div>
 					<button
 						class="impressive-button"
@@ -150,17 +154,27 @@ var hubPage = Vue.component('hub-page', {
 					class="impressive-button"
 					@click="goToHistoryViewer"
 				>Explore history</button>
-				<p>History items found:</p>
+				<hr style="margin-top: 10px;">
+				<p class="hint">Change which records are included in this view with "Manage Records."</p>
+			</div>
+		</div>
+		<div class="flex-card">
+			<div class="card-head">
+				<span>Manage Records</span>
+			</div>
+			<div class="card-body">
+				<p>Choose which rotation is "loaded," and manage existing records.</p>
+				<p>(Not yet implemented.)</p>
+				<h3>History items found:</h3>
 				<ul>
 					<li
 						v-for="month in displayHistoryItems"
 					>- {{month}}
 					</li>
 				</ul>
-				<p class="medium-mini">
-					(Currently, rotation history is updated manually.
-					Inform Mary if there is any missing layout history.)
-				</p>
+				<hr style="margin-top: 10px;">
+				<p class="hint">Currently, rotation history is updated manually.
+					Inform Mary if there is any missing layout history.</p>
 			</div>
 		</div>
 	</div>

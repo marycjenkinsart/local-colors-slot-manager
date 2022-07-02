@@ -76,7 +76,7 @@ var wizardQuiz = [
 		questionID: 20,
 		category: "Floor swap",
 		title: "Should the floors get swapped for this rotation?",
-		subtitles: ["Floors are swapped for most normal (sequential) rotations."],
+		subtitles: [],
 		dataNames: [
 			"swapFloors",
 		],
@@ -129,7 +129,7 @@ var wizardQuiz = [
 		questionID: 31,
 		category: "Guest info",
 		title: "Is the guest artist sharing the featured space?",
-		subtitles: ["If sharing the featured space, the guest artist will not be given hanging space in the 2D rotation."],
+		subtitles: ["If sharing the featured space, the guest artist will NOT be given hanging space in the 2D rotation."],
 		formName: "selectGuestSharesFeatured",
 		dataNames: [
 			"guestSharesFeatured",
@@ -500,8 +500,7 @@ var wizardQuiz = [
 		title: "All done!",
 		subtitles: [
 			"Click the button below to copy this link into your clipboard, after which you can \"paste\" to share the map with others.",
-			"Remember that the link must be whole in its entirety or the map will appear broken. (When sending this link via email, make it a clickable link by hand so that it is not truncated accidentally by your email client.)",
-			"Clicking \"Next\" will put this data into the URL bar, as well as make it available to the rest of the hub. This means you will be able to use the advanced editor to make further changes to this map if you wish!",
+			"Remember that the link must be shared and used in its entirety or the map will appear broken. (When sending this link via email, make it a clickable link by hand so that it is not truncated accidentally by your email client.)",
 		],
 		formName: "copyResult",
 		navButtons: [
