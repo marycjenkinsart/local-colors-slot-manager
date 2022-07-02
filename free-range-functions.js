@@ -136,17 +136,16 @@ var makeCompactFloorUnfancy = function (string) {
 //	}
 
 var makeLabelCompact = function (obj) {
-	var customLabel = makeSpacesUnderscores(obj.custom);
 	var result = obj.year + ',' + obj.month;
 	if (
 		obj.version !== 1
-		|| customLabel
+		|| obj.custom
 	) {
 		var version = obj.version || 1;
 		result += ',' + version;
 	}
-	if (customLabel) {
-		result += ',' + customLabel;
+	if (obj.custom) {
+		result += ',' + makeSpacesUnderscores(obj.custom);
 	}
 	return result;
 };

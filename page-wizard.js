@@ -402,15 +402,12 @@ var wizardPage = Vue.component('wizard', {
 				}
 			})
 			return working;
-			// yet TODO:
-			// auto version increment (must check with history)
 		},
 		wizardResults: function () {
 			var working = JSON.parse(JSON.stringify(this.workingRotation));
 			var empty = JSON.parse(JSON.stringify(emptyRotationObject));
 			var placedNames = this.$store.state.wizard.placedNames;
 			var rotation = {
-				rotationLabel: working.rotationLabel,
 				templateInfo: empty.templateInfo,
 				meta: empty.meta,
 				artists: {
@@ -422,10 +419,27 @@ var wizardPage = Vue.component('wizard', {
 			if (working.quizResults.insertGuest) {
 				rotation.artists.up.unshift('GUEST');
 			}
-			console.log({working})
-			rotation.originalQuery = generateQueryFromRotation(rotation);
 			rotation.meta.appVersion = 'v2';
 			rotation.meta.querySource = 'wizard';
+			var mergedMonth =
+				this.$store.state.wizard.quizAnswers.rotationMergedMonth
+				|| this.$store.getters.rotation.rotationLabel.mergedMonth;
+			var year = Math.floor(mergedMonth / 12);
+			var month = mergedMonth % 12;
+			if (month === 0) {
+				year -= 1;
+				month = 12;
+			}
+			var fullHistory = this.$store.getters.fullHistory;
+			var version = incrementVersionNumberBasedOnHistory(fullHistory, year, month);
+			rotation.rotationLabel = {
+				mergedMonth: mergedMonth,
+				year: year,
+				month: month,
+				version: version,
+				custom: '',
+			}
+			rotation.originalQuery = generateQueryFromRotation(rotation);
 			return rotation;
 		},
 		insertGuest: function () {
@@ -629,6 +643,12 @@ var wizardPage = Vue.component('wizard', {
 			this.$router.push({
 				path: '/hub',
 				query: this.$route.query,
+			});
+		},
+		returnToHubFreshQuery: function () {
+			this.$router.push({
+				path: '/hub',
+				query: this.$store.getters.rotation.originalQuery,
 			});
 		},
 	},

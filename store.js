@@ -349,10 +349,10 @@ var loadedStore = {
 			state.current = obj;
 		},
 		UPDATE_QUERY_OBJECTS: function (state, obj) {
-			state.queryObjects = obj;			
+			state.queryObjects = obj;
 		},
 		UPDATE_ALT_ROTATIONS: function (state, obj) {
-			state.altRotations = obj;			
+			state.altRotations = obj;
 		},
 		SET_IMPORT_WARNING_FROM_URL: function (state, message) {
 			state.importWarningFromURL = message;

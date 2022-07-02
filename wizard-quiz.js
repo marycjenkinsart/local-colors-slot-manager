@@ -472,7 +472,7 @@ var wizardQuiz = [
 		title: "Final preview!",
 		subtitles: [
 			// "If anything needs to be adjusted, click \"Back\" to redo the necessary portions of the wizard. If everything looks good, click \"Next\" to confirm this data and generate the shareable link."
-			"Mary is still working on the wizard, so if you need to make changes to this map, you will need to load the page from scratch and start the wizard over. (Sorry!!) (The back button has been disabled to emphasize this)"
+			"Mary is still working on the wizard, so if you need to make changes to this map, you will need to reload the page now and start the wizard over. (Sorry!!) (The back button has been disabled to emphasize this)"
 		],
 		formName: "showFinalPreview",
 		dataNames: [],
@@ -499,8 +499,9 @@ var wizardQuiz = [
 		category: "Complete!",
 		title: "All done!",
 		subtitles: [
-			"Remember that the link must be shared in its entirety, or the map will appear broken. (When sending this link via email, make it a link by hand so that it is not truncated accidentally.)",
-			"This new data is now loaded into the hub!"
+			"Click the button below to copy this link into your clipboard, after which you can \"paste\" to share the map with others.",
+			"Remember that the link must be whole in its entirety or the map will appear broken. (When sending this link via email, make it a clickable link by hand so that it is not truncated accidentally by your email client.)",
+			"Clicking \"Next\" will put this data into the URL bar, as well as make it available to the rest of the hub. This means you will be able to use the advanced editor to make further changes to this map if you wish!",
 		],
 		formName: "copyResult",
 		navButtons: [
@@ -513,7 +514,7 @@ var wizardQuiz = [
 			{
 				label: "Next",
 				enabled: "dummyTrue",
-				action: "returnToHub",
+				action: "returnToHubFreshQuery",
 				goTo: 0,
 			}
 		],

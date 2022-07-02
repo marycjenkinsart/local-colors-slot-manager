@@ -61,6 +61,20 @@ var detectDuplicateRecord = function (historyArray, testRotation) {
 	return result;
 };
 
+var incrementVersionNumberBasedOnHistory = function (historyArray, year, month) {
+	var latestVersionFound = 0;
+	historyArray.forEach(function (rotation) {
+		if (
+			rotation.rotationLabel.month === month
+			&& rotation.rotationLabel.year === year
+		) {
+			latestVersionFound = Math.max(rotation.rotationLabel.version, latestVersionFound);
+		}
+	});
+	return latestVersionFound + 1;
+};
+
+
 var addRotationToHistory = function (historyArray, newRotation) {
 	var newArray = JSON.parse(JSON.stringify(historyArray));
 
