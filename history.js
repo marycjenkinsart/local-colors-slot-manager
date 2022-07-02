@@ -22,12 +22,12 @@ var reconstructedHistory = [
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/#/view?l=2021,7&u=GUEST,Karen,Pam,Jeff_M.,Alicia,Mary&d=Bill,J._Clay-1,Blaine,Adam,Teri,Jan&f=Lawrence-3D&x=v2&t=u01,&au=x1,15,x1,27,x1,18,x1,9&ad=x1,18,18,x1,12'
 ];
 
-var makeShareableLinkIntoRawQueries = function (string) {
+var makeShareableLinkIntoRawQuery = function (string) {
 	var relevant = string.split('view?')
-	var queries = relevant[1].split('&'); // now array of strings for each query
+	var query = relevant[1].split('&'); // now array of strings for each query
 	// u=GUEST,Karen,Pam,Jeff_M.,Alicia,Mary
 	var result = {};
-	queries.forEach(function (query) {
+	query.forEach(function (query) {
 		var splits = query.split('=');
 		result[splits[0]] = splits[1];
 	});
@@ -70,12 +70,12 @@ var addRotationToHistory = function (historyArray, newRotation) {
 var makeFullHistory = function () {
 	var fullHistory = [];
 	reconstructedHistory.forEach(function (link) {
-		var rawQuery = makeShareableLinkIntoRawQueries(link);
+		var rawQuery = makeShareableLinkIntoRawQuery(link);
 		var historyRecord = makeRotationObjectFromQuery(rawQuery,'history, from reconstructed rotations');
 		fullHistory.push(historyRecord);
 	})
 	webAppHistory.forEach(function (link) {
-		var rawQuery = makeShareableLinkIntoRawQueries(link);
+		var rawQuery = makeShareableLinkIntoRawQuery(link);
 		var historyRecord = makeRotationObjectFromQuery(rawQuery,'history, from web app rotations');
 		fullHistory.push(historyRecord);
 	})

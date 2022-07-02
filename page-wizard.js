@@ -423,10 +423,9 @@ var wizardPage = Vue.component('wizard', {
 				rotation.artists.up.unshift('GUEST');
 			}
 			console.log({working})
-			rotation.originalQuery = {};
+			rotation.originalQuery = generateQueryFromRotation(rotation);
 			rotation.meta.appVersion = 'v2';
 			rotation.meta.querySource = 'wizard';
-			// TODO reconstruct query
 			return rotation;
 		},
 		insertGuest: function () {

@@ -271,19 +271,90 @@ var makeAdjustmentsUncompact = function (string, length) {
 	return result;
 };
 
-// TEMPLATE INFO
+// ALL THE REST
 
-// e.g. up = {
-// 	selectedTemplateBase: 'u00',
-// 	snapOn: true,
-// 	snapInches: 18,
-// 	priority: 'last',
-// 	adjustments: {},
-// }
+var compactEverything = function (rotation) {
+	rotation = JSON.parse(JSON.stringify(rotation));
+	var compactLabel = makeLabelCompact(rotation.rotationLabel);
+	var up = makeFloorCompact(rotation.artists.up);
+	var down = makeFloorCompact(rotation.artists.down);
+	var feat = makeFeaturedCompact(rotation.artists.feat);
+	// flags stuff -- DETECT LEGACY MODE HERE
+	var flags = [];
+	if (rotation.templateInfo.legacyMode === false) {
+		flags.push('v2');
+	}
+	var snapUp = parseInt(rotation.templateInfo.up.snapInches,10);
+	var snapDown = parseInt(rotation.templateInfo.down.snapInches,10);
+	if (
+		snapUp !== defaultSnapInches
+		|| snapDown !== defaultSnapInches
+	) {
+		var snaps = 'snap' + snapUp + '-' + snapDown;
+		flags.push(snaps);
+	}
+	// if legacy mode is used, ignore custom template selection and adjustments:
+	var result = 'l=' + compactLabel +
+		'&u=' + up +
+		'&d=' + down;
+	if (rotation.artists.feat.length > 0) {
+		result += '&f=' + feat;
+	}
+	if (flags.length > 0) {
+		var joinedFlags = flags.join(',');
+		result += '&x=' + joinedFlags;
+	}
+	if (flags.includes('v2')) {
+		// custom template selection:
+		var t = {};
+		limitedFloorNames.forEach(function (floorName) {
+			var shortName = 't' + floorName[0];
+			var selected = rotation.templateInfo[floorName].selectedTemplateBase
+			var defaultTemplate = Object.keys(templates[floorName])[0];
+			if (
+				selected !== defaultTemplate
+			) {
+				t[shortName] = selected;
+			}
+		})
+		if (t.tu || t.td) {
+			tu = t.tu || '',
+			td = t.td || '',
+			result += '&t=' + tu + ',' + td;
+		}
+		// custom adjustments:
+		limitedFloorNames.forEach(function (floorName) {
+			var halfSlotCount = rotation.artists[floorName].length;
+			var shortName = 'a' + floorName[0];
+			var adjustments = rotation.templateInfo[floorName].adjustments[halfSlotCount];
+			var shortValue = makeAdjustmentsCompact(adjustments);
+			if (shortValue.length > 0) {
+				result += '&' + shortName + '=' + shortValue;
+			}
+		})
+	}
+	result = makeSpacesUnderscores(result);
+	return result;
+};
 
-// FLAGS
+var generateURLFromCompactEverything = function (compactString) {
+	var prefix = "https://marycjenkinsart.github.io/local-colors-slot-manager/"
+	var infix = "?v2.1";
+	// the "infix" does nothing apart from ensuring the client treats the URL as a fresh destination
+	// otherwise caches can interfere with the preview's apperance (without anything appearing to be broken)
+	// VERY IMPORTANT:
+	// if something changes in the app that has the potential to change the preview, iterate the infix!!
+	var suffix = "#/view?"
+	return prefix + infix + suffix + compactString;
+}
 
-//
+// a quick bodge
+
+var generateQueryFromRotation = function (rotation) {
+	var link = generateURLFromCompactEverything(compactEverything(rotation));
+	result = makeShareableLinkIntoRawQuery(link);
+	return result;
+};
 
   //---------------------------------//
  /*   ROUTER QUERY INTERPRETATION   */

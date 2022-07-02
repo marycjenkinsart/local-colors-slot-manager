@@ -214,6 +214,12 @@ var monthViewPage = Vue.component('month-view', {
 			this.moveArtistToOtherFloorCancel();
 			this.$store.dispatch('manageThis',value);
 		},
+		returnToHub: function () {
+			this.$router.push({
+				path: '/hub',
+				query: this.$route.query,
+			});
+		},
 	},
 	template: /*html*/`
 <div
@@ -413,6 +419,11 @@ var monthViewPage = Vue.component('month-view', {
 		<span>URL for this map:</span>
 	</p>
 	<shareable-link></shareable-link>
+	<p>
+		<button
+			@click="returnToHub"
+		>Return to Hub</button>
+	</p>
 	<div
 		class="svg_preview"
 	>
