@@ -454,10 +454,10 @@ var makeRotationObjectFromQuery = function (queryObject, querySource) {
 	// populate templates (if encoded in query)
 	if (queryObject.t) {
 		var splits = queryObject.t.split(',');
-		if (splits[0].length > 0) {
+		if (splits.length >= 1 && splits[0].length > 0) {
 			result.templateInfo.up.selectedTemplateBase = splits[0];
 		}
-		if (splits[1].length > 0) {
+		if (splits.length >= 2 && splits[1].length > 0) {
 			result.templateInfo.down.selectedTemplateBase = splits[1];
 		}
 	}

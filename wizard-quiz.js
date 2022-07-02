@@ -512,9 +512,15 @@ var wizardQuiz = [
 				goTo: 110,
 			},
 			{
-				label: "Next",
+				label: "Proceed to Hub",
 				enabled: "dummyTrue",
 				action: "returnToHubFreshQuery",
+				goTo: 0,
+			},
+			{
+				label: "Proceed to Advanced Editor",
+				enabled: "dummyTrue",
+				action: "goToAdvancedEditorFreshQuery",
 				goTo: 0,
 			}
 		],

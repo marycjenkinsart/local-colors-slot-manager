@@ -651,10 +651,17 @@ var wizardPage = Vue.component('wizard', {
 				query: this.$store.getters.rotation.originalQuery,
 			});
 		},
+		goToAdvancedEditorFreshQuery: function () {
+			this.$router.push({
+				path: '/',
+				query: this.$store.getters.rotation.originalQuery,
+			});
+		},
 	},
 	template: /*html*/`
 <div
 	id="wizard"
+	style="width: 800px;"
 >
 	<my-header
 		label="Rotation Wizard"
