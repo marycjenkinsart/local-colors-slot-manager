@@ -122,15 +122,21 @@ var hubPage = Vue.component('hub-page', {
 			</div>
 			<div class="card-body">
 				<p>Edit the current rotation.</p>
+				<h3>Rotation Wizard</h3>
+				<p>Guided questionnaire for producing simple rotations.</p>
 				<p>
 					<button
 						class="impressive-button"
 						@click="goToWizard"
-					>Rotation wizard</button>
+					>Wizard</button>
+				</p>
+				<h3>Advanced Editor</h3>
+				<p>Original rotation editor for very granular control.</p>
+				<p>
 					<button
 						class="impressive-button"
 						@click="goToAdvancedEditMode"
-					>Advanced editor</button>
+					>Advanced</button>
 				</p>
 			</div>
 		</div>

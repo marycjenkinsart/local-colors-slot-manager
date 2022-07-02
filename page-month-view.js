@@ -412,20 +412,7 @@ var monthViewPage = Vue.component('month-view', {
 	<p>
 		<span>URL for this map:</span>
 	</p>
-	<p>
-		<textarea
-			cols="54"
-			rows="6"
-			class="position-absolute"
-			ref="linkToCopy"
-			readonly
-		>{{compactURL}}</textarea>
-	</p>
-	<p>
-		<button
-			@click="copyLink"
-		>Copy Shareable Link</button>
-	</p>
+	<shareable-link></shareable-link>
 	<div
 		class="svg_preview"
 	>

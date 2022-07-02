@@ -460,7 +460,8 @@ var wizardQuiz = [
 			{
 				label: "Next",
 				enabled: "allFreeDownstairsNamesPlaced",
-				action: "lockAnswers",
+				// action: "lockAnswers",
+				action: "loadFinalWizardResults",
 				goTo: 110,
 			}
 		],
@@ -470,7 +471,8 @@ var wizardQuiz = [
 		category: "Finishing up",
 		title: "Final preview!",
 		subtitles: [
-			"If anything needs to be adjusted, click \"BACK\"."
+			// "If anything needs to be adjusted, click \"Back\" to redo the necessary portions of the wizard. If everything looks good, click \"Next\" to confirm this data and generate the shareable link."
+			"Mary is still working on the wizard, so if you need to make changes to this map, you will need to load the page from scratch and start the wizard over. (Sorry!!) (The back button has been disabled to emphasize this)"
 		],
 		formName: "showFinalPreview",
 		dataNames: [],
@@ -478,14 +480,16 @@ var wizardQuiz = [
 		navButtons: [
 			{
 				label: "Back",
-				enabled: "dummyTrue",
+				enabled: "dummyFalse",
+				// enabled: "dummyTrue",
 				action: "setSelectedFloorToDownstairs",
 				goTo: 101,
 			},
 			{
 				label: "Next",
 				enabled: "dummyTrue",
-				action: "dummyNada",
+				action: "lockAnswers",
+				// action: "loadFinalWizardResults",
 				goTo: 120,
 			}
 		],
@@ -494,7 +498,10 @@ var wizardQuiz = [
 		questionID: 120,
 		category: "Complete!",
 		title: "All done!",
-		subtitles: [],
+		subtitles: [
+			"Remember that the link must be shared in its entirety, or the map will appear broken. (When sending this link via email, make it a link by hand so that it is not truncated accidentally.)",
+			"This new data is now loaded into the hub!"
+		],
 		formName: "copyResult",
 		navButtons: [
 			{
@@ -505,8 +512,8 @@ var wizardQuiz = [
 			},
 			{
 				label: "Next",
-				enabled: "dummyFalse",
-				action: "dummyNada",
+				enabled: "dummyTrue",
+				action: "returnToHub",
 				goTo: 0,
 			}
 		],

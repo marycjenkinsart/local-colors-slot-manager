@@ -290,7 +290,7 @@ var wizardPage = Vue.component('wizard', {
 				})
 			})
 			// quiz options: departing artists
-			// var departingArtists = this.$store.state.wizard.quizAnswers.departingArtists;
+			var departingArtists = this.$store.state.wizard.quizAnswers.departingArtists;
 			var departingOptions = Object.keys(fusedArtistTable)
 				.filter(getUnique)
 				// .filter(function (item) {
@@ -305,6 +305,10 @@ var wizardPage = Vue.component('wizard', {
 					displaySlotSize: '1',
 					location: 'limbo',
 				}
+			})
+			//Remove artists from the fusedArtistTable that are explicitly departing
+			departingArtists.forEach(function (departingName) {
+				delete fusedArtistTable[departingName];
 			})
 			// slot size changes
 			var origSlotSizeOptions = {};
@@ -400,6 +404,30 @@ var wizardPage = Vue.component('wizard', {
 			return working;
 			// yet TODO:
 			// auto version increment (must check with history)
+		},
+		wizardResults: function () {
+			var working = JSON.parse(JSON.stringify(this.workingRotation));
+			var empty = JSON.parse(JSON.stringify(emptyRotationObject));
+			var placedNames = this.$store.state.wizard.placedNames;
+			var rotation = {
+				rotationLabel: working.rotationLabel,
+				templateInfo: empty.templateInfo,
+				meta: empty.meta,
+				artists: {
+					up: placedNames.up,
+					down: placedNames.down,
+					feat: working.quizResults.feat,
+				}
+			}
+			if (working.quizResults.insertGuest) {
+				rotation.artists.up.unshift('GUEST');
+			}
+			console.log({working})
+			rotation.originalQuery = {};
+			rotation.meta.appVersion = 'v2';
+			rotation.meta.querySource = 'wizard';
+			// TODO reconstruct query
+			return rotation;
 		},
 		insertGuest: function () {
 			return this.workingRotation.quizResults.insertGuest;
@@ -593,6 +621,11 @@ var wizardPage = Vue.component('wizard', {
 			this.$store.dispatch('historySetSelectedFloor','down');
 		},
 		dummyNada: function () {},
+		loadFinalWizardResults: function () {
+			var results = JSON.parse(JSON.stringify(this.wizardResults));
+			console.log(results);
+			this.$store.dispatch('loadRotation', results);
+		},
 		returnToHub: function () {
 			this.$router.push({
 				path: '/hub',
@@ -1053,11 +1086,11 @@ var wizardPage = Vue.component('wizard', {
 				>Wizard results:</h3>
 				<p>
 					<span>Featured:</span>
-					<span>{{afterOverridesFeaturedString}}</span>
+					<span><strong>{{afterOverridesFeaturedString}}</strong></span>
 				<br/>
-				Guest in 2D rotation: {{insertGuest ? 'YES' : 'NO'}}<br/>
-				Upstairs: {{afterOverridesList.up.join(', ')}}<br/>
-				Downstairs: {{afterOverridesList.down.join(', ')}}</p>
+				Guest in 2D rotation: <strong>{{insertGuest ? 'YES' : 'NO'}}</strong><br/>
+				Upstairs: <strong>{{afterOverridesList.up.join(', ')}}</strong><br/>
+				Downstairs: <strong>{{afterOverridesList.down.join(', ')}}</strong></p>
 			</div>
 		</div>
 		<div
@@ -1078,7 +1111,7 @@ var wizardPage = Vue.component('wizard', {
 			v-if="currentForm === 'showFinalPreview'"
 		>
 		<p>
-			TODO
+			<map-preview></map-preview>
 		</p>
 			
 		</div>
@@ -1088,10 +1121,7 @@ var wizardPage = Vue.component('wizard', {
 			<div
 				class="manager-box-modest"
 			>
-			<p>
-				TODO
-			</p>
-				
+			<shareable-link></shareable-link>
 			</div>
 		</div>
 		<p class="unflat">

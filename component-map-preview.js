@@ -172,7 +172,6 @@ Vue.component('map-preview', {
 			if (currentPath === '/view') {
 				this.secretClickCount += 1;
 			};
-			console.log(this.$route);
 			if (this.secretClickCount === 5) {
 				this.secretClickCount = 0;
 				this.$router.push({
