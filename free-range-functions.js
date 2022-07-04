@@ -689,6 +689,21 @@ var measurementLabelRotation = function (coords, x, y) {
 	return result;
 }
 
+  //--------------------------//
+ /*   ARTIST SLOT METADATA   */
+//--------------------------//
+
+var featLinesTotal = function (featRawLines) {
+	console.log(featRawLines)
+	var rawSum = featRawLines.map(function (rawLine) {
+		return getLengthFromLineCoords(rawLine);
+	});
+	var result = rawSum.reduce(function (prev, cur) {
+		return prev + cur;
+	});
+	return result;
+};
+
   //----------------------//
  /*   LINE INTERATIONS   */
 //----------------------//
@@ -742,6 +757,23 @@ var getBaselineHalfSlots = function (templateArray, unfancyArtists, adjustmentsA
 	// 	},
 	// ]
 }
+
+var getAdjustedHalfSlotLengths = function (templatesToDraw, artists, adjustments) {
+	var halfSlotCount = artists.length;
+	// guaranteeing there's something there:
+	adjustments[halfSlotCount] = adjustments[halfSlotCount] || [];
+	var emptyFrom = adjustments[halfSlotCount].length;
+	adjustments[halfSlotCount].length = halfSlotCount;
+	adjustments[halfSlotCount].fill(0,emptyFrom);
+	// the real work:
+	var adjustmentsArray = adjustments[halfSlotCount];
+	result = getBaselineHalfSlots(
+		templatesToDraw,
+		artists,
+		adjustmentsArray,
+	)
+	return result;
+};
 
 // A reminder: the templates look like this:
 // [
@@ -963,6 +995,43 @@ var snapAllShortSegments = function (_complexSlots, threshold, priority) {
 		complexSlots[index] = snapShortSegments(complexSlots[index], threshold, priority);
 	}
 	return complexSlots;
+};
+
+var getSnappedFusedSlots = function () {
+	// TODO move this
+};
+
+var getSnappedFusedSlotsNeedingLabels = function (lineArrayArray) {
+	floorResults = [];
+	lineArrayArray.forEach(function (lines) {
+		if (lines.length > 1) {
+			var longLine = reconstructOrigLine(lines);
+			var workingLines = lines.map(function (line) {
+				return measureLineAgainstLongLine(line, longLine);
+			});
+			while (workingLines.length > 1) {
+				var indexOfShortest = -1;
+				var valueOfShortest = Infinity;
+				var topOrBot = '';
+				Object.values(workingLines).forEach(function (line, index) {
+					if (
+						line.topDistance < valueOfShortest
+						|| line.botDistance < valueOfShortest
+					) {
+						topOrBot = line.topDistance > line.botDistance ? 'bot' : 'top';
+						var label = topOrBot + 'Distance';
+						valueOfShortest = line[label];
+						indexOfShortest = index;
+					}
+				})
+				var insert = workingLines.splice(indexOfShortest,1)[0];
+				insert.labelLine = topOrBot === 'top' ? insert.topTestLine : insert.botTestLine;
+				insert.labelDistance = valueOfShortest;
+				floorResults.push(insert);
+			}
+		}
+	})
+	return floorResults;
 };
 
 var getEdgesFromComplexLines = function (complexLines) {

@@ -266,7 +266,7 @@ var wizardStore = {
 };
 
 var loadedStore = {
-	// contains a complete rotation object to treat ast "loaded"
+	// contains a complete rotation object to treat as "loaded"
 	// but should also contain "backup" info, like what the
 	// original query was, or other queries / rotation objects
 	// of interest
@@ -444,7 +444,7 @@ var advancedStore = {
 	state: {
 		advancedModeOn: false,
 		showCircles: false,
-		featuredExtras: false, // featured display speculation stuff
+		featuredExtras: true, // featured display speculation stuff
 		snapOn: {
 			up: true,
 			down: true,
@@ -539,15 +539,8 @@ var store = new Vuex.Store({
 				feat: templates.down[getters.templateInfo.down.selectedTemplateBase],
 			}
 		},
-		featLinesTotal: function (state, getters) {
-			var rawLines = getters.templatesToDraw.feat;
-			var rawSum = rawLines.map(function (rawLine) {
-				return getLengthFromLineCoords(rawLine);
-			});
-			var result = rawSum.reduce(function (prev, cur) {
-				return prev + cur;
-			});
-			return result;
+		featLinesTotal: function (state, getters) { // calculates featured space
+			return featLinesTotal(getters.templatesToDraw.feat);
 		},
 		naiveHalfSlotLengths: function (state, getters) {
 			return {
@@ -562,23 +555,18 @@ var store = new Vuex.Store({
 			};
 		},
 		adjustedHalfSlotLengths: function (state, getters) {
-			var result = {};
-			limitedFloorNames.forEach(function (floorName) {
-				var adjustments = getters.templateInfo[floorName].adjustments;
-				var halfSlotCount = getters.artists[floorName].length;
-				// guaranteeing there's something there:
-				adjustments[halfSlotCount] = adjustments[halfSlotCount] || [];
-				var emptyFrom = adjustments[halfSlotCount].length;
-				adjustments[halfSlotCount].length = halfSlotCount;
-				adjustments[halfSlotCount].fill(0,emptyFrom);
-				// the real work:
-				var adjustmentsArray = adjustments[halfSlotCount];
-				result[floorName] = getBaselineHalfSlots(
-					getters.templatesToDraw[floorName],
-					getters.artists[floorName],
-					adjustmentsArray,
-				)
-			})
+			result = {
+				up: getAdjustedHalfSlotLengths(
+					getters.templatesToDraw.up,
+					getters.artists.up,
+					getters.templateInfo.up.adjustments,
+				),
+				down: getAdjustedHalfSlotLengths(
+					getters.templatesToDraw.down,
+					getters.artists.down,
+					getters.templateInfo.down.adjustments,
+				),
+			};
 			return result;
 		},
 		adjustedHalfSlots: function (state, getters) {
@@ -594,12 +582,16 @@ var store = new Vuex.Store({
 			};
 		},
 		snappedFusedSlots: function (state, getters) {
-			var snappedSlots = JSON.parse(JSON.stringify(getters.fusedHalfSlots));
+			var originalSlots = getters.fusedHalfSlots; //!
+			var snapOn = getters.snapOn; //!
+			var templateInfo = getters.templateInfo; //!
+			var snappedSlots = JSON.parse(JSON.stringify(originalSlots));
 			limitedFloorNames.forEach(function (floorName) {
-				if (getters.snapOn[floorName]) {
+				if (snapOn[floorName]) {
+					var snapInches = templateInfo[floorName].snapInches
 					snappedSlots[floorName] = snapAllShortSegments(
 						snappedSlots[floorName],
-						inchesToTemplateNumber(getters.templateInfo[floorName].snapInches),
+						inchesToTemplateNumber(snapInches),
 						snapPriority[floorName]
 					);
 				}
@@ -607,9 +599,10 @@ var store = new Vuex.Store({
 			return snappedSlots;
 		},
 		snappedFusedSlotsFlat: function (state, getters) { // draw the svgs from this
+			var snappedFusedSlots = getters.snappedFusedSlots; //!
 			var snappedSlots = {}
 			limitedFloorNames.forEach(function (floorName) {
-				var lineSegmentFragments = getters.snappedFusedSlots[floorName];
+				var lineSegmentFragments = snappedFusedSlots[floorName];
 				lineSegmentFragments.forEach(function (lineSegment) {
 					lineSegment.forEach(function (line) {
 						snappedSlots[floorName] = snappedSlots[floorName] || [];
@@ -620,52 +613,25 @@ var store = new Vuex.Store({
 			return snappedSlots;
 		},
 		snappedFusedSlotsNeedingLabels: function (state, getters) {
-			var lineArrayArray = getters.snappedFusedSlots;
-			var result = {};
-			limitedFloorNames.forEach(function (floorName) {
-				floorResults = [];
-				lineArrayArray[floorName].forEach(function (lines) {
-					if (lines.length > 1) {
-						var longLine = reconstructOrigLine(lines);
-						var workingLines = lines.map(function (line) {
-							return measureLineAgainstLongLine(line, longLine);
-						});
-						while (workingLines.length > 1) {
-							var indexOfShortest = -1;
-							var valueOfShortest = Infinity;
-							var topOrBot = '';
-							Object.values(workingLines).forEach(function (line, index) {
-								if (
-									line.topDistance < valueOfShortest
-									|| line.botDistance < valueOfShortest
-								) {
-									topOrBot = line.topDistance > line.botDistance ? 'bot' : 'top';
-									var label = topOrBot + 'Distance';
-									valueOfShortest = line[label];
-									indexOfShortest = index;
-								}
-							})
-							var insert = workingLines.splice(indexOfShortest,1)[0];
-							insert.labelLine = topOrBot === 'top' ? insert.topTestLine : insert.botTestLine;
-							insert.labelDistance = valueOfShortest;
-							floorResults.push(insert);
-						}
-					}
-				})
-				result[floorName] = floorResults;
-			})
-			return result;
+			var lineArrayArray = getters.snappedFusedSlots; //!
+			return {
+				up: getSnappedFusedSlotsNeedingLabels(lineArrayArray.up),
+				down: getSnappedFusedSlotsNeedingLabels(lineArrayArray.down),
+			};
 		},
 		artistPar: function (state, getters) {
+			var artists = getters.artists; //!
+			var naiveHalfSlotLengths = getters.naiveHalfSlotLengths; //!
+			var snappedFusedSlotsFlat = getters.snappedFusedSlotsFlat; //!
 			var fancy = {
-				up: makeFloorFancy(getters.artists.up),
-				down: makeFloorFancy(getters.artists.down),
+				up: makeFloorFancy(artists.up),
+				down: makeFloorFancy(artists.down),
 			};
 			var result = {
 				up: {},
 				down: {},
 			};
-			Object.keys(fancy).forEach(function (floorName) {
+			limitedFloorNames.forEach(function (floorName) {
 				Object.values(fancy[floorName]).forEach(function (artist) {
 					result[floorName][artist.name] = result[floorName][artist.name] || {};
 					var artistResult = result[floorName][artist.name];
@@ -675,11 +641,11 @@ var store = new Vuex.Store({
 				})
 			})
 			var halfSlotSize = {
-				up: getters.naiveHalfSlotLengths.up[0].size,
-				down: getters.naiveHalfSlotLengths.down[0].size,
+				up: naiveHalfSlotLengths.up[0].size,
+				down: naiveHalfSlotLengths.down[0].size,
 			}
 			limitedFloorNames.forEach(function (floorName) {
-				var floor = getters.snappedFusedSlotsFlat[floorName];
+				var floor = snappedFusedSlotsFlat[floorName];
 				floor.forEach(function (lineSegment) {
 					result[floorName][lineSegment.name].slotTotal = result[floorName][lineSegment.name].slotTotal || 0;
 					result[floorName][lineSegment.name].slotTotal += getLengthFromLineCoords(lineSegment);
@@ -691,26 +657,6 @@ var store = new Vuex.Store({
 				})
 			})
 			return result;
-		},
-		naiveHalfSlotEdges: function (state, getters) { // draw the ghost slot border circles from this
-			return {
-				up: getEdgesFromComplexLines(getters.naiveHalfSlots.up),
-				down: getEdgesFromComplexLines(getters.naiveHalfSlots.down),
-			};
-		},
-		adjustedHalfSlotEdges: function (state, getters) { // draw the solid slot border circles from this
-			return {
-				up: getEdgesFromComplexLines(getters.adjustedHalfSlots.up),
-				down: getEdgesFromComplexLines(getters.adjustedHalfSlots.down),
-			};
-		},
-		snappedSlotEdges: function (state, getters) { // draw the slot borders and marin measurements from this
-			var up = getEdgesFromComplexLines(getters.snappedFusedSlots.up);
-			var down = getEdgesFromComplexLines(getters.snappedFusedSlots.down);
-			return {
-				up: up,
-				down: down,
-			};
 		},
 		compactEverything: function (state, getters) {
 			var rotation = JSON.parse(JSON.stringify(getters.rotation));

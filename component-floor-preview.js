@@ -109,23 +109,29 @@ Vue.component('floor-preview', {
 		},
 		lineSegmentsFeat: function () {
 			return this.$store.getters.featLineSegments;
+			// TODO: why isn't this drawn anymore?
 		},
 		showFeaturedExtras: function () {
 			return this.$store.getters.featuredExtras;
 		},
-		ghostCircles: function () {
-			return this.$store.getters.naiveHalfSlotEdges[this.floorName];
+		ghostCircles: function () { // previously 'naiveHalfSlotEdges'
+			// this is where the half slot edges would have landed WITHOUT snapping
+			// or manual adjustments
+			return getEdgesFromComplexLines(this.$store.getters.naiveHalfSlots[this.floorName]);
 		},
-		solidCircles: function () {
-			return this.$store.getters.adjustedHalfSlotEdges[this.floorName];
+		solidCircles: function () { // previously 'adjustedHalfSlotEdges'
+			// this is where the half slot edges landed WITH snapping and manual adjustments
+			// or manual adjustments
+			return getEdgesFromComplexLines(this.$store.getters.adjustedHalfSlots[this.floorName]);
 		},
-		realSlotEdges: function () {
-			return this.$store.getters.snappedSlotEdges[this.floorName];
+		snappedSlotEdges: function () {
+			// draw the slot borders and main measurements from this
+			return getEdgesFromComplexLines(this.$store.getters.snappedFusedSlots[this.floorName]);
 		},
 		// end refactor
 		processedDottedLines: function () {
 			var result = [];
-			var slotEdges = this.realSlotEdges;
+			var slotEdges = this.snappedSlotEdges;
 			var lineLength = this.dottedLineLength;
 			slotEdges.forEach(function (point) {
 				var extension = lineToRightLineAtOrigin(point.line1, lineLength, point.x, point.y);
@@ -197,7 +203,37 @@ Vue.component('floor-preview', {
 			return result;
 		},
 		linesToLabel: function () {
-			return this.$store.getters.snappedFusedSlotsNeedingLabels[this.floorName];
+			var lineArray = this.$store.getters.snappedFusedSlots[this.floorName];
+			thisFloorResults = [];
+			lineArray.forEach(function (lines) {
+				if (lines.length > 1) {
+					var longLine = reconstructOrigLine(lines);
+					var workingLines = lines.map(function (line) {
+						return measureLineAgainstLongLine(line, longLine);
+					});
+					while (workingLines.length > 1) {
+						var indexOfShortest = -1;
+						var valueOfShortest = Infinity;
+						var topOrBot = '';
+						Object.values(workingLines).forEach(function (line, index) {
+							if (
+								line.topDistance < valueOfShortest
+								|| line.botDistance < valueOfShortest
+							) {
+								topOrBot = line.topDistance > line.botDistance ? 'bot' : 'top';
+								var label = topOrBot + 'Distance';
+								valueOfShortest = line[label];
+								indexOfShortest = index;
+							}
+						})
+						var insert = workingLines.splice(indexOfShortest,1)[0];
+						insert.labelLine = topOrBot === 'top' ? insert.topTestLine : insert.botTestLine;
+						insert.labelDistance = valueOfShortest;
+						thisFloorResults.push(insert);
+					}
+				}
+			})
+			return thisFloorResults;
 		},
 		processedMeasurementLabels: function () {
 			var result = [];
