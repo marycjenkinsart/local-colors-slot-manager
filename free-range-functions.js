@@ -704,6 +704,30 @@ var featLinesTotal = function (featRawLines) {
 	return result;
 };
 
+var getArtistsPar = function (artists, halfSlotSize, snappedFusedSlotsFlat) {
+	var fancy = makeFloorFancy(artists); // source info
+	var floorResult = {};
+	// tallying artist slot size *on that floor*, including wrapped slots
+	Object.values(fancy).forEach(function (artist) {
+		floorResult[artist.name] = floorResult[artist.name] || {};
+		var artistResult = floorResult[artist.name];
+		var slotSize = artistResult.slotSize || 0;
+		slotSize += artist.slotSize;
+		artistResult.slotSize = slotSize;
+	})
+	// same as above, but tallying the actual size of the half slots
+	snappedFusedSlotsFlat.forEach(function (lineSegment) {
+		floorResult[lineSegment.name].slotTotal = floorResult[lineSegment.name].slotTotal || 0;
+		floorResult[lineSegment.name].slotTotal += getLengthFromLineCoords(lineSegment);
+	})
+	Object.values(fancy).forEach(function (artist) {
+		var artistData = floorResult[artist.name];
+		artistData.par = artistData.slotSize * halfSlotSize * 2;
+		artistData.overPar = artistData.slotTotal - artistData.par;
+	})
+	return floorResult;
+};
+
   //----------------------//
  /*   LINE INTERATIONS   */
 //----------------------//
