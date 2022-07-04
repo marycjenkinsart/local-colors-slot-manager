@@ -284,6 +284,8 @@ button.insertable:hover {
 
 .strikethrough {
 	text-decoration-line: line-through;
+	/* okay, iOS 9, you get one free "webkit" accomodation... */
+	-webkit-text-decoration-line: line-through;
 }
 
 /* *-*-*-*   SPECIFICS   *-*-*-*  */

@@ -661,7 +661,6 @@ var wizardPage = Vue.component('wizard', {
 	template: /*html*/`
 <div
 	id="wizard"
-	style="width: 800px;"
 >
 	<my-header
 		label="Rotation Wizard"

@@ -11,6 +11,9 @@ Vue.component('shareable-link', {
 		copyLink: function () {
 			this.$refs.linkToCopy.select();
 			document.execCommand("copy");
+			// Did not work with Safari 11 on iOS
+			// Also it's apparently officially deprecated
+			// TODO: Think of other options
 		},
 	},
 	template: /*html*/`
