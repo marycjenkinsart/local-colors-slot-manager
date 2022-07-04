@@ -119,7 +119,10 @@ Vue.component('history-placement', {
 				}
 			} else { // There isn't a name there already
 				// console.log("There is no name there already")
-				if (!!this.insertName) { // But there's one wanting to be inserted
+				if (
+					!!this.insertName // But there's one wanting to be inserted
+					&& index !== -1 // and the slot you clicked isn't "GUEST"
+				) {
 					// console.log("There is a name to be inserted")
 					// console.log('INSERT THE NAME')					
 					var halfSlotCount = this.namesToSlotSizes[this.insertName] * 2;

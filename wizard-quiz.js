@@ -44,6 +44,12 @@ var wizardQuiz = [
 				enabled: "dummyTrue",
 				action: "dummyNada",
 				goTo: 10,
+			},
+			{
+				label: "DEBUG",
+				enabled: "dummyTrue",
+				action: "dummyNada",
+				goTo: 80,
 			}
 		],
 	},
@@ -347,7 +353,7 @@ var wizardQuiz = [
 		category: "Floor assignments",
 		title: "The following artist(s) must be newly added to a floor. Which floor?",
 		subtitles: [
-			"If you change your mind, click the red name in the assignment list return the name to \"limbo\".",
+			"If you change your mind, click the red name in the assignment list to return the name to \"limbo\".",
 		],
 		formName: "selectNewArtistsNewFloor",
 		dataNames: [
@@ -423,7 +429,9 @@ var wizardQuiz = [
 		questionID: 100,
 		category: "Slot assignments",
 		title: "Assign upstairs artists to slots.",
-		subtitles: [],
+		subtitles: [
+			"Next we'll choose their hanging slots."
+		],
 		formName: "insertUpstairsSlots",
 		dataNames: [],
 		alsoReset: [],

@@ -381,3 +381,7 @@ button.insertable:hover {
 .artist-name-label {
 	font-size: 0.6rem;
 }
+
+#wizard {
+	max-width: 800px;
+}
