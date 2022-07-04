@@ -69,6 +69,12 @@ Vue.component('map-preview', {
 	mixins: [
 		mixins,
 	],
+	props: {
+		rotation: {
+			type: Object,
+			require: true,
+		},
+	},
 	data: function () {
 		return {
 			secretClickCount: 0,
@@ -76,12 +82,11 @@ Vue.component('map-preview', {
 	},
 	computed: {
 		artists: function () {
-			return this.$store.getters.artists;
+			return this.rotation.artists;
 		},
 		rotationLabel: function () {
-			return this.$store.getters.rotationLabel;
+			return this.rotation.rotationLabel;
 		},
-		// the above should be the only place these things come from!!
 		longLabel: function () {
 			return getLongLabel(this.rotationLabel);
 		},
@@ -203,6 +208,7 @@ Vue.component('map-preview', {
 			floor-name="down"
 			:origin="origins('down')"
 			:canvas-size="wrapperSize"
+			:rotation="rotation"
 		>
 		</floor-preview>
 		<floor-preview
@@ -210,6 +216,7 @@ Vue.component('map-preview', {
 			floor-name="up"
 			:origin="origins('up')"
 			:canvas-size="wrapperSize"
+			:rotation="rotation"
 		>
 		</floor-preview>
 		<g

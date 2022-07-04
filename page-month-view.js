@@ -12,11 +12,14 @@ var monthViewPage = Vue.component('month-view', {
 		}
 	},
 	computed: {
+		rotation: function () {
+			return this.$store.getters.rotation;
+		},
 		artists: function () {
-			return this.$store.getters.artists;
+			return this.rotation.artists;
 		},
 		rotationLabel: function () {
-			return this.$store.getters.rotationLabel;
+			return this.rotation.rotationLabel;
 		},
 		longLabel: function () {
 			return getLongLabel(this.rotationLabel);
@@ -428,6 +431,7 @@ var monthViewPage = Vue.component('month-view', {
 		class="svg_preview"
 	>
 		<map-preview
+			:rotation="rotation"
 		></map-preview>
 	</div>
 </div>

@@ -12,6 +12,10 @@ Vue.component('floor-preview', {
 			type: Object,
 			require: true,
 		},
+		rotation: {
+			type: Object,
+			require: true,
+		},
 	},
 	data: function () {
 		return {
@@ -24,10 +28,10 @@ Vue.component('floor-preview', {
 	},
 	computed: {
 		nameList: function () {
-			return this.$store.getters.artists[this.floorName];
+			return this.rotation.artists[this.floorName];
 		},
 		legacyMode: function () {
-			return this.$store.getters.templateInfo.legacyMode;
+			return this.rotation.templateInfo.legacyMode;
 		},
 		// Still used for legacy stuff; don't excise yet
 		slot01: function () {
@@ -99,6 +103,7 @@ Vue.component('floor-preview', {
 		showCircles: function () {
 			return this.$store.getters.showCircles;
 		},
+		// make the below part of this again
 		snappedLineSegments: function () {
 			return this.$store.getters.snappedFusedSlotsFlat[this.floorName];
 		},
@@ -117,6 +122,7 @@ Vue.component('floor-preview', {
 		realSlotEdges: function () {
 			return this.$store.getters.snappedSlotEdges[this.floorName];
 		},
+		// end refactor
 		processedDottedLines: function () {
 			var result = [];
 			var slotEdges = this.realSlotEdges;
@@ -154,7 +160,7 @@ Vue.component('floor-preview', {
 		processedRectanglesFeat: function () {
 			var result = [];
 			var rectWidth = this.rectWidth
-			var lineSegments = this.lineSegmentsFeat;
+			var lineSegments = this.lineSegmentsFeat || [];
 			lineSegments.forEach(function (line) {
 				var rect = lineToLeftRectangle(line, rectWidth);
 				var rectPoints = rect.x1 + ',' + rect.y1 + ' ' +

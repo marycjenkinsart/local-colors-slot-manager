@@ -6,6 +6,10 @@ var previewPage = Vue.component('preview', {
 		importWarningsGeneric: function () {
 			return this.$store.getters.importWarningsGeneric;
 		},
+		rotation: function () {
+			console.log(this.$store.getters.rotation)
+			return this.$store.getters.rotation;
+		},
 	},
 	template: /*html*/`
 <div
@@ -23,6 +27,7 @@ var previewPage = Vue.component('preview', {
 			>> {{warning}}<br/></span>
 		</p>
 		<map-preview
+			:rotation="rotation"
 		></map-preview>
 	</div>
 </div>

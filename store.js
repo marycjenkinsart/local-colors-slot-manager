@@ -532,17 +532,15 @@ var store = new Vuex.Store({
 		guestNameString: function (state, getters) {
 			return state.guestNameString || 'GUEST';
 		},
-		upTemplate: function (state, getters) {
-			return templates.up[getters.templateInfo.up.selectedTemplateBase];
-		},
-		downTemplate: function (state, getters) {
-			return templates.down[getters.templateInfo.down.selectedTemplateBase];
-		},
-		featLineSegments: function (state, getters) {
-			return templates.feat[getters.templateInfo.feat.selectedTemplateBase];
+		templatesToDraw: function (state, getters) {
+			return {
+				up: templates.up[getters.templateInfo.up.selectedTemplateBase],
+				down: templates.down[getters.templateInfo.down.selectedTemplateBase],
+				feat: templates.down[getters.templateInfo.down.selectedTemplateBase],
+			}
 		},
 		featLinesTotal: function (state, getters) {
-			var rawLines = getters.featLineSegments;
+			var rawLines = getters.templatesToDraw.feat;
 			var rawSum = rawLines.map(function (rawLine) {
 				return getLengthFromLineCoords(rawLine);
 			});
@@ -553,14 +551,14 @@ var store = new Vuex.Store({
 		},
 		naiveHalfSlotLengths: function (state, getters) {
 			return {
-				up: getBaselineHalfSlots(getters.upTemplate, getters.artists.up),
-				down: getBaselineHalfSlots(getters.downTemplate, getters.artists.down),
+				up: getBaselineHalfSlots(getters.templatesToDraw.up, getters.artists.up),
+				down: getBaselineHalfSlots(getters.templatesToDraw.down, getters.artists.down),
 			};
 		},
 		naiveHalfSlots: function (state, getters) {
 			return {
-				up: makeComplexLines(getters.upTemplate, getters.naiveHalfSlotLengths.up),
-				down: makeComplexLines(getters.downTemplate, getters.naiveHalfSlotLengths.down),
+				up: makeComplexLines(getters.templatesToDraw.up, getters.naiveHalfSlotLengths.up),
+				down: makeComplexLines(getters.templatesToDraw.down, getters.naiveHalfSlotLengths.down),
 			};
 		},
 		adjustedHalfSlotLengths: function (state, getters) {
@@ -575,9 +573,8 @@ var store = new Vuex.Store({
 				adjustments[halfSlotCount].fill(0,emptyFrom);
 				// the real work:
 				var adjustmentsArray = adjustments[halfSlotCount];
-				var templateName = floorName + 'Template';
 				result[floorName] = getBaselineHalfSlots(
-					getters[templateName],
+					getters.templatesToDraw[floorName],
 					getters.artists[floorName],
 					adjustmentsArray,
 				)
@@ -586,8 +583,8 @@ var store = new Vuex.Store({
 		},
 		adjustedHalfSlots: function (state, getters) {
 			return {
-				up: makeComplexLines(getters.upTemplate, getters.adjustedHalfSlotLengths.up),
-				down: makeComplexLines(getters.downTemplate, getters.adjustedHalfSlotLengths.down),
+				up: makeComplexLines(getters.templatesToDraw.up, getters.adjustedHalfSlotLengths.up),
+				down: makeComplexLines(getters.templatesToDraw.down, getters.adjustedHalfSlotLengths.down),
 			};
 		},
 		fusedHalfSlots: function (state, getters) {
