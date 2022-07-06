@@ -15,7 +15,7 @@ var mixinsHistory = {
 			return this.$store.getters.fullHistory;
 		},
 		practicalHistory: function () {
-			return this.$store.getters.fullHistory;
+			return this.$store.getters.practicalHistory;
 		},
 	},
 	methods: {

@@ -209,10 +209,6 @@ var monthViewPage = Vue.component('month-view', {
 				console.error(`You can't decrement ${variable}!`)
 			}
 		},
-		copyLink: function () {
-			this.$refs.linkToCopy.select();
-			document.execCommand("copy");
-		},
 		manageThis: function (value) {
 			this.moveArtistToOtherFloorCancel();
 			this.$store.dispatch('manageThis',value);

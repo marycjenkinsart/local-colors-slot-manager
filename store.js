@@ -11,8 +11,11 @@ var historyStore = {
 		fullHistory: function (state) {
 			return state.fullHistory;
 		},
-		practicalHistory: function (state) {
-			return state.fullHistory; // TODO figure this part out properly
+		practicalHistory: function (state, getters) {
+			var fullHistory = JSON.parse(JSON.stringify(getters.fullHistory));
+			return fullHistory.filter(function (rotation) {
+				return isLatestRotation(rotation, fullHistory);
+			})
 		},
 	},
 	mutations: {
