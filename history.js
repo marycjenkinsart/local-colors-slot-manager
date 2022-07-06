@@ -1,4 +1,6 @@
-/* *-*-*-*   CREATING HISTORY DATA FROM ARCHIVED LINKS   *-*-*-*  */
+  //-----------------------------------------------//
+ /*   CREATING HISTORY DATA FROM ARCHIVED LINKS   */
+//-----------------------------------------------//
 
 var webAppHistory = [
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2#/view?l=2022,6,3&u=Lorraine,Blaine,Brianna&d=Jeff_M.-1,Mary,Pam,J._Clay-1&f=Bill-2D-2&x=v2&t=u01,',
@@ -22,77 +24,6 @@ var reconstructedHistory = [
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/#/view?l=2021,7&u=GUEST,Karen,Pam,Jeff_M.,Alicia,Mary&d=Bill,J._Clay-1,Blaine,Adam,Teri,Jan&f=Lawrence-3D&x=v2&t=u01,&au=x1,15,x1,27,x1,18,x1,9&ad=x1,18,18,x1,12'
 ];
 
-var makeShareableLinkIntoRawQuery = function (string) {
-	var relevant = string.split('view?')
-	var query = relevant[1].split('&'); // now array of strings for each query
-	// u=GUEST,Karen,Pam,Jeff_M.,Alicia,Mary
-	var result = {};
-	query.forEach(function (query) {
-		var splits = query.split('=');
-		result[splits[0]] = splits[1];
-	});
-	return result;
-};
-
-var sortHistoryRecords = function (historyArray) {
-	var newArray = JSON.parse(JSON.stringify(historyArray));
-	newArray.sort(function (a, b) {
-		return b.rotationLabel.version - a.rotationLabel.version;
-	})
-	newArray.sort(function (a, b) {
-		return b.rotationLabel.month - a.rotationLabel.month;
-	})
-	newArray.sort(function (a, b) {
-		return b.rotationLabel.year - a.rotationLabel.year;
-	})
-	return newArray;
-};
-
-var detectDuplicateRecord = function (historyArray, testRotation) {
-	var historyStrings = historyArray.map(function (rotation) {
-		var relevantRotation = JSON.parse(JSON.stringify(rotation));
-		relevantRotation.meta = 'stripped';
-		return JSON.stringify(relevantRotation);
-	});
-	testRotation = JSON.parse(JSON.stringify(testRotation));
-	testRotation.meta = 'stripped';
-	testRotationString =  JSON.stringify(testRotation)
-	var result = historyStrings.includes(testRotationString);
-	return result;
-}; //TODO this won't actually work for a few reasons
-
-var findHighestVersionForMonth = function (historyArray, year, month) {
-	var latestVersionFound = 0;
-	historyArray.forEach(function (rotation) {
-		if (
-			rotation.rotationLabel.month === month
-			&& rotation.rotationLabel.year === year
-		) {
-			latestVersionFound = Math.max(rotation.rotationLabel.version, latestVersionFound);
-		}
-	});
-	return latestVersionFound;
-}
-
-var isLatestRotation = function (rotation, fullHistory) {
-	var targetMonth = rotation.rotationLabel.month;
-	var targetYear = rotation.rotationLabel.year;
-	var targetVersion = rotation.rotationLabel.version;
-	var highestVersion = findHighestVersionForMonth(fullHistory, targetYear, targetMonth);
-	var result = highestVersion <= targetVersion ? true : false;
-	return result;
-};
-
-var incrementVersionNumberBasedOnHistory = function (historyArray, year, month) {
-	return findHighestVersionForMonth(historyArray, year, month) + 1;
-};
-
-var addRotationToHistory = function (historyArray, newRotation) {
-	var newArray = JSON.parse(JSON.stringify(historyArray));
-	// TODO lol
-	return newArray;
-};
-
 var makeFullHistory = function () {
 	var fullHistory = [];
 	reconstructedHistory.forEach(function (link) {
@@ -109,7 +40,278 @@ var makeFullHistory = function () {
 	return fullHistory;
 };
 
-/* *-*-*-*   INTERACTING WITH A NEW HISTORY ROW   *-*-*-*  */
+var makeShareableLinkIntoRawQuery = function (string) {
+	var relevant = string.split('view?')
+	var query = relevant[1].split('&'); // now array of strings for each query
+	// u=GUEST,Karen,Pam,Jeff_M.,Alicia,Mary
+	var result = {};
+	query.forEach(function (query) {
+		var splits = query.split('=');
+		result[splits[0]] = splits[1];
+	});
+	return result;
+};
+
+var addRotationToHistory = function (historyArray, newRotation) {
+	var newArray = JSON.parse(JSON.stringify(historyArray));
+	// TODO lol
+	return newArray;
+};
+
+  //----------------------//
+ /*   MANAGING HISTORY   */
+//----------------------//
+
+var sortHistoryRecords = function (historyArray) {
+	var newArray = JSON.parse(JSON.stringify(historyArray));
+	newArray.sort(function (a, b) {
+		return b.rotationLabel.version - a.rotationLabel.version;
+	})
+	newArray.sort(function (a, b) {
+		return b.rotationLabel.month - a.rotationLabel.month;
+	})
+	newArray.sort(function (a, b) {
+		return b.rotationLabel.year - a.rotationLabel.year;
+	})
+	return newArray;
+};
+
+  //-----------------------------//
+ /*   COMPARING TWO ROTATIONS   */
+//-----------------------------//
+
+var compareTestFull = {"originalQuery":{"l":"2022,6,3","u":"Lorraine,Blaine,Brianna","d":"Jeff_M.-1,Mary,Pam,J._Clay-1","f":"Bill-2D-2","x":"v2","t":"u01,"},"rotationLabel":{"year":2022,"month":6,"version":2,"custom":"","mergedMonth":24270,"shortLabelString":""},"artists":{"up":["Lorraine","Lorraine","Blaine","Blaine","Brianna","Brianna"],"down":["Jeff M.","Mary","Mary","Pam","Pam","J. Clay"],"feat":[{"name":"Bill","type":"2D","origSlotSize":1}]},"templateInfo":{"up":{"selectedTemplateBase":"u01","snapInches":18,"adjustments":[null,null,null,null,null,null,[]]},"down":{"selectedTemplateBase":"d00","snapInches":18,"adjustments":[null,null,null,null,null,null,[]]},"feat":{"selectedTemplateBase":"defaultA"},"legacyMode":false},"meta":{"appVersion":"v2","querySource":"from URL","queryIncomplete":null,"parseSuccessful":true,"warnings":[]}}
+
+var compareTestPartial = {"originalQuery":{"l":"2022,6,3","u":"Lorraine,Blaine,Brianna","d":"Jeff_M"},"rotationLabel":{"year":2022,"month":6,"version":3,"custom":"","mergedMonth":24270,"shortLabelString":""},"artists":{"up":["Lorraine","Lorraine","Blaine","Blaine","Brianna","Brianna"],"down":["Jeff M","Jeff M"],"feat":[]},"templateInfo":{"up":{"selectedTemplateBase":"u00","snapInches":18,"adjustments":[null,null,null,null,null,null,[]]},"down":{"selectedTemplateBase":"d00","snapInches":18,"adjustments":[null,null,[]]},"feat":{"selectedTemplateBase":"defaultA"},"legacyMode":true},"meta":{"appVersion":"v1","querySource":"from URL","queryIncomplete":true,"parseSuccessful":true,"warnings":["No featured artists found in query!"]}}
+
+var compareTestNoMatch = {"originalQuery":{"l":"2013,1","u":"asdf,sdf","d":"fsdafasd","f":"lkkl-3D","x":"v2,snap20-18","t":"u01,","au":"x2,1"},"rotationLabel": {"year":2013,"month":1,"version":1,"custom":"","mergedMonth":24157,"shortLabelString":""},"artists":{"up":["asdf","asdf","sdf","sdf"],"down":["fsdafasd","fsdafasd"],"feat":[{"name":"lkkl","type":"3D"}]},"templateInfo":{"up":{"selectedTemplateBase":"u01","snapInches":"20","adjustments":[null,null,null,null,[]]},"down":{"selectedTemplateBase":"d00","snapInches":"18","adjustments":[null,null,[]]},"feat":{"selectedTemplateBase":"defaultA"},"legacyMode":false},"meta":{"appVersion":"v2","querySource":"from URL","queryIncomplete":null,"parseSuccessful":true,"warnings":[]}}
+
+var checkMatchRotationLabel = function (goodRotation, testRotation) {
+	var goodQuery = goodRotation.originalQuery;
+	var testQuery = testRotation.originalQuery;
+	var goodL = goodRotation.rotationLabel;
+	var testL = testRotation.rotationLabel;
+	var result = null;
+	if (goodQuery.l && testQuery.l) {
+		if (goodQuery.l === testQuery.l) {
+			result = 'perfect'
+		} else if (
+			(goodL.mergedMonth
+			=== testL.mergedMonth)
+			|| goodQuery.l.includes(testQuery.l)
+			|| testQuery.l.includes(goodQuery.l)
+		) {
+			result = 'partial'
+		} else {
+			result = 'no'
+		}
+	} else {
+		result = 'no'
+	}
+	return result;
+};
+
+var checkMatchRotationFloor = function (goodRotation, testRotation, floor) {
+	var short = floor[0];
+	var goodQuery = goodRotation.originalQuery;
+	var testQuery = testRotation.originalQuery;
+	var result = null;
+	if (goodQuery[short] && testQuery[short]) {
+		if (goodQuery[short] === testQuery[short]) {
+			result = 'perfect'
+		} else if (
+			goodQuery[short].includes(testQuery[short])
+			|| testQuery[short].includes(goodQuery[short])
+		) {
+			if (
+				goodQuery[short].includes(',')
+				&& testQuery[short].includes(',')
+			) {
+				result = 'partial'
+			} else {
+				result = 'inconclusive'
+			}
+		} else {
+			result = 'no'
+		}
+	} else {
+		result = 'no'
+	}
+	return result;
+};
+
+var checkMatchRotationOptional = function (goodRotation, testRotation, label) {
+	var goodQuery = goodRotation.originalQuery;
+	var testQuery = testRotation.originalQuery;
+	var result = null;
+	if (goodQuery[label] && testQuery[label]) {
+		if (goodQuery[label] === testQuery[label]) {
+			result = 'perfect'
+		} else if (
+			goodQuery[label].includes(testQuery[label])
+			|| testQuery[label].includes(goodQuery[label])
+		) {
+			result = 'partial'
+		} else {
+			result = 'no'
+		}
+	} else if (!goodQuery[label] && !testQuery[label]) {
+		result = 'inconclusive'
+	} else {
+		result = 'no'
+	}
+	return result;
+};
+
+var rotationMatchReport = function (good, test) {
+	var matchChecks = {
+		label: checkMatchRotationLabel(good, test),
+		up: checkMatchRotationFloor(good, test, 'up'),
+		down: checkMatchRotationFloor(good, test, 'down'),
+		feat: checkMatchRotationFloor(good, test, 'feat'),
+		bareMinimumMatch: null,
+		au: checkMatchRotationOptional(good, test, 'au'),
+		ad: checkMatchRotationOptional(good, test, 'ad'),
+		x: checkMatchRotationOptional(good, test, 'x'),
+		remainderMatch: null,
+	};
+	// BARE MINIMUM SUMMARY
+	if (
+		matchChecks.label === 'perfect'
+		&& matchChecks.up === 'perfect'
+		&& matchChecks.down === 'perfect'
+		&& matchChecks.feat === 'perfect'
+	) {
+		matchChecks.bareMinimumMatch = 'perfect'
+	} else if (
+		matchChecks.label === 'no'
+		&& (
+			matchChecks.up === 'no'
+			|| matchChecks.up === 'inconclusive'
+		)
+		&& (
+			matchChecks.down === 'no'
+			|| matchChecks.down === 'inconclusive'
+		)
+		&& matchChecks.feat === 'no'
+	) {
+		matchChecks.bareMinimumMatch = 'no'
+	} else {
+		matchChecks.bareMinimumMatch = 'partial'
+	}
+	// REMAINDER SUMMARY
+	if (
+		(
+			matchChecks.au === 'perfect'
+			|| matchChecks.au === 'inconclusive'
+		)
+		&& (
+			matchChecks.ad === 'perfect'
+			|| matchChecks.ad === 'inconclusive'
+		)
+		&& (
+			matchChecks.x === 'perfect'
+			|| matchChecks.x === 'inconclusive'
+		)
+	) {
+		matchChecks.remainderMatch = 'perfect'
+	} else if (
+		(
+			matchChecks.au === 'no'
+			|| matchChecks.au === 'inconclusive'
+		)
+		&& (
+			matchChecks.ad === 'no'
+			|| matchChecks.ad === 'inconclusive'
+		)
+		&& (
+			matchChecks.x === 'no'
+			|| matchChecks.x === 'inconclusive'
+		)
+	) {
+		matchChecks.remainderMatch = 'no'
+	} else {
+		matchChecks.remainderMatch = 'partial'
+	}
+	// ALL DONE
+	return {
+		testRotation: test,
+		comparedRotation: good,
+		matchChecks: matchChecks
+	}
+};
+
+// checking whether a possibly-truncated URL is (likely) present in full in history:
+
+var detectRotationPartialMatch = function (good, test) {
+	var temp = rotationMatchReport(good, test);
+	return temp.matchChecks.bareMinimumMatch !== 'no';
+};
+
+// checking duplicate rotations by their most important data alone:
+
+var detectRotationPerfectMatch = function (good, test) {
+	var temp = rotationMatchReport(good, test);
+	return temp.matchChecks.bareMinimumMatch === 'perfect'
+		&& temp.matchChecks.remainderMatch === 'perfect'
+};
+
+  //---------------------------------------------------//
+ /*   COMPARING ONE ROTATION WITH ALL HISTORY ITEMS   */
+//---------------------------------------------------//
+
+var getRotationMatches = function (historyArray, testRotation) {
+	var result = [];
+	var historyArray = historyArray || makeFullHistory();
+	historyArray.forEach(function (historyItem) {
+		var partialMatch = detectRotationPartialMatch(historyItem, testRotation);
+		if (partialMatch) {
+			result.push(rotationMatchReport(historyItem, testRotation));
+		}
+	})
+	return result;
+};
+
+var detectDuplicateRotationInHistory = function (historyArray, testRotation) {
+	var result = false;
+	historyArray.forEach(function (historyItem) {
+		var match = detectRotationPerfectMatch(historyItem, testRotation);
+		if (match) {
+			result = true;
+		}
+	})
+	return result;
+};
+
+var findHighestVersionForMonth = function (historyArray, year, month) {
+	var latestVersionFound = 0;
+	historyArray.forEach(function (rotation) {
+		if (
+			rotation.rotationLabel.month === month
+			&& rotation.rotationLabel.year === year
+		) {
+			latestVersionFound = Math.max(rotation.rotationLabel.version, latestVersionFound);
+		}
+	});
+	return latestVersionFound;
+}
+
+var isLatestRotationInHistory = function (historyArray, rotation) {
+	var targetMonth = rotation.rotationLabel.month;
+	var targetYear = rotation.rotationLabel.year;
+	var targetVersion = rotation.rotationLabel.version;
+	var highestVersion = findHighestVersionForMonth(historyArray, targetYear, targetMonth);
+	var result = highestVersion <= targetVersion ? true : false;
+	return result;
+};
+
+var incrementVersionNumberBasedOnHistory = function (historyArray, year, month) {
+	return findHighestVersionForMonth(historyArray, year, month) + 1;
+};
+
+  //----------------------------------------//
+ /*   INTERACTING WITH A NEW HISTORY ROW   */
+//----------------------------------------//
 
 var test = ['test', 'test', null, null, 'test'];
 var literalTest = ['test', 'test', 'empty#3', 'empty#4', 'test'];

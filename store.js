@@ -14,7 +14,7 @@ var historyStore = {
 		practicalHistory: function (state, getters) {
 			var fullHistory = JSON.parse(JSON.stringify(getters.fullHistory));
 			return fullHistory.filter(function (rotation) {
-				return isLatestRotation(rotation, fullHistory);
+				return isLatestRotationInHistory(fullHistory, rotation);
 			})
 		},
 	},
@@ -40,7 +40,7 @@ var historyStore = {
 		},
 		historyAddSingleHistoryItem: function (context, newHistoryItem) {
 			var fullHistoryArray = JSON.parse(JSON.stringify(context.state.fullHistory));
-			var duplicate = detectDuplicateRecord(fullHistoryArray, newHistoryItem);
+			var duplicate = detectDuplicateRotationInHistory(fullHistoryArray, newHistoryItem);
 			if (!duplicate) {
 				fullHistoryArray.push(newHistoryItem);
 				fullHistoryArray = sortHistoryRecords(fullHistoryArray);
