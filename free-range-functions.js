@@ -445,11 +445,14 @@ var makeRotationObjectFromQuery = function (queryObject, querySource) {
 		result.meta.warnings.push('No downstairs artists found in query!');
 	}
 	// populate adjustments
+	// IMPORTANT: the uncompacted adjustments array gets inserted in an array
+	// at the index for the half slot count (so adjustments get blanked out if
+	// the slot quantity changes, but returns if the slot quantity changes back!)
 	var upHalfSlots = result.artists.up.length;
-	result.templateInfo.up.adjustments =
+	result.templateInfo.up.adjustments[upHalfSlots] =
 		makeAdjustmentsUncompact(queryObject.au, upHalfSlots);
 	var downHalfSlots = result.artists.down.length;
-	result.templateInfo.down.adjustments =
+	result.templateInfo.down.adjustments[downHalfSlots] =
 		makeAdjustmentsUncompact(queryObject.ad, downHalfSlots);
 	// populate templates (if encoded in query)
 	if (queryObject.t) {
@@ -694,7 +697,6 @@ var measurementLabelRotation = function (coords, x, y) {
 //--------------------------//
 
 var featLinesTotal = function (featRawLines) {
-	console.log(featRawLines)
 	var rawSum = featRawLines.map(function (rawLine) {
 		return getLengthFromLineCoords(rawLine);
 	});
@@ -1023,6 +1025,10 @@ var snapAllShortSegments = function (_complexSlots, threshold, priority) {
 
 var getSnappedFusedSlots = function () {
 	// TODO move this
+};
+
+var getSnappedFusedSlotsFlat = function () {
+	// TODO move this also
 };
 
 var getSnappedFusedSlotsNeedingLabels = function (lineArrayArray) {

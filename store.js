@@ -602,13 +602,15 @@ var store = new Vuex.Store({
 			var snappedFusedSlots = getters.snappedFusedSlots; //!
 			var snappedSlots = {}
 			limitedFloorNames.forEach(function (floorName) {
+				var floorResult = [];
 				var lineSegmentFragments = snappedFusedSlots[floorName];
 				lineSegmentFragments.forEach(function (lineSegment) {
 					lineSegment.forEach(function (line) {
 						snappedSlots[floorName] = snappedSlots[floorName] || [];
-						snappedSlots[floorName].push(line);
+						floorResult.push(line);
 					})
 				})
+				snappedSlots[floorName] = floorResult;
 			})
 			return snappedSlots;
 		},
