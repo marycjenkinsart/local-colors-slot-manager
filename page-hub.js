@@ -198,13 +198,15 @@ var hubPage = Vue.component('hub-page', {
 					From <strong>{{historyItemsRange[0]}}</strong><br/>
 					to <strong>{{historyItemsRange[1]}}</strong>
 				</p>
-				<p
-					v-if="displayHistoryGaps === 1"
-				>({{displayHistoryGaps}} gap)</p>
-				<p
-					v-if="displayHistoryGaps !== 1"
-				>({{displayHistoryGaps}} gaps)</p>
 				<p>
+					<span
+						v-if="displayHistoryGaps === 1"
+					>({{displayHistoryGaps}} gap)</span>
+					<span
+						v-if="displayHistoryGaps !== 1"
+					>({{displayHistoryGaps}} gaps)</span>
+					<span>
+				</p>
 		<hr style="margin-top: 10px;">
 				<p class="hint">Currently, rotation history is updated manually.
 					Inform Mary if there is any missing layout history.</p>

@@ -6,7 +6,7 @@ var wizardPage = Vue.component('wizard', {
 		return {
 			wizardQuizChapters: makeWizardQuizChapters(),
 			newArtistName: '',
-			showTips: true,
+			showTips: false,
 		}
 	},
 	computed: {
