@@ -26,17 +26,13 @@ var errorPage = Vue.component('error-page', {
 		},
 		partialMatchRotations: function () { // NOTE: an array of rotations!!
 			var tempHistory = this.$store.getters.rotationMatches || []
-			var selfself = this;
 			var filtered = tempHistory.filter(function (item) {
-				var result = true;
-				if (item.comparedRotation) {
-					var result = !detectRotationPerfectMatch(item.comparedRotation, selfself.rotation);
-				}
-				return result;
+				return item.comparedRotation.meta.querySource !== 'from URL';
 			});
 			var result = filtered.map(function (item) {
 				return item.comparedRotation;
 			})
+			console.log({result})
 			return result;
 		},
 		singlePartialMatch: function () {
@@ -68,8 +64,11 @@ var errorPage = Vue.component('error-page', {
 		// 		query: this.$route.query,
 		// 	});
 		// },
-		clickedOnHistoryRotation: function (index) {
-			// TODO
+		clickedOnChooseFromHistory: function () {
+			this.$router.push({
+				path: '/choose',
+				query: this.$route.query,
+			});
 		},
 		clickedOnMatchedRotation: function (index) {
 			var destination = this.returnTo || '/hub';
@@ -113,28 +112,30 @@ var errorPage = Vue.component('error-page', {
 			>{{warning}}</li>
 		</ul>
 	</p>
-	<h1>Recovery options:</h1>
-	<p> Try to manually copy and paste the URL rather than click a link that may have been converted into a link automatically. Alternatively, click one of the buttons below to {{viewOrLoad}} fresh data.</p>
+	<p>Choose an option below to continue.</p>
 	<div
 		v-if="partialMatchRotations.length > 0"
 	>
-		<h3>
+		<h2
+			style="color: #000;"
+		>
 			<span
 				v-if="singlePartialMatch"
 			>Partial data match found!</span>
 			<span
 				v-if="!singlePartialMatch"
 			>Partial data matches found!</span>
-		</h3>
+		</h2>
 		<p
 			v-if="singlePartialMatch"
-		>The following rotation has data in common with the incomplete URL query. Did you mean to {{viewOrLoad}} this one, perhaps?</p>
+		>The following rotation has data in common with the incomplete URL query. Did you mean to {{viewOrLoad}} this?</p>
 		<p
 			v-if="!singlePartialMatch"
-		>The following rotations have data in common with incomplete URL query. Did you mean to {{viewOrLoad}} one of these, perhaps?</p>
+		>The following rotations have data in common with the incomplete URL query. Did you mean to {{viewOrLoad}} one of these?</p>
 		<div class="flex-cards">
 			<rotation-button-row
 				v-for="(matchedItem, index) in partialMatchRotations"
+				:key="index"
 				:rotation="matchedItem"
 				header-label="Partial match"
 				:button-label="viewOrLoadCap"
@@ -145,29 +146,38 @@ var errorPage = Vue.component('error-page', {
 		</div>
 	</div>
 	<div>
-		<h3>Historical rotations</h3>
-		<p>From the archives:</p>
+		<h2
+			style="color: #000;"
+		>Historical rotations</h2>
+		<p>{{viewOrLoadCap}} a rotation from the archives:</p>
 		<div class="flex-cards">
 			<rotation-button-row
 				:rotation="latestHistoryItem"
 				header-label="Most recent data"
 				:button-label="viewOrLoadCap"
-				@clicked-on-rotation="clickedOnLatestRotation()"
+				@clicked-on-rotation="clickedOnLatestRotation"
 			>
 				<h3 class="flat">{{makeShortLabel(latestHistoryItem.rotationLabel)}}</h3>
 			</rotation-button-row>
 			<div class="flex-card-wide">
 				<div class="card-head">
-					<span>All historical data</span>
+					<span>Other historical data</span>
 				</div>
 				<div class="card-body">
 					<p>
-						{{viewOrLoadCap}} a specific rotation:
+						From <strong>{{historyItemsRange[0]}}</strong><br/>
+						to <strong>{{historyItemsRange[1]}}</strong>
 					</p>
+					<p
+						v-if="displayHistoryGaps === 1"
+					>({{displayHistoryGaps}} gap)</p>
+					<p
+						v-if="displayHistoryGaps !== 1"
+					>({{displayHistoryGaps}} gaps)</p>
 					<p>
 						<button
 							class="big_button"
-							disabled
+							@click="clickedOnChooseFromHistory"
 						>Choose a rotation
 						</button>
 					</p>

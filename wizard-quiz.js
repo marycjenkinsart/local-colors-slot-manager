@@ -44,12 +44,6 @@ var wizardQuiz = [
 				enabled: "dummyTrue",
 				action: "dummyNada",
 				goTo: 10,
-			},
-			{
-				label: "DEBUG",
-				enabled: "dummyTrue",
-				action: "dummyNada",
-				goTo: 80,
 			}
 		],
 	},
@@ -430,7 +424,8 @@ var wizardQuiz = [
 		category: "Slot assignments",
 		title: "Assign upstairs artists to slots.",
 		subtitles: [
-			"Next we'll choose their hanging slots."
+			"Next we'll place artists in their final slots on each floor. If you're using a phone, you may want to turn it sideways for this one!",
+			"Upstairs first.",
 		],
 		formName: "insertUpstairsSlots",
 		dataNames: [],
@@ -454,7 +449,9 @@ var wizardQuiz = [
 		questionID: 101,
 		category: "Slot assignments",
 		title: "Assign downstairs artists to slots.",
-		subtitles: [],
+		subtitles: [
+			"Now downstairs.",
+		],
 		formName: "insertDownstairsSlots",
 		dataNames: [],
 		alsoReset: [],

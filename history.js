@@ -13,6 +13,7 @@ var webAppHistory = [
 ];
 
 var reconstructedHistory = [
+	'https://marycjenkinsart.github.io/local-colors-slot-manager/#/view?l=2022,1&u=GUEST-1,Bill,J._Clay-1,Jeff_M.,Emily,Blaine&d=(mix)-3,Pam,Mary,Jan,(mix)-1&f=Teri-2D-2&x=v2&t=u01,&au=x3,-6,x3,-9&ad=33,x1,52,x1,46,x1,31,x1,26',
 	// 'https://marycjenkinsart.github.io/local-colors-slot-manager/#/view?l=2021,12,2&u=GUEST-1,Bill,J._Clay-1,Jeff_M.,Emily,Blaine&d=(mix)-3,Pam,Mary,Jan,(mix)-1&f=Teri-2D-2&x=v2&t=u01,&au=x3,-6,x3,-9&ad=33,x1,52,x1,46,x1,31,x1,26',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/#/view?l=2021,12&u=GUEST-1,Bill,J._Clay-1,Jeff_M.,Emily,Blaine&d=Adam-1,Nuha,Pam,Mary,Jan,Adam-1&f=Teri-2D-2&x=v2&t=u01,&au=x3,-6,x3,-9&ad=33,x1,52,x1,46,x1,31,x1,26',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/#/view?l=2021,11&u=GUEST-1,Alicia,Mary,Teri,Adam,Nuha&d=J._Clay-1,Jeff_M.,Emily,Blaine,Bill,Jan&f=Pam-2D-2&x=v2&t=u01,&au=x4,-13,x1,-27,x1,-39&ad=10,x1,18,x1,11,x3,6',
@@ -76,6 +77,34 @@ var sortHistoryRecords = function (historyArray) {
 	return newArray;
 };
 
+var countHistoryGaps = function (historyArray) {
+	var tally = 0;
+	var mergedMonth = historyArray[0].rotationLabel.mergedMonth;
+	historyArray.forEach(function (item) {
+		console.log({
+			month: item.rotationLabel.month,
+			year: item.rotationLabel.year,
+			mergedMonth: item.rotationLabel.mergedMonth,
+		})
+		var newMergedMonth = item.rotationLabel.mergedMonth;
+		var dif = Math.abs(mergedMonth - newMergedMonth);
+		if (dif > 1) {
+			tally += 1;
+		}
+		mergedMonth = newMergedMonth;
+	})
+	return tally;
+};
+
+var getHistoryRange = function (historyArray) {
+	var oldest = getLongLabel(historyArray[historyArray.length-1].rotationLabel, true);
+	var newest = getLongLabel(historyArray[0].rotationLabel, true);
+	return [
+		oldest,
+		newest
+	];
+};
+
   //-----------------------------//
  /*   COMPARING TWO ROTATIONS   */
 //-----------------------------//
@@ -93,13 +122,15 @@ var checkMatchRotationLabel = function (goodRotation, testRotation) {
 	var testL = testRotation.rotationLabel;
 	var result = null;
 	if (goodQuery.l && testQuery.l) {
+		var goodMonth = goodL.month || 0;
+		var goodYear = goodL.year || 0;
+		var testMonth = testL.month || -1;
+		var testYear = testL.year || -1;
 		if (goodQuery.l === testQuery.l) {
 			result = 'perfect'
 		} else if (
-			(goodL.mergedMonth
-			=== testL.mergedMonth)
-			|| goodQuery.l.includes(testQuery.l)
-			|| testQuery.l.includes(goodQuery.l)
+			goodMonth === testMonth
+			&& goodYear === testYear
 		) {
 			result = 'partial'
 		} else {

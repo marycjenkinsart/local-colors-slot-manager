@@ -60,6 +60,10 @@ button:disabled {
 	padding: 8px 16px;
 	margin-right: 8px;
 }
+.medium_button {
+	font-size: 1rem;
+	padding: 4px 8px;
+}
 
 a {
 	color: #000;
@@ -256,6 +260,7 @@ button.insertable:hover {
 	flex: 0 1 100%;
 }
 .card-head {
+	font-size: 1.2rem;
 	font-weight: 600;
 	background-color:#910000;
 	color: #fff;

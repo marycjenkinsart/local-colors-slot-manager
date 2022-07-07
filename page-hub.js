@@ -72,6 +72,12 @@ var hubPage = Vue.component('hub-page', {
 				query: this.$route.query,
 			});
 		},
+		clickedOnChooseFromHub: function () {
+			this.$router.push({
+				path: '/choose',
+				query: this.$route.query,
+			});
+		}
 	},
 	template: /*html*/`
 <div
@@ -99,8 +105,8 @@ var hubPage = Vue.component('hub-page', {
 				<span>View</span>
 			</div>
 			<div class="card-body">
-				<p>Preview a specific rotation.</p>
-				<h3>Most recent data</h3>
+				<p>Preview a specific rotation. (This may change what data is currently loaded.)</p>
+				<h3>Most recent map:</h3>
 				<div>
 					<button
 						class="impressive-button"
@@ -119,7 +125,7 @@ var hubPage = Vue.component('hub-page', {
 				<div
 					v-if="!importDataIsPresent || latestDataTest < 0"
 				>
-					<h3>Loaded data</h3>
+					<h3>Loaded data:</h3>
 					<div>
 						<button
 							class="impressive-button"
@@ -127,12 +133,12 @@ var hubPage = Vue.component('hub-page', {
 						>{{makeShortLabel(currentDataLabel)}}</button>
 					</div>
 				</div>
-				<h3>All historical data</h3>
-				<p>Load (and preview) a different rotation.</p>
+				<h3>Historical maps:</h3>
+				<p>Load an older rotation.</p>
 				<div>
 					<button
 						class="impressive-button"
-						disabled
+						@click="clickedOnChooseFromHub"
 					>Choose a rotation</button>
 				</div>
 				<hr style="margin-top: 10px;">
@@ -145,7 +151,7 @@ var hubPage = Vue.component('hub-page', {
 			</div>
 			<div class="card-body">
 				<p>Edit the currently-loaded rotation.</p>
-				<h3>Rotation wizard</h3>
+				<h3>Rotation wizard:</h3>
 				<p>A guided questionnaire for producing simple rotations.</p>
 				<div>
 					<button
@@ -153,7 +159,7 @@ var hubPage = Vue.component('hub-page', {
 						@click="goToWizard"
 					>Go to wizard</button>
 				</div>
-				<h3>Advanced editor</h3>
+				<h3>Advanced editor:</h3>
 				<p>The original rotation editor for very granular control.</p>
 				<div>
 					<button
@@ -174,27 +180,32 @@ var hubPage = Vue.component('hub-page', {
 					@click="goToHistoryViewer"
 				>Explore history</button>
 				<hr style="margin-top: 10px;">
-				<p class="hint">Change which records are included in this view with "Manage Records."</p>
+				<p class="hint">Add more records to this view with "Manage."</p>
 			</div>
 		</div>
 		<div class="flex-card">
 			<div class="card-head">
-				<span>Manage Records</span>
+				<span>Manage</span>
 			</div>
 			<div class="card-body">
-				<p>Manage history data for this session. (Import tab or return-delimited links from Google Sheets or elsewhere.)</p>
+				<p>Manage history data for this session.</p>
 				<button
 					class="impressive-button"
 					disabled
-				>Manage history</button>
-				<h3>History items found:</h3>
-				<ul>
-					<li
-						v-for="month in displayHistoryItems"
-					>- {{month}}
-					</li>
-				</ul>
-				<hr style="margin-top: 10px;">
+				>Manage data</button>
+				<h3>History items:</h3>
+				<p>
+					From <strong>{{historyItemsRange[0]}}</strong><br/>
+					to <strong>{{historyItemsRange[1]}}</strong>
+				</p>
+				<p
+					v-if="displayHistoryGaps === 1"
+				>({{displayHistoryGaps}} gap)</p>
+				<p
+					v-if="displayHistoryGaps !== 1"
+				>({{displayHistoryGaps}} gaps)</p>
+				<p>
+		<hr style="margin-top: 10px;">
 				<p class="hint">Currently, rotation history is updated manually.
 					Inform Mary if there is any missing layout history.</p>
 			</div>

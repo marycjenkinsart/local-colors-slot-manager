@@ -1165,7 +1165,7 @@ var compareLabelAges = function (first, second) {
 	}
 };
 
-var getLongLabel = function (labelObject) {
+var getLongLabel = function (labelObject, omitVersion) {
 	var year = labelObject.year || 1970;
 	var month = labelObject.month || 13;
 	var version = labelObject.version || 1;
@@ -1180,18 +1180,11 @@ var getLongLabel = function (labelObject) {
 		]
 		var monthName = monthMap[parseInt(month,10) - 1] || 'ERROR';
 		result = monthName + ' ' + year
-		if (version > 1) {
+		if (version > 1 && !omitVersion) {
 			result += ' v' + version;
 		}
 	}
 	return result;
-};
-
-var getDifferenceInMonths = function (first, second) {
-	console.log({year:first.year,month:first.month})
-	var firstMonths = first.year * 12 + first.month;
-	var secondMonths = second.year * 12 + second.month;
-	return Math.abs(firstMonths - secondMonths);
 };
 
 var makeSlotCountPretty = function (number) {

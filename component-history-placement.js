@@ -144,19 +144,19 @@ Vue.component('history-placement', {
 	template: /*html*/`
 <div>
 	<p>
-	<span>Artists left to place: </span>
-	<span
-		v-if="visibleButtons.length === 0 && !insertName"
-	><strong>All done!</strong></span>
-	<button
-		v-for="artist in visibleButtons"
-		@click="highlightNameToInsert(artist.name)"
-		class="insertion-button"
-		:class="artist.name === insertName ? 'insertable-highlighted' : 'insertable'"
-	>{{artist.displayName}}</button>
-	<span
-		v-if="!!insertName"
-	>Placing the name <strong>{{insertName}}</strong></span>
+		<span class="red">Artists left to place:</span>
+		<span
+			v-if="visibleButtons.length === 0 && !insertName"
+		><strong>All done!</strong></span>
+		<button
+			v-for="artist in visibleButtons"
+			@click="highlightNameToInsert(artist.name)"
+			class="insertion-button"
+			:class="artist.name === insertName ? 'insertable-highlighted' : 'insertable'"
+		>{{artist.displayName}}</button>
+		<span
+			v-if="!!insertName"
+		>Placing the name <strong>{{insertName}}</strong></span>
 	</p>
 	</history-row>
 	<history-row

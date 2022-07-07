@@ -17,6 +17,13 @@ var mixinsHistory = {
 		practicalHistory: function () {
 			return this.$store.getters.practicalHistory;
 		},
+		historyItemsRange: function () {
+			return getHistoryRange(this.fullHistory);
+		},
+		displayHistoryGaps: function () {
+			var result = countHistoryGaps(this.fullHistory);
+			return result === 0 ? 'no' : result;
+		},
 	},
 	methods: {
 		setFloor: function (string) {

@@ -23,6 +23,10 @@ var routes = [
 		path: '/error',
 		component: errorPage
 	},
+	{
+		path: '/choose',
+		component: choosePage
+	},
 ];
 
 var router = new VueRouter({

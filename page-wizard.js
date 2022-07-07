@@ -6,9 +6,13 @@ var wizardPage = Vue.component('wizard', {
 		return {
 			wizardQuizChapters: makeWizardQuizChapters(),
 			newArtistName: '',
+			showTips: true,
 		}
 	},
 	computed: {
+		rotation: function () {
+			return this.$store.getters.rotation;
+		},
 		// the below is set up so these values can be kept in vuex store
 		// but also be the target of v-model
 		swapFloors: {
@@ -556,6 +560,9 @@ var wizardPage = Vue.component('wizard', {
 		self: function () {
 			return this;
 		}, // Stack overflow magic
+		setTips: function (bool) {
+			this.showTips = bool;
+		},
 		resetQuizAnswerByName: function (name) {
 			this.$store.dispatch('wizardResetQuizAnswer', name);
 		},
@@ -679,6 +686,7 @@ var wizardPage = Vue.component('wizard', {
 		>{{subtitle}}</p>
 		<div
 			v-if="currentForm === 'wizardStart'"
+			id="wizard-start-q"
 		>
 			<div
 				class="manager-box-modest"
@@ -696,6 +704,7 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'selectMonth'"
+			id="wizard-set-label-q"
 		>
 			<div
 				class="manager-box-modest"
@@ -724,6 +733,7 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'selectSwapFloors'"
+			id="wizard-set-swap-q"
 		>
 			<div
 				class="manager-box-modest"
@@ -761,6 +771,7 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'selectGuestPresent'"
+			id="wizard-set-guest-present-q"
 		>
 			<div
 				class="manager-box-modest"
@@ -786,6 +797,7 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'selectGuestSharesFeatured'"
+			id="wizard-set-guest-shares-featured-q"
 		>
 			<div
 				class="manager-box-modest"
@@ -811,6 +823,7 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'selectFeaturedType'"
+			id="wizard-set-who-is-featured-q"
 		>
 			<div
 				class="manager-box-modest"
@@ -852,6 +865,7 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'selectFeatured2DName'"
+			id="wizard-set-featured-2d-name-q"
 		>
 			<div
 				class="manager-box-modest"
@@ -878,6 +892,7 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'selectFeatured3DName'"
+			id="wizard-set-featured-3d-name-q"
 		>
 			<div
 				class="manager-box-modest"
@@ -899,6 +914,7 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'selectFeaturedGroupTheme'"
+			id="wizard-set-featured-group-theme-q"
 		>
 			<div
 				class="manager-box-modest"
@@ -920,6 +936,7 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'selectDepartingArtists'"
+			id="wizard-set-departing-q"
 		>
 			<div
 				class="manager-box-modest"
@@ -942,6 +959,7 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'selectArrivingArtists'"
+			id="wizard-set-arriving-q"
 		>
 			<div
 				class="manager-box-modest"
@@ -979,6 +997,7 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'selectArtistSlotSizeChanges'"
+			id="wizard-set-slot-size-changes-q"
 		>
 			<div
 				class="manager-box-modest"
@@ -1004,6 +1023,7 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'selectNewArtistsNewFloor'"
+			id="wizard-set-reduce-limbo-q"
 		>
 			<div
 				class="manager-box-modest"
@@ -1022,11 +1042,11 @@ var wizardPage = Vue.component('wizard', {
 					>
 						<span><strong>{{makePrintName(artistName, slotSizeOptions[artistName])}}:</strong></span>
 						<button
-							style="font-size: 1rem;"
+							class="medium_button"
 							@click="assignLimboToFloor(artistName, 'up')"
 						>Send UPSTAIRS</button>
 						<button
-							style="font-size: 1rem;"
+							class="medium_button"
 							@click="assignLimboToFloor(artistName, 'down')"
 						>Send DOWNSTAIRS</button>
 					</p>
@@ -1064,13 +1084,14 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'selectArtistFloorAssignmentOverrides'"
+			id="wizard-set-overrides-q"
 		>
 			<div
 				class="manager-box-modest"
 			>
 				<h3
 					class="flat"
-				>Upstairs ({{afterOverridesSlotTotals.up}}):</h3>
+				>Upstairs (total slots: {{afterOverridesSlotTotals.up}}):</h3>
 				<p>
 					<button
 						class="big_button"
@@ -1087,7 +1108,7 @@ var wizardPage = Vue.component('wizard', {
 						><strong>{{makePrintName(artistName, slotSizeOptions[artistName])}}</strong></button>
 					</span>
 				</p>
-				<h3>Downstairs ({{afterOverridesSlotTotals.down}}):</h3>
+				<h3>Downstairs (total slots: {{afterOverridesSlotTotals.down}}):</h3>
 				<p>
 					<span
 						v-for="artistName in afterOverridesList.down"
@@ -1102,6 +1123,7 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'showArtistFloorAssignments'"
+			id="wizard-subtotal-results-q"
 		>
 			<div
 				class="manager-box-modest"
@@ -1120,28 +1142,44 @@ var wizardPage = Vue.component('wizard', {
 		</div>
 		<div
 			v-if="currentForm === 'insertUpstairsSlots'"
+			id="wizard-place-upstairs-slots"
 		>
+			<wizard-insertion-tips
+				:show-tips="showTips"
+				@set-tips="setTips($event)"
+			></wizard-insertion-tips>
+			<hr style="margin: 10px 0px;">
 			<history-placement></history-placement>
 			<history-header></history-header>
 			<history-table></history-table>
 		</div>
 		<div
 			v-if="currentForm === 'insertDownstairsSlots'"
+			id="wizard-place-downstairs-slots"
 		>
+			<wizard-insertion-tips
+				:show-tips="showTips"
+				@set-tips="setTips($event)"
+			></wizard-insertion-tips>
+			<hr style="margin: 10px 0px;">
 			<history-placement></history-placement>
 			<history-header></history-header>
 			<history-table></history-table>
 		</div>
 		<div
 			v-if="currentForm === 'showFinalPreview'"
+			id="wizard-confirm-final-preivew"
 		>
 		<p>
-			<map-preview></map-preview>
+			<map-preview
+				:rotation="rotation"
+			></map-preview>
 		</p>
 			
 		</div>
 		<div
 			v-if="currentForm === 'copyResult'"
+			id="wizard-copy-result"
 		>
 			<div
 				class="manager-box-modest"
