@@ -179,6 +179,7 @@ Vue.component('map-preview', {
 			};
 			if (this.secretClickCount === 5) {
 				this.secretClickCount = 0;
+				scrollToTop();
 				this.$router.push({
 					path: '/hub',
 					query: this.$route.query,

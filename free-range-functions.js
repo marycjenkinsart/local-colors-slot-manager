@@ -35,6 +35,10 @@ var inchesToTemplateNumber = function (number) {
 
 var limitedFloorNames = ['up','down'];
 
+var scrollToTop = function () {
+	window.scrollTo(0,0)
+};
+
   //--------------------------//
  /*   ARTIST DATA HANDLING   */
 //--------------------------//

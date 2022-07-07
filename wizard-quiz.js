@@ -465,7 +465,6 @@ var wizardQuiz = [
 			{
 				label: "Next",
 				enabled: "allFreeDownstairsNamesPlaced",
-				// action: "lockAnswers",
 				action: "loadFinalWizardResults",
 				goTo: 110,
 			}

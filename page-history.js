@@ -7,6 +7,7 @@ var historyPage = Vue.component('history', {
 		goToHub: function () {
 			this.setHighlightedName('');
 			this.setInsertName('');
+			scrollToTop();
 			this.$router.push({
 				path: '/hub',
 				query: this.$route.query,

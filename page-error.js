@@ -68,6 +68,7 @@ var errorPage = Vue.component('error-page', {
 		// 	});
 		// },
 		clickedOnChooseFromHistory: function () {
+			scrollToTop();
 			this.$router.push({
 				path: '/choose',
 				query: this.$route.query,
@@ -79,6 +80,7 @@ var errorPage = Vue.component('error-page', {
 			this.$store.dispatch('loadRotation', target);
 			this.$store.dispatch('setReturnTo', '');
 			this.$store.dispatch('setImportWarningFromURL', '');
+			scrollToTop();
 			this.$router.push({
 				path: destination,
 				query: target.originalQuery,
@@ -90,6 +92,7 @@ var errorPage = Vue.component('error-page', {
 			this.$store.dispatch('loadRotation', target);
 			this.$store.dispatch('setReturnTo', '');
 			this.$store.dispatch('setImportWarningFromURL', '');
+			scrollToTop();
 			this.$router.push({
 				path: destination,
 				query: target.originalQuery,

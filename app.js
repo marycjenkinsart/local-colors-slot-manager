@@ -34,6 +34,7 @@ var app = new Vue({
 				this.$store.dispatch('setReturnTo', '/view');
 			}
 			if (this.$route.path !== '/error') {
+				scrollToTop();
 				this.$router.push({
 					path: '/error',
 					query: this.$route.query,

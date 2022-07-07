@@ -214,6 +214,7 @@ var monthViewPage = Vue.component('month-view', {
 			this.$store.dispatch('manageThis',value);
 		},
 		returnToHub: function () {
+			scrollToTop();
 			this.$router.push({
 				path: '/hub',
 				query: this.$route.query,

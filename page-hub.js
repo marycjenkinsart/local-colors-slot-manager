@@ -40,6 +40,7 @@ var hubPage = Vue.component('hub-page', {
 	methods: {
 		loadAndGoToView: function (rotationObject) {
 			this.$store.dispatch('loadRotation', rotationObject);
+			scrollToTop();
 			this.$router.push({
 				path: '/view',
 				query: rotationObject.originalQuery,
@@ -49,30 +50,35 @@ var hubPage = Vue.component('hub-page', {
 			this.loadAndGoToView(this.historyItems[0]);
 		},
 		goToViewImport: function () {
+			scrollToTop();
 			this.$router.push({
 				path: '/view',
 				query: this.$route.query,
 			});
 		},
 		goToHistoryViewer: function () {
+			scrollToTop();
 			this.$router.push({
 				path: '/history',
 				query: this.$route.query,
 			});
 		},
 		goToAdvancedEditMode: function () {
+			scrollToTop();
 			this.$router.push({
 				path: '/',
 				query: this.$route.query,
 			});
 		},
 		goToWizard: function () {
+			scrollToTop();
 			this.$router.push({
 				path: '/wizard',
 				query: this.$route.query,
 			});
 		},
 		clickedOnChooseFromHub: function () {
+			scrollToTop();
 			this.$router.push({
 				path: '/choose',
 				query: this.$route.query,

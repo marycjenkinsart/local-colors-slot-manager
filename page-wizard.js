@@ -567,6 +567,7 @@ var wizardPage = Vue.component('wizard', {
 			this.$store.dispatch('wizardResetQuizAnswer', name);
 		},
 		initializeQ: function () {
+			scrollToTop();
 			var selfself = this;
 			this.currentQuestion.dataNames.forEach(function (item) {
 				selfself.resetQuizAnswerByName(item);
@@ -584,6 +585,7 @@ var wizardPage = Vue.component('wizard', {
 			this[action]();
 		},
 		lockAnswers: function () {
+			scrollToTop();
 			// Guess I dont need this?
 		},
 		incrementMergedMonth: function () {
@@ -628,6 +630,7 @@ var wizardPage = Vue.component('wizard', {
 		makeSlotCountPretty: makeSlotCountPretty,
 		makePrintName: makePrintName,
 		submitQuizResults: function () {
+			scrollToTop();
 			this.$store.dispatch(
 				'wizardSubmitQuizResults',
 				JSON.parse(JSON.stringify(this.workingRotation.quizResults))
@@ -635,30 +638,37 @@ var wizardPage = Vue.component('wizard', {
 			this.$store.dispatch('historySetSelectedFloor','up');
 		},
 		setSelectedFloorToUpstairs: function () {
+			scrollToTop();
 			this.$store.dispatch('historySetSelectedFloor','up');
 		},
 		setSelectedFloorToDownstairs: function () {
+			scrollToTop();
 			this.$store.dispatch('historySetSelectedFloor','down');
 		},
-		dummyNada: function () {},
+		dummyNada: function () {
+			scrollToTop();
+		},
 		loadFinalWizardResults: function () {
 			var results = JSON.parse(JSON.stringify(this.wizardResults));
 			console.log(results);
 			this.$store.dispatch('loadRotation', results);
 		},
 		returnToHub: function () {
+			scrollToTop();
 			this.$router.push({
 				path: '/hub',
 				query: this.$route.query,
 			});
 		},
 		returnToHubFreshQuery: function () {
+			scrollToTop();
 			this.$router.push({
 				path: '/hub',
 				query: this.$store.getters.rotation.originalQuery,
 			});
 		},
 		goToAdvancedEditorFreshQuery: function () {
+			scrollToTop();
 			this.$router.push({
 				path: '/',
 				query: this.$store.getters.rotation.originalQuery,

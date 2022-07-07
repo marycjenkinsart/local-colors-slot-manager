@@ -38,6 +38,7 @@ var choosePage = Vue.component('choose-page', {
 			this.$store.dispatch('loadRotation', target);
 			this.$store.dispatch('setReturnTo', '');
 			this.$store.dispatch('setImportWarningFromURL', '');
+			scrollToTop();
 			this.$router.push({
 				path: destination,
 				query: target.originalQuery,
@@ -49,6 +50,7 @@ var choosePage = Vue.component('choose-page', {
 			if (this.importWarningExists) {
 				destination = '/error';
 			}
+			scrollToTop();
 			this.$router.push({
 				path: destination,
 				query: this.$route.query,
