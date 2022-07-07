@@ -8,6 +8,10 @@ Vue.component('rotation-button-row', {
 			type: Object,
 			require: true,
 		},
+		buttonLabel: {
+			type: String,
+			require: true,
+		},
 	},
 	computed: {
 		fancyUpstairs: function () {
@@ -38,25 +42,24 @@ Vue.component('rotation-button-row', {
 		}
 	},
 	template: /*html*/`
-	<table
-		class="rotation-button-row"
-	>
-		<tr>
-			<td>
-				<button
-					class="big_button"
-					@click="clickedRotation"
-				>{{makeShortLabel(rotation.rotationLabel)}}
-				</button>
-			</td>
-			<td>
-				<strong>Up: </strong>{{upstairsString}}<br/>
-				<strong>Down: </strong>{{downstairsString}}
-			</td>
-			<td>
-				<strong>Featured: </strong>{{featuredString}}
-			</td>
-		</tr>
-	</table>
+<div class="flex-card-wide">
+	<div class="card-head">
+		<span>{{makeShortLabel(rotation.rotationLabel)}}</span>
+	</div>
+	<div class="card-body">
+		<p>
+			<strong>Featured: </strong>{{featuredString}}<br/>
+			<strong>Up: </strong>{{upstairsString}}<br/>
+			<strong>Down: </strong>{{downstairsString}}
+		</p>
+		<p>
+			<button
+				class="big_button"
+				@click="clickedRotation"
+			>{{buttonLabel}}
+			</button>
+		</p>
+	</div>
+</div>
 `
 });

@@ -15,6 +15,9 @@ var errorPage = Vue.component('error-page', {
 		viewOrLoad: function () {
 			return this.$store.getters.returnTo === '/view' ? 'view' : 'load'
 		},
+		viewOrLoadCap: function () {
+			return this.$store.getters.returnTo === '/view' ? 'View' : 'Load'
+		},
 		rotation: function () {
 			return this.$store.getters.rotation;
 		},
@@ -100,28 +103,54 @@ var errorPage = Vue.component('error-page', {
 	>
 		<h3>Partial data matches found!</h3>
 		<p>The following rotation(s) have data in common with existing URL query data. Did you mean to {{viewOrLoad}} one of these, perhaps?</p>
-		<p
-			v-for="(matchedItem, index) in partialMatchRotations"
-		>
-		<rotation-button-row
-			:rotation="matchedItem"
-			@clicked-on-rotation="clickedOnMatchedRotation(index)"
-		></rotation-button-row>
-		</p>
+		<div class="flex-cards">
+			<rotation-button-row
+				v-for="(matchedItem, key, index) in partialMatchRotations"
+				:rotation="matchedItem"
+				:button-label="viewOrLoadCap"
+				@clicked-on-rotation="clickedOnMatchedRotation(index)"
+			></rotation-button-row>
+		</div>
 	</div>
 	<div>
 		<h3>Historical rotations:</h3>
-		<p>To abandon the incomplete rotation data, click one of the buttons below to {{viewOrLoad}} an archived rotation:</p>
-		<p>
-			<button
-				class="big_button"
-			>Latest in history</button>
-		</p>
-		<p>
-			<button
-				class="big_button"
-			>Choose another historical rotation</button>
-		</p>
+		<p>Click one of the buttons below to abandon the bad data and {{viewOrLoad}} a previous rotation instead:</p>
+		<div class="flex-cards">
+			<div class="flex-card-wide">
+				<div class="card-head">
+					<span>Latest map found</span>
+				</div>
+				<div class="card-body">
+					<p>
+						Choose to {{viewOrLoad}} the most recent map:
+					</p>
+					<p>
+						<button
+							class="big_button"
+							disabled
+						>{{viewOrLoadCap}} latest
+						</button>
+					</p>
+				</div>
+			</div>
+			<div class="flex-card-wide">
+				<div class="card-head">
+					<span>Historical data</span>
+				</div>
+				<div class="card-body">
+					<p>
+						Choose to {{viewOrLoad}} a specific rotation from archives:
+					</p>
+					<p>
+						<button
+							class="big_button"
+							disabled
+						>Choose a previous rotation
+						</button>
+					</p>
+				</div>
+			</div>
+		</div>
 	</div>
 	<my-footer></my-footer>
 </div>

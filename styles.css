@@ -251,6 +251,10 @@ button.insertable:hover {
 	margin: 10px 0px;
 	flex: 0 1 48%;
 }
+.flex-card-wide {
+	margin: 10px 0px;
+	flex: 0 1 100%;
+}
 .card-head {
 	font-weight: 600;
 	background-color:#910000;
@@ -267,6 +271,9 @@ button.insertable:hover {
 @media screen and (min-width: 800px) {
     .flex-card {
 		flex: 0 1 24%;
+    }
+    .flex-card-wide {
+		flex: 0 1 48%;
     }
 }
 .impressive-button {
