@@ -105,7 +105,7 @@ var errorPage = Vue.component('error-page', {
 		<p>The following rotation(s) have data in common with existing URL query data. Did you mean to {{viewOrLoad}} one of these, perhaps?</p>
 		<div class="flex-cards">
 			<rotation-button-row
-				v-for="(matchedItem, key, index) in partialMatchRotations"
+				v-for="(matchedItem, index) in partialMatchRotations"
 				:rotation="matchedItem"
 				:button-label="viewOrLoadCap"
 				@clicked-on-rotation="clickedOnMatchedRotation(index)"
@@ -122,7 +122,7 @@ var errorPage = Vue.component('error-page', {
 				</div>
 				<div class="card-body">
 					<p>
-						Choose to {{viewOrLoad}} the most recent map:
+						{{viewOrLoadCap}} the most recent map ounf:
 					</p>
 					<p>
 						<button
@@ -139,7 +139,7 @@ var errorPage = Vue.component('error-page', {
 				</div>
 				<div class="card-body">
 					<p>
-						Choose to {{viewOrLoad}} a specific rotation from archives:
+						{{viewOrLoadCap}} a specific rotation from archives:
 					</p>
 					<p>
 						<button
