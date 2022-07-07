@@ -274,6 +274,7 @@ var loadedStore = {
 	// original query was, or other queries / rotation objects
 	// of interest
 	state: {
+		returnTo: null,
 		importWarningFromURL: '',
 		altRotations: {
 			// `originalFromURL` is added when app is loaded
@@ -334,8 +335,16 @@ var loadedStore = {
 		importWarningFromURL: function (state, getters) {
 			return state.importWarningFromURL;
 		},
+		returnTo: function (state, getters) {
+			return state.returnTo || null;
+		},
 		importWarningsGeneric: function (state, getters) {
 			return state.current.meta.warnings;
+		},
+		rotationMatches: function (state, getters) {
+			var fullHistory = getters.fullHistory;
+			var testRotation = getters.rotation;
+			return getRotationMatches(fullHistory, testRotation);
 		},
 		artists: function (state, getters) {
 			return state.current.artists;
@@ -360,6 +369,9 @@ var loadedStore = {
 		SET_IMPORT_WARNING_FROM_URL: function (state, message) {
 			state.importWarningFromURL = message;
 		},
+		SET_RETURN_TO: function (state, string) {
+			state.returnTo = string;
+		},
 		UDPATE_TEMPLATE_INFO: function (state, obj) {
 			state.current.templateInfo = obj;
 		},
@@ -381,6 +393,9 @@ var loadedStore = {
 		},
 		setImportWarningFromURL: function (context, message) {
 			context.commit('SET_IMPORT_WARNING_FROM_URL', message);
+		},
+		setReturnTo: function (context, message) {
+			context.commit('SET_RETURN_TO', message);
 		},
 		setLegacyMode: function (context, bool) {
 			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));

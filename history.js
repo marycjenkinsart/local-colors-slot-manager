@@ -135,7 +135,11 @@ var checkMatchRotationFloor = function (goodRotation, testRotation, floor) {
 			result = 'no'
 		}
 	} else {
-		result = 'no'
+		if (goodQuery[short] === testQuery[short]) {
+			result = 'perfect'
+		} else {
+			result = 'no'
+		}
 	}
 	return result;
 };

@@ -10,7 +10,7 @@ var app = new Vue({
 			loadMessage = "The URL query processing broke partway. You found a bug!"
 			console.warn(loadMessage);
 		} else if (imported.meta.queryIncomplete) {
-			loadMessage = "I couldn't find a complete set of data. Are you sure the link is complete?"
+			loadMessage = "I couldn't find a complete set of data in the URL query. Are you sure the link is complete?"
 			console.warn(loadMessage);
 		} else {
 			loadMessage = ""
@@ -22,6 +22,17 @@ var app = new Vue({
 		});
 		this.$store.dispatch('historyAddSingleHistoryItem', imported);
 		this.$store.dispatch('loadRotation', imported);
+		if (loadMessage.length > 0) {
+			if (this.$route.path === '/view') {
+				this.$store.dispatch('setReturnTo', '/view');
+			}
+			if (this.$route.path !== '/error') {
+				this.$router.push({
+					path: '/error',
+					query: this.$route.query,
+				});
+			}
+		}
 		// var actualQueryData = this.$route.query;
 		// var patchedQueryData = {};
 		// var artistsFromQuery = {};

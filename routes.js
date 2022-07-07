@@ -19,6 +19,10 @@ var routes = [
 		path: '/wizard',
 		component: wizardPage
 	},
+	{
+		path: '/error',
+		component: errorPage
+	},
 ];
 
 var router = new VueRouter({
