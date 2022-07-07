@@ -4,25 +4,32 @@ var app = new Vue({
 	router: router,
 	created: function () {
 		var query = JSON.parse(JSON.stringify(this.$route.query));
-		var imported = makeRotationObjectFromQuery(query, 'from URL');
 		var loadMessage = "Something broke fairly early; not sure what. Sorry!";
-		if (!imported.meta.parseSuccessful) {
-			loadMessage = "The URL query processing broke partway. You found a bug!"
-			console.warn(loadMessage);
-		} else if (imported.meta.queryIncomplete) {
-			loadMessage = "I couldn't find a complete set of data in the URL query. Are you sure the link is complete?"
+		var imported = makeRotationObjectFromQuery(query, 'from URL');
+		var isEmpty = Object.keys(query).length === 0
+		if (isEmpty) {
+			loadMessage = "I found no query data whatsoever! But that's okay!"
 			console.warn(loadMessage);
 		} else {
-			loadMessage = ""
+			if (!imported.meta.parseSuccessful) {
+				loadMessage = "The URL query processing broke partway. You found a bug!"
+				console.warn(loadMessage);
+			} else if (imported.meta.queryIncomplete) {
+				loadMessage = "I couldn't find a complete set of data in the URL query. Are you sure the link is complete?"
+				console.warn(loadMessage);
+			} else {
+				loadMessage = ""
+			}
 		}
+		var hasErrors = loadMessage.length > 0;
 		this.$store.dispatch('setImportWarningFromURL', loadMessage);
-		this.$store.dispatch('setAltRotation', {
-			label: 'originalFromURL',
-			rotation: imported,
-		});
-		this.$store.dispatch('historyAddSingleHistoryItem', imported);
-		this.$store.dispatch('loadRotation', imported);
-		if (loadMessage.length > 0) {
+		if (!isEmpty && !hasErrors) { // rotation is good
+			this.$store.dispatch('setAltRotation', {
+				label: 'originalFromURL',
+				rotation: imported,
+			});
+			this.$store.dispatch('historyAddSingleHistoryItem', imported);
+		} else {
 			if (this.$route.path === '/view') {
 				this.$store.dispatch('setReturnTo', '/view');
 			}
@@ -33,6 +40,7 @@ var app = new Vue({
 				});
 			}
 		}
+		this.$store.dispatch('loadRotation', imported);
 		// var actualQueryData = this.$route.query;
 		// var patchedQueryData = {};
 		// var artistsFromQuery = {};

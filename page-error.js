@@ -12,6 +12,9 @@ var errorPage = Vue.component('error-page', {
 		returnTo: function () {
 			return this.$store.getters.returnTo;
 		},
+		isEmpty: function () {
+			return Object.keys(this.$route.query).length === 0;
+		},
 		viewOrLoad: function () {
 			return this.$store.getters.returnTo === '/view' ? 'view' : 'load'
 		},
@@ -104,7 +107,9 @@ var errorPage = Vue.component('error-page', {
 		<span class="red">ERROR: </span>
 		<span>{{importWarningFromURL}}</span>
 	</p>
-	<p>
+	<p
+		v-if="!isEmpty"
+	>
 		<ul>
 			<li
 				class="red"
