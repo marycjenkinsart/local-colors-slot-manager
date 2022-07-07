@@ -6,20 +6,17 @@ var hubPage = Vue.component('hub-page', {
 		return {}
 	},
 	computed: {
-		storeState: function () {
-			return this.$store.state;
-		},
-		importDataLabel: function () {
+		currentDataLabel: function () {
 			return this.$store.getters.rotationLabel;
 		},
 		importDataIsPresent: function () {
-			return this.importDataLabel.year !== 1969;
+			return this.currentDataLabel.year !== 1969;
 		},
 		latestHistoryItemLabel: function () {
 			return this.historyItems[0].rotationLabel;
 		},
 		latestDataTest: function () {
-			var importData = this.importDataLabel;
+			var importData = this.currentDataLabel;
 			var historyData = this.latestHistoryItemLabel;
 			// TODO: finish this
 			return compareLabelAges(importData,historyData);
@@ -29,6 +26,9 @@ var hubPage = Vue.component('hub-page', {
 		},
 		historyItems: function () {
 			return this.$store.getters.practicalHistory;
+		},
+		latestHistoryItem: function () {
+			return this.historyItems[0];
 		},
 		displayHistoryItems: function () {
 			var self = this;
@@ -83,8 +83,8 @@ var hubPage = Vue.component('hub-page', {
 			v-if="importDataIsPresent"
 			:class="latestDataTest >= 0 ? 'bold' : ''"
 		>
-			<span>Data imported:</span>
-			<span class="red">{{makeShortLabel(importDataLabel)}}</span>
+			<span>Currently loaded:</span>
+			<span class="red">{{makeShortLabel(currentDataLabel)}}</span>
 		</span>
 		<span
 			v-if="!importDataIsPresent"
@@ -100,22 +100,41 @@ var hubPage = Vue.component('hub-page', {
 			</div>
 			<div class="card-body">
 				<p>Preview a specific rotation.</p>
-				<h3>Most Recent</h3>
+				<h3>Most recent data</h3>
 				<div>
 					<button
 						class="impressive-button"
 						v-if="importDataIsPresent && latestDataTest >= 0"
 						@click="goToViewImport"
-					>{{makeShortLabel(importDataLabel)}}</button>
+					>{{makeShortLabel(currentDataLabel)}}</button>
 					<button
 						class="impressive-button"
 						v-if="!importDataIsPresent || latestDataTest < 0"
 						@click="goToViewLatestHistory"
 					>{{makeShortLabel(latestHistoryItemLabel)}}*</button>
+					<p
+						v-if="!importDataIsPresent || latestDataTest < 0"
+					>*From history</p>
 				</div>
-				<p
+				<div
 					v-if="!importDataIsPresent || latestDataTest < 0"
-				>*Latest data from history</p>
+				>
+					<h3>Loaded data</h3>
+					<div>
+						<button
+							class="impressive-button"
+							@click="goToViewImport"
+						>{{makeShortLabel(currentDataLabel)}}</button>
+					</div>
+				</div>
+				<h3>All historical data</h3>
+				<p>Load (and preview) a different rotation.</p>
+				<div>
+					<button
+						class="impressive-button"
+						disabled
+					>Choose a rotation</button>
+				</div>
 				<hr style="margin-top: 10px;">
 				<p class="hint">To return to the hub from the preview screen, click the rotation's title five times.</p>
 			</div>
@@ -126,21 +145,21 @@ var hubPage = Vue.component('hub-page', {
 			</div>
 			<div class="card-body">
 				<p>Edit the currently-loaded rotation.</p>
-				<h3>Rotation Wizard</h3>
+				<h3>Rotation wizard</h3>
 				<p>A guided questionnaire for producing simple rotations.</p>
 				<div>
 					<button
 						class="impressive-button"
 						@click="goToWizard"
-					>Wizard</button>
+					>Go to wizard</button>
 				</div>
-				<h3>Advanced Editor</h3>
+				<h3>Advanced editor</h3>
 				<p>The original rotation editor for very granular control.</p>
 				<div>
 					<button
 						class="impressive-button"
 						@click="goToAdvancedEditMode"
-					>Advanced</button>
+					>Go to editor</button>
 				</div>
 			</div>
 		</div>
@@ -163,8 +182,11 @@ var hubPage = Vue.component('hub-page', {
 				<span>Manage Records</span>
 			</div>
 			<div class="card-body">
-				<p>Choose which rotation is "loaded," and manage existing records.</p>
-				<p>(Not yet implemented.)</p>
+				<p>Manage history data for this session. (Import tab or return-delimited links from Google Sheets or elsewhere.)</p>
+				<button
+					class="impressive-button"
+					disabled
+				>Manage history</button>
 				<h3>History items found:</h3>
 				<ul>
 					<li

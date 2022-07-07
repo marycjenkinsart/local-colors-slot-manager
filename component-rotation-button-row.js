@@ -8,6 +8,10 @@ Vue.component('rotation-button-row', {
 			type: Object,
 			require: true,
 		},
+		headerLabel: {
+			type: String,
+			require: true,
+		},
 		buttonLabel: {
 			type: String,
 			require: true,
@@ -44,9 +48,10 @@ Vue.component('rotation-button-row', {
 	template: /*html*/`
 <div class="flex-card-wide">
 	<div class="card-head">
-		<span>{{makeShortLabel(rotation.rotationLabel)}}</span>
+		<span>{{headerLabel}}</span>
 	</div>
 	<div class="card-body">
+		<slot></slot>
 		<p>
 			<strong>Featured: </strong>{{featuredString}}<br/>
 			<strong>Up: </strong>{{upstairsString}}<br/>

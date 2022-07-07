@@ -39,12 +39,18 @@ var errorPage = Vue.component('error-page', {
 			})
 			return result;
 		},
+		singlePartialMatch: function () {
+			return this.partialMatchRotations.length === 1;
+		},
 		fullHistory: function () {
 			var result = this.$store.getters.fullHistory || [];
 			var selfself = this;
 			return result.filter(function (item) {
 				return !detectRotationPerfectMatch(item, selfself.rotation);
 			});
+		},
+		latestHistoryItem: function () {
+			return this.fullHistory[0]; // TODO maybe streamline this a bit
 		},
 		displayLabel: function () {
 			return this.returnTo === '/view' ? 'LC Layout Viewer' : 'LC Layout Manager'
@@ -76,6 +82,17 @@ var errorPage = Vue.component('error-page', {
 				query: target.originalQuery,
 			});
 		},
+		clickedOnLatestRotation: function () {
+			var destination = this.returnTo || '/hub';
+			var target = this.latestHistoryItem;
+			this.$store.dispatch('loadRotation', target);
+			this.$store.dispatch('setReturnTo', '');
+			this.$store.dispatch('setImportWarningFromURL', '');
+			this.$router.push({
+				path: destination,
+				query: target.originalQuery,
+			});
+		},
 	},
 	template: /*html*/`
 <div
@@ -97,55 +114,61 @@ var errorPage = Vue.component('error-page', {
 		</ul>
 	</p>
 	<h1>Recovery options:</h1>
-	<p> Try to manually copy and paste the URL rather than click a link that may have been converted into a link automatically. Alternatively, choose to {{viewOrLoad}} one of the below rotations instead:</p>
+	<p> Try to manually copy and paste the URL rather than click a link that may have been converted into a link automatically. Alternatively, click one of the buttons below to {{viewOrLoad}} fresh data.</p>
 	<div
 		v-if="partialMatchRotations.length > 0"
 	>
-		<h3>Partial data matches found!</h3>
-		<p>The following rotation(s) have data in common with existing URL query data. Did you mean to {{viewOrLoad}} one of these, perhaps?</p>
+		<h3>
+			<span
+				v-if="singlePartialMatch"
+			>Partial data match found!</span>
+			<span
+				v-if="!singlePartialMatch"
+			>Partial data matches found!</span>
+		</h3>
+		<p
+			v-if="singlePartialMatch"
+		>The following rotation has data in common with the incomplete URL query. Did you mean to {{viewOrLoad}} this one, perhaps?</p>
+		<p
+			v-if="!singlePartialMatch"
+		>The following rotations have data in common with incomplete URL query. Did you mean to {{viewOrLoad}} one of these, perhaps?</p>
 		<div class="flex-cards">
 			<rotation-button-row
 				v-for="(matchedItem, index) in partialMatchRotations"
 				:rotation="matchedItem"
+				header-label="Partial match"
 				:button-label="viewOrLoadCap"
 				@clicked-on-rotation="clickedOnMatchedRotation(index)"
-			></rotation-button-row>
+			>
+				<h3 class="flat">{{makeShortLabel(matchedItem.rotationLabel)}}</h3>
+			</rotation-button-row>
 		</div>
 	</div>
 	<div>
-		<h3>Historical rotations:</h3>
-		<p>Click one of the buttons below to abandon the bad data and {{viewOrLoad}} a previous rotation instead:</p>
+		<h3>Historical rotations</h3>
+		<p>From the archives:</p>
 		<div class="flex-cards">
+			<rotation-button-row
+				:rotation="latestHistoryItem"
+				header-label="Most recent data"
+				:button-label="viewOrLoadCap"
+				@clicked-on-rotation="clickedOnLatestRotation()"
+			>
+				<h3 class="flat">{{makeShortLabel(latestHistoryItem.rotationLabel)}}</h3>
+			</rotation-button-row>
 			<div class="flex-card-wide">
 				<div class="card-head">
-					<span>Latest map found</span>
+					<span>All historical data</span>
 				</div>
 				<div class="card-body">
 					<p>
-						{{viewOrLoadCap}} the most recent map ounf:
+						{{viewOrLoadCap}} a specific rotation:
 					</p>
 					<p>
 						<button
 							class="big_button"
 							disabled
-						>{{viewOrLoadCap}} latest
-						</button>
-					</p>
-				</div>
-			</div>
-			<div class="flex-card-wide">
-				<div class="card-head">
-					<span>Historical data</span>
-				</div>
-				<div class="card-body">
-					<p>
-						{{viewOrLoadCap}} a specific rotation from archives:
-					</p>
-					<p>
-						<button
-							class="big_button"
-							disabled
-						>Choose a previous rotation
+						>Choose a rotation
 						</button>
 					</p>
 				</div>
