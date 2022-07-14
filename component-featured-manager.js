@@ -119,7 +119,7 @@ Vue.component('featured-manager', {
 				}
 			})
 			newObject.feat = newFeatured;
-			for (let index = 0; index < halfSlotCount; index++) {
+			for (var index = 0; index < halfSlotCount; index++) {
 				newObject[floor].push(artistName);
 			}
 			this.updateArtistsObject(newObject);

@@ -3,6 +3,7 @@
 //-----------------------------------------------//
 
 var webAppHistory = [
+	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2.1#/view?l=2022,7&u=GUEST-1,Mary,Pam,Jeff_M.-1,J._Clay-1&d=Blaine,Brianna,Lorraine&f=no_theme-group&x=v2&au=x5,3',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2#/view?l=2022,6,3&u=Lorraine,Blaine,Brianna&d=Jeff_M.-1,Mary,Pam,J._Clay-1&f=Bill-2D-2&x=v2&t=u01,',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2#/view?l=2022,5&u=GUEST-1,J._Clay-1,Bill,Mary&d=Brianna,Pam,Lorraine,Blaine&f=Jeff_M.-2D-2&x=v2&t=u01,',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2#/view?l=2022,4&u=GUEST-1,Pam,Jan,Blaine,Lorraine&d=Mary,Jeff_M.,J._Clay-1,Bill&f=Brianna-3D&x=v2&t=u01,',
@@ -378,7 +379,7 @@ var insertWholeNameAtIndex = function (array, index, name, length) {
 	var newArray = array.slice();
 	newArray = clearNameFromArray(newArray,name);
 	var currIndex = index;
-	for (let i = 0; i < length; i++) {
+	for (var i = 0; i < length; i++) {
 		// console.log("clearing name at index " + currIndex)
 		if (currIndex !== null) {
 			newArray = clearWholeNameAtIndex(newArray, currIndex);
@@ -386,7 +387,7 @@ var insertWholeNameAtIndex = function (array, index, name, length) {
 		}
 	}
 	var currIndex = index;
-	for (let i = 0; i < length; i++) {
+	for (var i = 0; i < length; i++) {
 		// console.log("inserting name at index " + currIndex)
 		if (currIndex !== null) {
 			newArray = insertNameAtIndex(newArray, currIndex, name);

@@ -201,7 +201,7 @@ Vue.component('name-manager', {
 		togglelegacyMode: function () {
 			this.$store.dispatch('togglelegacyMode');
 		},
-		updateFloor (floor) {
+		updateFloor: function (floor) {
 			var artistsObject = JSON.parse(JSON.stringify(this.artists));
 			artistsObject[this.floorName] = floor;
 			this.$store.dispatch('updateArtistsObject',artistsObject);
@@ -385,7 +385,7 @@ Vue.component('name-manager', {
 			var names = this.nameList;
 			// check clockwise
 			var testIndex = index;
-			for (let index = 0; index < names.length; index++) {
+			for (var index = 0; index < names.length; index++) {
 				testIndex = this.findDownIndex(testIndex);
 				if (names[testIndex] === testName) {
 					resultCCW.push(testIndex);
@@ -397,7 +397,7 @@ Vue.component('name-manager', {
 			}
 			// check counter-clockwise
 			testIndex = index;
-			for (let index = 0; index < names.length; index++) {
+			for (var index = 0; index < names.length; index++) {
 				testIndex = this.findUpIndex(testIndex);
 				if (names[testIndex] === testName) {
 					resultCW.push(testIndex);
@@ -434,10 +434,10 @@ Vue.component('name-manager', {
 			var self = this;
 			indices.forEach(function (movingPiece) {
 				workingIndex = movingPiece;
-				for (let index = 0; index < self.shift; index++) {
+				for (var index = 0; index < self.shift; index++) {
 					workingIndex = self.findUpIndex(workingIndex);
 				}
-				for (let index = 0; index < moveCount; index++) {
+				for (var index = 0; index < moveCount; index++) {
 					newFloor = self.moveOneSlotUp(workingIndex, newFloor);
 					workingIndex = self.findUpIndex(workingIndex);
 				}
@@ -447,9 +447,10 @@ Vue.component('name-manager', {
 		getSwapMessage: function (fancyIndex) {
 			var targetArtist = this.fancyNameList[fancyIndex].name;
 			var neighborArtist = this.nameList[this.findDownNeighbor(fancyIndex)];
-			return `swap ${targetArtist} and ${neighborArtist}`
+			var message = 'swap ' + targetArtist + ' and ' + neighborArtist;
+			return message;
 		},
-		attemptArtistMove: function (artistName) {
+		attemptArtistMove: function () {
 			this.artistTransfer.attempt = true;
 		},
 		toggleCornerSnap: function () {

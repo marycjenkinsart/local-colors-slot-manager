@@ -1,3 +1,5 @@
+var currentAppVersion = "2.2";
+
 var defaultSnapInches = 18;
 
 var snapPriority = {
@@ -89,7 +91,7 @@ var makeFloorUnfancy = function (array) { // TODO: unused?
 	var result = [];
 	array.forEach(function (object) {
 		var halfSlots = object.slotSize * 2;
-		for (let index = 0; index < halfSlots; index++) {
+		for (var index = 0; index < halfSlots; index++) {
 			result.push(object.name);
 		}
 	})
@@ -258,7 +260,7 @@ var makeAdjustmentsUncompact = function (string, length) {
 		array.forEach(function (item) {
 			if (item.includes('x')) {
 				var count = parseInt(item.replace('x',''),10);
-				for (let index = 0; index < count; index++) {
+				for (var index = 0; index < count; index++) {
 					result.push(0);
 				}
 			} else if (item.includes('-')) {
@@ -342,11 +344,9 @@ var compactEverything = function (rotation) {
 
 var generateURLFromCompactEverything = function (compactString) {
 	var prefix = "https://marycjenkinsart.github.io/local-colors-slot-manager/"
-	var infix = "?v2.1";
+	var infix = "?v" + currentAppVersion;
 	// the "infix" does nothing apart from ensuring the client treats the URL as a fresh destination
 	// otherwise caches can interfere with the preview's apperance (without anything appearing to be broken)
-	// VERY IMPORTANT:
-	// if something changes in the app that has the potential to change the preview, iterate the infix!!
 	var suffix = "#/view?"
 	return prefix + infix + suffix + compactString;
 }
@@ -763,7 +763,7 @@ var getBaselineHalfSlots = function (templateArray, unfancyArtists, adjustmentsA
 	var beginning = 0;
 	var end = 0;
 	var adjustmentPrev = 0;
-	for (let index = 0; index < halfSlotCount; index++) {
+	for (var index = 0; index < halfSlotCount; index++) {
 		var adjustmentCurr = adjustmentsArray && adjustmentsArray[index] || 0;
 		adjustmentCurr = inchesToTemplateNumber(adjustmentCurr);
 		end += halfSlotLength + adjustmentCurr - adjustmentPrev;
@@ -901,7 +901,7 @@ var fuseComplexLinesByArtist = function (complexSlotsArray) {
 		var totalLength = extractNames(sharedLine).length;
 		var uniqueLength = extractNames(sharedLine).filter(getUnique).length;
 		while (totalLength > uniqueLength) {
-			for (let index = 1; index < sharedLine.length; index++) {
+			for (var index = 1; index < sharedLine.length; index++) {
 				if (sharedLine[index].name === sharedLine[index-1].name) {
 					var fusion = makeFusedLine(
 						sharedLine[index-1],
@@ -1021,7 +1021,7 @@ var snapShortSegments = function (_lineSegmentPieces, threshold, priority) {
 
 var snapAllShortSegments = function (_complexSlots, threshold, priority) {
 	var complexSlots = JSON.parse(JSON.stringify(_complexSlots));
-	for (let index = 0; index < complexSlots.length; index++) {
+	for (var index = 0; index < complexSlots.length; index++) {
 		complexSlots[index] = snapShortSegments(complexSlots[index], threshold, priority);
 	}
 	return complexSlots;
@@ -1071,7 +1071,7 @@ var getSnappedFusedSlotsNeedingLabels = function (lineArrayArray) {
 var getEdgesFromComplexLines = function (complexLines) {
 	var points = [];
 	complexLines.forEach(function (lineSegment) {
-		for (let index = 1; index < lineSegment.length; index++) {
+		for (var index = 1; index < lineSegment.length; index++) {
 			var point = {
 				x: lineSegment[index].x1,
 				y: lineSegment[index].y1,

@@ -1527,7 +1527,7 @@ var grossTagRestorer = function (object) {
 
 var trimFromEnd = function (string, count) {
 	var array = string.split('');
-	for (let index = 0; index < count; index++) {
+	for (var index = 0; index < count; index++) {
 		array.pop();
 	}
 	return array.join('');
@@ -1560,7 +1560,7 @@ var cleanData = data.replaceAll('	','')
 	.replaceAll('asdf','\n<');
 
 var dataArray = cleanData.split('\n');
-for (let index = dataArray.length - 1; index >= 0; index--) {
+for (var index = dataArray.length - 1; index >= 0; index--) {
 	var line = dataArray[index];	
 	var slotNumber;
 	if (line.includes('_x30_') || line.includes('_x31_')) {

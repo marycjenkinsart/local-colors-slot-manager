@@ -9,11 +9,24 @@ Vue.component('shareable-link', {
 	},
 	methods: {
 		copyLink: function () {
-			this.$refs.linkToCopy.select();
+			var el = this.$refs.linkToCopy;
+			if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
+				var editable = el.contentEditable;
+				var readOnly = el.readOnly;
+				el.contentEditable = 'true';
+				el.readOnly = 'false';
+				var range = document.createRange();
+				range.selectNodeContents(el);
+				var sel = window.getSelection();
+				sel.removeAllRanges();
+				sel.addRange(range);
+				el.setSelectionRange(0, 999999);
+				el.contentEditable = editable;
+				el.readOnly = readOnly;
+			} else {
+				el.select();
+			}
 			document.execCommand("copy");
-			// Did not work with Safari 11 on iOS
-			// Also it's apparently officially deprecated
-			// TODO: Think of other options
 		},
 	},
 	template: /*html*/`

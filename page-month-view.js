@@ -398,19 +398,19 @@ var monthViewPage = Vue.component('month-view', {
 		></name-manager>
 	</div>
 	<div class="manager-box">
-	<h3 class="flat">
-		<span>
-			{{displayFloor('down')}} ({{artists.down.length / 2}})
-		</span>
-		<button
-			v-show="manageWhich !== 'down'"
-			@click="manageThis('down')"
-		>Manage</button>
-		<button
-			v-show="manageWhich === 'down'"
-			@click="manageThis('')"
-		>DONE</button>
-	</h3>
+		<h3 class="flat">
+			<span>
+				{{displayFloor('down')}} ({{artists.down.length / 2}})
+			</span>
+			<button
+				v-show="manageWhich !== 'down'"
+				@click="manageThis('down')"
+			>Manage</button>
+			<button
+				v-show="manageWhich === 'down'"
+				@click="manageThis('')"
+			>DONE</button>
+		</h3>
 		<name-manager
 			floor-name="down"
 		></name-manager>
