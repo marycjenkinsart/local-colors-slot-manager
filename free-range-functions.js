@@ -1,4 +1,4 @@
-var currentAppVersion = "2.2";
+var currentAppVersion = "2.3";
 
 var defaultSnapInches = 18;
 
@@ -124,6 +124,103 @@ var makeCompactFloorUnfancy = function (string) {
 		}
 	})
 	return result;
+};
+
+var getAdjacentIndex = function (index, array, direction) {
+	var count = array.length;
+	return ((index + direction) + count) % count;
+}
+var findUpIndex = function (index, array) {
+	return getAdjacentIndex(index, array, -1);
+};
+var findDownIndex = function (index, array) {
+	return getAdjacentIndex(index, array, 1);
+};
+
+var contiguousIndicesReport = function (index, array) {
+	var result = {
+		indices: [ index ],
+		up: {},
+		down: {},
+	};
+	var testIndex = index;
+	if (index >= array.length) {
+		console.error("Attempting to detect contiguous indices for an out of bound index! (Index: " + index + ")");
+		return null
+	} else {
+		// check clockwise
+		for (var i = 0; i < array.length; i++) {
+			testIndex = findDownIndex(testIndex, array);
+			if (array[testIndex] === array[index]) {
+				result.indices.push(testIndex);
+			} else {
+				result.down.neighbor = array[testIndex];
+				result.down.index = testIndex;
+				break
+			}
+		}
+		// check counter-clockwise
+		testIndex = index;
+		for (var i = 0; i < array.length; i++) {
+			testIndex = findUpIndex(testIndex, array);
+			if (array[testIndex] === array[index]) {
+				result.indices.unshift(testIndex);
+			} else {
+				result.up.neighbor = array[testIndex];
+				result.up.index = testIndex;
+				break
+			}
+		}
+		return result;
+	}
+};
+
+var moveSingleSlotOnce = function (index, array, direction) {
+	direction = Math.sign(direction);
+	var newArray = array.slice();
+	var newIndex = getAdjacentIndex(index, array, direction);
+	var insert = newArray[index];
+	var swap = newArray[newIndex];
+	newArray[index] = swap;
+	newArray[newIndex] = insert;
+	return newArray;
+};
+
+var moveSingleSlotMultiple = function (index, array, quantity) {
+	var moveCount = Math.abs(quantity);
+	var direction = Math.sign(quantity);
+	var newArray = array.slice();
+	for (var i = 0; i < moveCount; i++) {
+		newArray = moveSingleSlotOnce(index, newArray, direction);
+		index = getAdjacentIndex(index, array, direction);
+	}
+	return newArray;
+}
+
+var moveNameChunky = function (index, array, direction, skipName) {
+	var sign = Math.sign(direction);
+	var newArray = array.slice();
+	var report = contiguousIndicesReport(index, array);
+	var down = sign > 0;
+	var neighborIndex = down ? report.down.index : report.up.index;
+	var neighborReport = contiguousIndicesReport(neighborIndex, array);
+	var extraSkip = array[neighborIndex] === skipName;
+	var count = neighborReport.indices.length;
+	var indices = report.indices;
+	if (down) {
+		indices.reverse();
+	}
+	indices.forEach(function (movingIndex) {
+		newArray = moveSingleSlotMultiple(movingIndex, newArray, count * sign)
+	})
+	if (extraSkip) {
+		var secondMoveIndex = neighborIndex;
+		var secondMoveReport = contiguousIndicesReport(secondMoveIndex, newArray);
+		var newNeighborIndex = down ? secondMoveReport.up.index : secondMoveReport.down.index;
+		newArray = moveNameChunky(secondMoveIndex, newArray, direction);
+		newArray = moveNameChunky(newNeighborIndex, newArray, direction);
+	}
+	return newArray;
 };
 
   //---------------------------------//
@@ -258,16 +355,17 @@ var makeAdjustmentsUncompact = function (string, length) {
 	if (string.length > 0) {
 		var array = string.split(',');
 		array.forEach(function (item) {
+			var insert;
 			if (item.includes('x')) {
 				var count = parseInt(item.replace('x',''),10);
 				for (var index = 0; index < count; index++) {
 					result.push(0);
 				}
 			} else if (item.includes('-')) {
-				var insert = parseInt(item,10);
+				insert = parseInt(item,10);
 				result.push(insert);
 			} else {
-				var insert = parseInt(item,10);
+				insert = parseInt(item,10);
 				result.push(insert);
 			}
 		})
@@ -557,7 +655,7 @@ var makeFusedLine = function (line1, line2, addendum) {
 		line1,
 		line2,
 		adjustments,
-		addendum || {},
+		addendum || {}
 	);
 	return result;
 }
@@ -797,11 +895,11 @@ var getAdjustedHalfSlotLengths = function (templatesToDraw, artists, adjustments
 	adjustments[halfSlotCount].fill(0,emptyFrom);
 	// the real work:
 	var adjustmentsArray = adjustments[halfSlotCount];
-	result = getBaselineHalfSlots(
+	var result = getBaselineHalfSlots(
 		templatesToDraw,
 		artists,
-		adjustmentsArray,
-	)
+		adjustmentsArray
+	);
 	return result;
 };
 
@@ -830,6 +928,7 @@ var makeComplexLines = function (templateArray, baselineHalfSlots) {
 		pc += 1;
 		return lines.shift();
 	};
+	var insert;
 	var unshiftLine = function (insert) {
 		pc -= 1;
 		return lines.unshift(insert);
@@ -837,14 +936,14 @@ var makeComplexLines = function (templateArray, baselineHalfSlots) {
 	while (artists.length > 0 && lines.length > 0) {
 		if (artists[0].size > getLengthFromLineCoords(lines[0])) {
 			artists[0].size -= getLengthFromLineCoords(lines[0]);
-			var insert = shiftLine();
+			insert = shiftLine();
 			insert.name = artists[0].name;
 			combinedLines[pc] = combinedLines[pc] || [];
 			combinedLines[pc].push(insert);
 		} else {
 			var workingLine = shiftLine();
 			var splits = cutLineAtDistance(workingLine, artists[0].size);
-			var insert = splits[0];
+			insert = splits[0];
 			insert.name = artists[0].name;
 			combinedLines[pc] = combinedLines[pc] || [];
 			combinedLines[pc].push(insert);
@@ -853,7 +952,7 @@ var makeComplexLines = function (templateArray, baselineHalfSlots) {
 		}
 	}
 	while (lines.length > 0) {
-		var insert = shiftLine();
+		insert = shiftLine();
 		var lastArtistName = baselineHalfSlots[baselineHalfSlots.length-1].name;
 		insert.name = lastArtistName;
 		combinedLines[pc] = combinedLines[pc] || [];
@@ -908,8 +1007,8 @@ var fuseComplexLinesByArtist = function (complexSlotsArray) {
 						sharedLine[index],
 						{
 							name: sharedLine[index].name
-						},
-					)
+						}
+					);
 					sharedLine[index-1] = fusion;
 					sharedLine.splice(index,1);
 					totalLength = extractNames(sharedLine).length;

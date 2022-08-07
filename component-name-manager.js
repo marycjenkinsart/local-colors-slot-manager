@@ -263,15 +263,6 @@ Vue.component('name-manager', {
 			this.newNameCancel();
 			this.updateFloor(newFloor);
 		},
-		// detectWrapping: function (array) {
-		//	 var first = array[0];
-		//	 var last = array[array.length-1];
-		//	 var result = false;
-		//	 if (first === last) {
-		//		 result = true;
-		//	 }
-		//	 return result;
-		// },
 		makeSlotCountPretty: makeSlotCountPretty,
 		makePrintName: makePrintName,
 		getArtistSlotCount: function (artistName) {
@@ -293,28 +284,40 @@ Vue.component('name-manager', {
 			newFloor.splice(slotIndex,0,newFloor[slotIndex]);
 			this.updateFloor(newFloor);
 		},
-		exciseGuests: function (unfancyArray) {
-			var array = unfancyArray.slice();
+		exciseGuests: function (array) {
+			var newArray = array.slice();
 			var guestIndices = [];
+			var guestName = this.guestName;
 			if (this.lockGuest) {
-				while (array.includes(this.guestName)) {
-					var guestIndex = array.indexOf(this.guestName);
-					guestIndices.push(guestIndex);
-					array.splice(guestIndex,1);
-				}
+				newArray.forEach(function (name, index) {
+					if (name === guestName) {
+						guestIndices.push(index);
+					}
+				})
+				newArray = array.filter(function (name) {
+					return name !== guestName;
+				})
 			}
 			return {
-				array: array,
+				array: newArray,
 				indices: guestIndices,
 			} // unfancy only
 		},
 		restoreGuests: function (array, indices) {
-			var guestIndices = indices.slice();
+			// assumes the guest's slots are contiguous
+			var guestIndices = indices || [];
 			var newArray = array.slice();
-			while (guestIndices.length > 0) {
-				var currentIndex = guestIndices.pop();
-				newArray.splice(currentIndex,0,this.guestName);
+			var guestName = this.guestName;
+			if (guestIndices.length > 0) {
+				var guestCount = guestIndices.length;
+				var guestMin = guestIndices[0]
+				guestIndices.forEach(function (curr) {
+					guestMin = Math.min(curr, guestMin);
+				})
+				for (var i = 0; i < guestCount; i++) {
+					newArray.splice(guestMin, 0, guestName);
 				}
+			}
 			return newArray; // unfancy only
 		},
 		rotateFloorCCW: function () {
@@ -343,105 +346,15 @@ Vue.component('name-manager', {
 			newArray.push(newArray.shift());
 			return newArray;
 		},
-		findUpIndex: function (index) {
-			var result = index - 1;
-			if (result === - 1) {
-				result = this.nameList.length - 1;
-			}
-			return result;
-		},
-		findDownIndex: function (index) {
-			var result = index + 1;
-			if (result === this.nameList.length) {
-				result = 0;
-			}
-			return result;
-		},
-		findUpNeighbor: function (index) {
-			var currentName = this.nameList[index];
-			var upIndex = this.findUpIndex(index);
-			var upName = this.nameList[upIndex];
-			while (currentName === upName) {
-				upIndex = this.findUpIndex(upIndex);
-				upName = this.nameList[upIndex];
-			}
-			return upIndex;
-		},
-		findDownNeighbor: function (fancyIndex) {
-			var index = this.fancyNameList[fancyIndex].slotIndex;
-			var currentName = this.nameList[index];
-			var downIndex = this.findDownIndex(index);
-			var downName = this.nameList[downIndex];
-			while (currentName === downName) {
-				downIndex = this.findDownIndex(downIndex);
-				downName = this.nameList[downIndex];
-			}
-			return downIndex;
-		},
-		getContiguousIndices: function (index) { // slotIndex
-			var testName = this.nameList[index];
-			var resultCCW = [];
-			var resultCW = [];
-			var names = this.nameList;
-			// check clockwise
-			var testIndex = index;
-			for (var index = 0; index < names.length; index++) {
-				testIndex = this.findDownIndex(testIndex);
-				if (names[testIndex] === testName) {
-					resultCCW.push(testIndex);
-				} else if (names[testIndex] === this.guestName) {
-					continue
-				} else {
-					break
-				}
-			}
-			// check counter-clockwise
-			testIndex = index;
-			for (var index = 0; index < names.length; index++) {
-				testIndex = this.findUpIndex(testIndex);
-				if (names[testIndex] === testName) {
-					resultCW.push(testIndex);
-				} else if (names[testIndex] === this.guestName) {
-					continue
-				} else {
-					break
-				}
-			}
-			resultCW.reverse();
-			resultCW.push(index);
-			var result = [].concat(resultCW, resultCCW);
-			return result;
-		},
-		moveOneSlotUp: function (index, _array) {
-			var array = _array || this.nameList.slice();
-			var upIndex = index - 1;
-			var splice = array.splice(index, 1);
-			if (upIndex === -1) {
-				var swap = array.pop();
-				array.unshift(swap);
-				array.push(splice[0]);
-			} else {
-				array.splice(upIndex, 0, splice[0]);
-			}
-			return array;
-		},
-		rotateArtistUp: function (slotIndex) {
-			var newFloor = this.nameList.slice();
-			var indices = this.getContiguousIndices(slotIndex);
-			var upIndices = this.getContiguousIndices(this.findUpNeighbor(slotIndex));
-			var moveCount = upIndices.length;
-			var workingIndex; // ewww
-			var self = this;
-			indices.forEach(function (movingPiece) {
-				workingIndex = movingPiece;
-				for (var index = 0; index < self.shift; index++) {
-					workingIndex = self.findUpIndex(workingIndex);
-				}
-				for (var index = 0; index < moveCount; index++) {
-					newFloor = self.moveOneSlotUp(workingIndex, newFloor);
-					workingIndex = self.findUpIndex(workingIndex);
-				}
-			})
+		moveArtistChunky: function (slotIndex, direction) {
+			var newFloor = this.nameList.slice()
+			var exciseGuest = this.lockGuest && newFloor.includes(this.guestName);
+			newFloor = moveNameChunky(
+				slotIndex,
+				newFloor,
+				direction,
+				exciseGuest ? this.guestName : null
+			);
 			this.updateFloor(newFloor);
 		},
 		getSwapMessage: function (fancyIndex) {
@@ -650,11 +563,11 @@ Vue.component('name-manager', {
 							<td class="table_first">
 								<button
 									title="move artist clockwise"
-									@click="rotateArtistUp(findDownNeighbor(index))"
+									@click="moveArtistChunky(artist.indices[0], 1)"
 								>↓</button>
 								<button
 								title="move artist counter-clockwise"
-									@click="rotateArtistUp(artist.slotIndex)"
+									@click="moveArtistChunky(artist.indices[0], -1)"
 								>↑</button>
 							</td>
 							<td class="table_second">

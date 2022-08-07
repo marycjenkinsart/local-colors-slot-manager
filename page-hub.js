@@ -211,7 +211,6 @@ var hubPage = Vue.component('hub-page', {
 					<span
 						v-if="displayHistoryGaps !== 1"
 					>({{displayHistoryGaps}} gaps)</span>
-					<span>
 				</p>
 		<hr style="margin-top: 10px;">
 				<p class="hint">Currently, rotation history is updated manually.

@@ -187,12 +187,12 @@ Vue.component('floor-preview', {
 			result.forEach(function (lineSegment, index) {
 				result[index] = Object.assign(
 					result[index],
-					textLabelOrigin(result[index], spacing),
+					textLabelOrigin(result[index], spacing)
 				)
 				result[index].transform = textLabelRotation(
 					lineSegment,
 					result[index].x,
-					result[index].y,
+					result[index].y
 				)
 			})
 			result = result.filter(function (lineSegment) {

@@ -3,6 +3,7 @@
 //-----------------------------------------------//
 
 var webAppHistory = [
+	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2.2#/view?l=2022,8&u=GUEST-1,Brianna,Lorraine&d=Mary,J._Clay-1,Jeff_M.-1,Pam&f=Blaine-2D-2&x=v2',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2.1#/view?l=2022,7&u=GUEST-1,Mary,Pam,Jeff_M.-1,J._Clay-1&d=Blaine,Brianna,Lorraine&f=no_theme-group&x=v2&au=x5,3',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2#/view?l=2022,6,3&u=Lorraine,Blaine,Brianna&d=Jeff_M.-1,Mary,Pam,J._Clay-1&f=Bill-2D-2&x=v2&t=u01,',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2#/view?l=2022,5&u=GUEST-1,J._Clay-1,Bill,Mary&d=Brianna,Pam,Lorraine,Blaine&f=Jeff_M.-2D-2&x=v2&t=u01,',
@@ -82,11 +83,11 @@ var countHistoryGaps = function (historyArray) {
 	var tally = 0;
 	var mergedMonth = historyArray[0].rotationLabel.mergedMonth;
 	historyArray.forEach(function (item) {
-		console.log({
-			month: item.rotationLabel.month,
-			year: item.rotationLabel.year,
-			mergedMonth: item.rotationLabel.mergedMonth,
-		})
+		// console.log({
+		// 	month: item.rotationLabel.month,
+		// 	year: item.rotationLabel.year,
+		// 	mergedMonth: item.rotationLabel.mergedMonth,
+		// })
 		var newMergedMonth = item.rotationLabel.mergedMonth;
 		var dif = Math.abs(mergedMonth - newMergedMonth);
 		if (dif > 1) {

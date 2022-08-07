@@ -176,7 +176,7 @@ Vue.component('map-preview', {
 			var currentPath = this.$route.path;
 			if (currentPath === '/view') {
 				this.secretClickCount += 1;
-			};
+			}
 			if (this.secretClickCount === 5) {
 				this.secretClickCount = 0;
 				scrollToTop();
@@ -184,7 +184,7 @@ Vue.component('map-preview', {
 					path: '/hub',
 					query: this.$route.query,
 				});
-			};
+			}
 		},
 		origins: function (floor) {
 			var result = offsets[floor]
