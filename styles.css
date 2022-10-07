@@ -35,7 +35,8 @@ p {
 	padding-top: 4px;
 }
 
-button {
+button,
+.button {
 	cursor: pointer;
 	font-weight: inherit;
 	font-size: 0.8rem;

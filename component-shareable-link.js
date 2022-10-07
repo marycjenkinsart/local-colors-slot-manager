@@ -3,6 +3,30 @@ Vue.component('shareable-link', {
 		compactURL: function () {
 			return this.$store.getters.compactURL;
 		},
+		rotationLabel: function () {
+			return this.$store.getters.rotationLabel;
+		},
+		monthName: function () {
+			var labelInfo = this.rotationLabel;
+			var month = labelInfo.month - 1;
+			var lookup = [
+				"January" , "February", "March", "April", "May", "June",
+				"July", "August", "September", "October", "November", "December"
+			]
+			return lookup[month] ? lookup[month] : "???";
+		},
+		mailToCompactURL: function () {
+			var subject = `Hanging preview for ${this.monthName}`;
+			if (this.rotationLabel.version !== 1) {
+				subject += ' (v' + this.rotationLabel.version + ')';
+			}
+			subject = encodeURIComponent(subject);
+			var url = this.compactURL;
+			var body = `Visit this URL to preview the hanging layout:\n\n${url}`;
+			body = encodeURIComponent(body);
+			var result = `mailto:?subject=${subject}&body=${body}`;
+			return result;
+		},
 		isWizard: function () {
 			return this.$route.path === '/wizard'
 		},
@@ -46,7 +70,16 @@ Vue.component('shareable-link', {
 		<button
 			:class="isWizard ? 'big_button' : ''"
 			@click="copyLink"
-		>Copy Shareable Link</button>
+			title="Copy this link to your clipboard"
+		>Copy Link</button>
+		<a
+			:href="mailToCompactURL"
+			class="button"
+			:class="isWizard ? 'big_button' : ''"
+			@click="copyLink"
+			title="Send this link as an email"
+			target="_blank"
+		>Email Link</a>
 	</p>
 </div>
 `

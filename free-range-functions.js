@@ -1,4 +1,4 @@
-var currentAppVersion = "2.3";
+var currentAppVersion = "2.4";
 
 var defaultSnapInches = 18;
 

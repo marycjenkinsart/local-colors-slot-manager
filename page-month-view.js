@@ -422,6 +422,7 @@ var monthViewPage = Vue.component('month-view', {
 	<p>
 		<button
 			@click="returnToHub"
+			title="Go back to the LC Rotation hub"
 		>Return to Hub</button>
 	</p>
 	<div

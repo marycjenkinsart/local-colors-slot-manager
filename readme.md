@@ -12,8 +12,8 @@ Hey there! Thanks for taking a look at this!
 		- iOS 10+ is required for the "copy link" button to work (which requires `document.execCommand("copy")`), but for browsers that don't support this feature, the text can be selected by hand and copied manually.
 3. **No server-side data management**. No authentication, and no external server to manage; all the data is kept in the URL query itself. Save the link, and you've saved the map!
 4. **Beginner friendly**. If you can read and click buttons, you have all the skills you need to use the editor.
-	a. Buttons do what they say they do, confirmation dialogs keep users from committing changes by accident, warnings are given for problems in the page itself (as opposed to the console), and hovertext explains buttons and text fields in greater detail.
-	b. Cache busting is used when preview behavior changes, so no need to ask anyone to clear their cache or try a hard refresh to see updated content.
+	1. Buttons do what they say they do, confirmation dialogs keep users from committing changes by accident, warnings are given for problems in the page itself (as opposed to the console), and hovertext explains buttons and text fields in greater detail.
+	2. Cache busting is used when preview behavior changes, so no need to ask anyone to clear their cache or try a hard refresh to see updated content.
 
 ### Advanced Management
 
