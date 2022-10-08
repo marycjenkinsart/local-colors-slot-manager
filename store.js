@@ -95,14 +95,6 @@ var wizardStore = {
 			})
 			return result;
 		},
-		filteredUnplacedNames: function (state, getters, rootState) {
-			var floor = rootState.history.selectedFloor;
-			var placedNames = state.placedNames[floor];
-			var result = getters.rawUnplacedNames.filter(function (item) {
-				return !placedNames.includes(item.name);
-			})
-			return result;
-		},
 	},
 	mutations: {
 		WIZARD_SET_CURRENT_QUESTION_INDEX: function (state, value) {
@@ -116,9 +108,6 @@ var wizardStore = {
 		WIZARD_SET_PLACED_NAMES: function (state, obj) {
 			state.placedNames = obj;
 		},
-		WIZARD_RESET_PLACED_NAMES: function (state, floor) {
-			state.placedNames[floor] = [];
-		},
 	},
 	actions: {
 		wizardSetCurrentQuestionIndex: function (context, value) {
@@ -128,11 +117,12 @@ var wizardStore = {
 			context.commit('WIZARD_SUBMIT_QUIZ_RESULTS', object);
 		},
 		// INSERTION STUFF BELOW
-		wizardSetPlacedNames: function (context, obj) {
-			context.commit('WIZARD_SET_PLACED_NAMES', obj);
-		},
-		wizardResetPlacedNames: function (context, floor) {
-			context.commit('WIZARD_RESET_PLACED_NAMES',floor);
+		wizardSetPlacedNames: function (context, array) {
+			var floor = context.rootState.history.selectedFloor;
+			var placedNamesAllFloors = clone(context.state.placedNames);
+			placedNamesAllFloors[floor] = array;
+			console.log(placedNamesAllFloors)
+			context.commit('WIZARD_SET_PLACED_NAMES', placedNamesAllFloors);
 		},
 	},
 };

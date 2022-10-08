@@ -2,40 +2,33 @@ Vue.component('history-placement', {
 	mixins: [
 		mixinsHistory,
 	],
+	props: {
+		insertGuest: {
+			type: Boolean,
+			require: true,
+		},
+		namesToInsert: {
+			type: Array,
+			require: true,
+		},
+		featured: {
+			type: Array,
+			require: true,
+		},
+	},
 	data: function () {
-		return {};
+		return {
+			placedNames: [],
+			finished: false,
+		};
 	},
 	computed: {
-		placedNames: function () {
-			return this.$store.state.wizard.placedNames;
-		},
-		potentialState: function () {
-			return this.$store.state.wizard.quizResults;
-		},
-		autoInsertGuest: function () {
-			return this.potentialState.insertGuest;
-		},
-		slotCounts: function () {
-			var tally = {
-				up: 0,
-				down: 0,
-			};
-			var self = this;
-			Object.keys(tally).forEach(function (floor) {
-				self.potentialState[floor].forEach(function (artist) {
-					tally[floor] += artist.slotSize;
-				})
+		slotCount: function () {
+			var tally = 0;
+			this.namesToInsert.forEach(function (artist) {
+				tally += artist.slotSize;
 			})
-			// if (this.potentialState.insertGuest) {
-			// 	tally[up] += 0.5;
-			// }
 			return tally;
-		},
-		halfSlotCounts: function () {
-			return {
-				up: this.slotCounts.up * 2,
-				down: this.slotCounts.down * 2,
-			};
 		},
 		namesToSlotSizes: function () {
 			// returns an object map of artist name to slot size
@@ -47,40 +40,32 @@ Vue.component('history-placement', {
 			return result;
 		},
 		displaySlotSizes: function () {
-			return {
-				up: makeSlotCountPretty(this.slotCounts.up),
-				down: makeSlotCountPretty(this.slotCounts.down),
-			}
+			return makeSlotCountPretty(this.slotCount);
 		},
-		visibleButtons: function () {
-			return this.$store.getters.filteredUnplacedNames;
+		filteredUnplacedNames: function () {
+			var rawUnplacedNames = this.$store.getters.rawUnplacedNames;
+			var placedNames = this.placedNames; // don't lose the `this`!
+			return rawUnplacedNames.filter(function (item) {
+				return !placedNames.includes(item.name);
+			})
 		},
 		paddedNames: function () { // padded with null to the target length
-			var result = clone(this.placedNames);
-			var halfSlotCounts = this.halfSlotCounts;
-			Object.keys(result).forEach(function (floor) {
-				var halfSlotCount = halfSlotCounts[floor];
-				var origLength = result[floor].length;
-				result[floor].length = halfSlotCount;
-				result[floor].fill(null, origLength);
-			})
+			var result = this.placedNames.slice();
+			var origLength = result.length;
+			result.length = this.slotCount * 2;
+			result.fill(null, origLength);
 			return result;
 		},
 		inProgressNames: function () { // with unique names for null slots
-			var result = clone(this.paddedNames);
-			Object.keys(result).forEach(function (floor){
-				var editingArray = result[floor].slice()
-				var newArray = editingArray.map(function (item, index) {
-					return !!item ? item : 'empty #' + index;
-				})
-				result[floor] = newArray;
+			var result = this.paddedNames.map(function (item, index) {
+				return item ? item : 'empty #' + index;
 			})
 			return result;
 		},
 		displayNames: function () { // to send to display component
 			var result = clone(this.inProgressNames);
-			if (this.autoInsertGuest) {
-				result.up.unshift('GUEST');
+			if (this.insertGuest) {
+				result.unshift('GUEST');
 			};
 			return result;
 		},
@@ -96,10 +81,10 @@ Vue.component('history-placement', {
 			}
 		},
 		clickNameTopRow: function (args) {
-			var arrayWithUniques = this.placedNames[this.selectedFloor].slice();
-			var arrayWithNulls = this.paddedNames[this.selectedFloor].slice();
+			var arrayWithUniques = this.placedNames.slice();
+			var arrayWithNulls = this.paddedNames.slice();
 			var index = args.index;
-			if (this.displayNames.up.includes('GUEST') && this.selectedFloor === 'up') {
+			if (this.displayNames.includes('GUEST')) {
 				index -= 1;
 			}
 			var clickedName = arrayWithNulls[index];
@@ -150,23 +135,27 @@ Vue.component('history-placement', {
 					// console.log('No name to insert, however')
 				}
 			}
-			var finishedStuff = clone(this.placedNames);
-			finishedStuff[this.selectedFloor] = arrayWithNulls
-			this.setPlacedNames(finishedStuff);
+			this.placedNames = arrayWithNulls;
+			if (!this.filteredUnplacedNames.length) { // no more names to insert
+				if (!this.finished) {
+					this.finished = true;
+					this.$emit('update-placed-names', clone(this.placedNames));
+				}
+			} else if (this.finished) {
+				this.finished = false;
+				this.$emit('update-placed-names', []);
+			}
 		},
-		setPlacedNames: function (obj) {
-			this.$store.dispatch('wizardSetPlacedNames', obj);
-		}
 	},
 	template: /*html*/`
 <div>
 	<p>
 		<span class="red">Artists left to place:</span>
 		<span
-			v-if="visibleButtons.length === 0 && !insertName"
+			v-if="filteredUnplacedNames.length === 0 && !insertName"
 		><strong>All done!</strong></span>
 		<button
-			v-for="artist in visibleButtons"
+			v-for="artist in filteredUnplacedNames"
 			@click="highlightNameToInsert(artist.name)"
 			class="insertion-button"
 			:class="artist.name === insertName ? 'insertable-highlighted' : 'insertable'"
@@ -175,12 +164,11 @@ Vue.component('history-placement', {
 			v-if="!!insertName"
 		>Placing the name <strong>{{insertName}}</strong></span>
 	</p>
-	</history-row>
 	<history-row
-		:names="displayNames[selectedFloor]"
+		:names="displayNames"
 		@clicked-on-name="clickNameTopRow($event)"
 		label="NEW"
-		:featured="potentialState.feat"
+		:featured="featured"
 		:insertable="true"
 	>
 	</history-row>

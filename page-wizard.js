@@ -28,6 +28,12 @@ var wizardPage = Vue.component('wizard', {
 		dummyFalse: function () {
 			return false;
 		},
+		potentialState: function () {
+			return this.workingRotation.quizResults;
+		},
+		selectedHistoryInsertFloor: function () {
+			return this.$store.state.history.selectedFloor;
+		},
 		// computeds for goTo branches
 		guestArtistBranch: function () {
 			var quizAnswers = this.quizAnswers;
@@ -76,8 +82,13 @@ var wizardPage = Vue.component('wizard', {
 		newArtistsFloorIsSet: function () {
 			return this.limboLists.limbo.length === 0;
 		},
-		allFreeNamesPlaced: function () {
-			return !this.$store.getters.filteredUnplacedNames.length;
+		allFreeUpstairsNamesPlaced: function () {
+			var placedNames = this.$store.state.wizard.placedNames;
+			return !!placedNames.up.length;
+		},
+		allFreeDownstairsNamesPlaced: function () {
+			var placedNames = this.$store.state.wizard.placedNames;
+			return !!placedNames.down.length;
 		},
 		// forbidden char reports and related stuff
 		groupThemeForbiddenReport: function () {
@@ -362,6 +373,9 @@ var wizardPage = Vue.component('wizard', {
 			}
 			this.quizAnswers.artistFloorAssignmentOverrides = result;
 		},
+		updatePlacedNames: function (array) {
+			this.$store.dispatch('wizardSetPlacedNames', array);
+		},
 		submitNewArtistName: function () {
 			var artistName = this.newArtistName;
 			if (!this.arrivingArtists.includes(artistName)) {
@@ -384,20 +398,23 @@ var wizardPage = Vue.component('wizard', {
 			);
 			this.$store.dispatch('historySetSelectedFloor','up');
 		},
-		setSelectedFloorToUpstairs: function () {
+		setSelectedFloor: function (floor) {
 			scrollToTop();
-			this.$store.dispatch('historySetSelectedFloor','up');
+			this.setInsertName('');
+			this.setHighlightedName('');
+			this.$store.dispatch('historySetSelectedFloor',floor);
+		},
+		setSelectedFloorToUpstairs: function () {
+			this.setSelectedFloor('up');
 		},
 		setSelectedFloorToDownstairs: function () {
-			scrollToTop();
-			this.$store.dispatch('historySetSelectedFloor','down');
+			this.setSelectedFloor('down');
 		},
 		dummyNada: function () {
 			scrollToTop();
 		},
 		loadFinalWizardResults: function () {
 			var results = clone(this.wizardResults);
-			console.log(results);
 			this.$store.dispatch('loadRotation', results);
 		},
 		returnToHub: function () {
@@ -906,7 +923,13 @@ var wizardPage = Vue.component('wizard', {
 				@set-tips="setTips($event)"
 			></wizard-insertion-tips>
 			<hr style="margin: 10px 0px;">
-			<history-placement></history-placement>
+			<history-placement
+				key="up"
+				:insertGuest="insertGuest"
+				:namesToInsert="potentialState[selectedHistoryInsertFloor]"
+				:featured="potentialState.feat"
+				@update-placed-names="updatePlacedNames($event)"
+			></history-placement>
 			<history-header></history-header>
 			<history-table></history-table>
 		</div>
@@ -919,7 +942,13 @@ var wizardPage = Vue.component('wizard', {
 				@set-tips="setTips($event)"
 			></wizard-insertion-tips>
 			<hr style="margin: 10px 0px;">
-			<history-placement></history-placement>
+			<history-placement
+				key="down"
+				:insertGuest="insertGuest"
+				:namesToInsert="potentialState[selectedHistoryInsertFloor]"
+				:featured="potentialState.feat"
+				@update-placed-names="updatePlacedNames($event)"
+			></history-placement>
 			<history-header></history-header>
 			<history-table></history-table>
 		</div>
