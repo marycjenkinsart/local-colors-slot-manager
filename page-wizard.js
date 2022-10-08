@@ -52,7 +52,6 @@ var wizardPage = Vue.component('wizard', {
 		limboArtistsBranch: function () {
 			var defaultGoTo = 90;
 			var extraQGoTo = 80;
-			console.log(this.limboLists.limbo.length === 0 ? defaultGoTo : extraQGoTo)
 			return this.limboLists.limbo.length === 0 ? defaultGoTo : extraQGoTo;
 		},
 		// computeds for whether buttons are enabled
@@ -77,13 +76,8 @@ var wizardPage = Vue.component('wizard', {
 		newArtistsFloorIsSet: function () {
 			return this.limboLists.limbo.length === 0;
 		},
-		allFreeUpstairsNamesPlaced: function () {
-			var filteredUnplacedNames = this.$store.getters.filteredUnplacedNames;
-			return !filteredUnplacedNames.up.length;
-		},
-		allFreeDownstairsNamesPlaced: function () {
-			var filteredUnplacedNames = this.$store.getters.filteredUnplacedNames;
-			return !filteredUnplacedNames.down.length;
+		allFreeNamesPlaced: function () {
+			return !this.$store.getters.filteredUnplacedNames.length;
 		},
 		// forbidden char reports and related stuff
 		groupThemeForbiddenReport: function () {

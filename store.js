@@ -84,88 +84,24 @@ var wizardStore = {
 			var currentGuest = getters.guestCurrentlyExists;
 			return wizardGuest || currentGuest;
 		},
-		quizResultsSlotCounts: function (state, getters, rootState) {
-			var tally = {
-				up: 0,
-				down: 0,
-			};
-			if (rootState.history.fromEditMode) {// non-wizard bodge
-				var bodgeNames = getters.artists;
-				limitedFloorNames.forEach(function (floor) {
-					tally[floor] = bodgeNames[floor].length / 2;
-				})
-			} else {// normal
-				var quizResults = state.quizResults;
-				Object.keys(tally).forEach(function (floor) {
-					quizResults[floor].forEach(function (artist) {
-						tally[floor] += artist.slotSize;
-					})
-				})
-			}
-			return tally;
-		},
-		namesToSlotSizes: function (state, getters) {
-			// returns an object map of artist name to slot size
-			var totalNames = getters.rawUnplacedNames;
-			var result = {};
-			limitedFloorNames.forEach(function (floor) {
-				totalNames[floor].forEach(function (item) {
-					result[item.name] = item.slotSize;
-				})
+		rawUnplacedNames: function (state, getters, rootState) {
+			var floor = rootState.history.selectedFloor;
+			var result = state.quizResults[floor].map(function (item) {
+				return {
+					name: item.name,
+					displayName: makePrintName(item.name, item.slotSize),
+					slotSize: item.slotSize,
+				};
 			})
 			return result;
 		},
-		rawUnplacedNames: function (state, getters, rootState) {
-			var unplaced = {
-				'up': [],
-				'down': [],
-			}
-			if (rootState.history.fromEditMode) {// non-wizard bodge
-				var currentState = getters.artists;
-				var fancyFloors = {};
-				limitedFloorNames.forEach(function (floor) {
-					fancyFloors[floor] = makeFloorFancy(currentState[floor])
-				})
-				limitedFloorNames.forEach(function (floor) {
-					var insert = fancyFloors[floor].map(function (item) {
-						return {
-							name: item.name,
-							displayName: makePrintName(item.name, item.slotSize),
-							slotSize: item.slotSize,
-						}
-					})
-					unplaced[floor] = insert;
-				})
-			} else { // normal
-				var potentialState = state.quizResults;
-				limitedFloorNames.forEach(function (floor) {
-					potentialState[floor].forEach(function (item) {
-						var insert = {
-							name: item.name,
-							displayName: makePrintName(item.name, item.slotSize),
-							slotSize: item.slotSize,
-						};
-						unplaced[floor].push(insert);
-					})
-				})
-			}
-			return unplaced;
-		},
-		filteredUnplacedNames: function (state, getters) {
-			var orig = clone(getters.rawUnplacedNames);
-			var placedNames = clone(state.placedNames);
-			var filtered = {
-				'up': [],
-				'down': [],
-			}
-			limitedFloorNames.forEach(function (floor) {
-				orig[floor].forEach(function (item) {
-					if (!placedNames[floor].includes(item.name)){
-						filtered[floor].push(item);
-					}
-				})
+		filteredUnplacedNames: function (state, getters, rootState) {
+			var floor = rootState.history.selectedFloor;
+			var placedNames = state.placedNames[floor];
+			var result = getters.rawUnplacedNames.filter(function (item) {
+				return !placedNames.includes(item.name);
 			})
-			return filtered;
+			return result;
 		},
 	},
 	mutations: {

@@ -16,8 +16,20 @@ Vue.component('history-placement', {
 			return this.potentialState.insertGuest;
 		},
 		slotCounts: function () {
-			var result = this.$store.getters.quizResultsSlotCounts
-			return result;
+			var tally = {
+				up: 0,
+				down: 0,
+			};
+			var self = this;
+			Object.keys(tally).forEach(function (floor) {
+				self.potentialState[floor].forEach(function (artist) {
+					tally[floor] += artist.slotSize;
+				})
+			})
+			// if (this.potentialState.insertGuest) {
+			// 	tally[up] += 0.5;
+			// }
+			return tally;
 		},
 		halfSlotCounts: function () {
 			return {
@@ -26,7 +38,13 @@ Vue.component('history-placement', {
 			};
 		},
 		namesToSlotSizes: function () {
-			return this.$store.getters.namesToSlotSizes;
+			// returns an object map of artist name to slot size
+			var totalNames = this.$store.getters.rawUnplacedNames;
+			var result = {};
+			totalNames.forEach(function (item) {
+				result[item.name] = item.slotSize;
+			})
+			return result;
 		},
 		displaySlotSizes: function () {
 			return {
@@ -35,8 +53,7 @@ Vue.component('history-placement', {
 			}
 		},
 		visibleButtons: function () {
-			var filteredUnplacedNames = this.$store.getters.filteredUnplacedNames;
-			return filteredUnplacedNames[this.selectedFloor];
+			return this.$store.getters.filteredUnplacedNames;
 		},
 		paddedNames: function () { // padded with null to the target length
 			var result = clone(this.placedNames);

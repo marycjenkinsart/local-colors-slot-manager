@@ -439,7 +439,7 @@ var wizardQuiz = [
 			},
 			{
 				label: "Next",
-				enabled: "allFreeUpstairsNamesPlaced",
+				enabled: "allFreeNamesPlaced",
 				action: "setSelectedFloorToDownstairs",
 				goTo: 101,
 			}
@@ -464,7 +464,7 @@ var wizardQuiz = [
 			},
 			{
 				label: "Next",
-				enabled: "allFreeDownstairsNamesPlaced",
+				enabled: "allFreeNamesPlaced",
 				action: "loadFinalWizardResults",
 				goTo: 110,
 			}
