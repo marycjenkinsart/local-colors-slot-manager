@@ -41,6 +41,80 @@ var scrollToTop = function () {
 	window.scrollTo(0,0)
 };
 
+var clone = function (object) {
+	return JSON.parse(JSON.stringify(object));
+}
+
+  //-------------------------------//
+ /*   MONTHS, DATES, and LABELS   */
+//-------------------------------//
+
+var unmergeMergedMonth = function (mergedMonth) {
+	var year = Math.floor(mergedMonth / 12);
+	var month = mergedMonth % 12;
+	if (month === 0) {
+		year -= 1;
+		month = 12;
+	}
+	return {
+		year: year,
+		month: month
+	};
+}
+
+var shortMonthMap = [
+	'Jan', 'Feb', 'Mar', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
+];
+var longMonthMap = [
+	"January" , "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",
+];
+
+var getShortMonth = function (int) {
+	return shortMonthMap[int - 1] || `?? (${int})`;
+};
+var getLongMonth = function (int) {
+	return longMonthMap[int - 1] || `?? (${int})`;
+};
+
+var makeShortLabel = function (label) {
+	if (label.custom) {
+		return label.custom; // we're already done
+	}
+	var month = label.month;
+	var year = label.year;
+	if (!month || !year) {
+		if (label.mergedMonth) {
+			var unmerged = unmergeMergedMonth(label.mergedMonth);
+			month = unmerged.month;
+			year = unmerged.year;
+		} else {
+			throw new Error("Cannot makeShortLabel without complete date information!")
+		}
+	}
+	result = `${getShortMonth(month)} ${year}`;
+	if (label.version !== 1) {
+		result = result + ` v${label.version}`;
+	}
+	return result;
+}
+
+var makeVeryShortLabel = function (label) {
+	var month = label.month;
+	var year = label.year;
+	if (!month || !year) {
+		if (label.mergedMonth) {
+			var unmerged = unmergeMergedMonth(label.mergedMonth);
+			month = unmerged.month;
+			year = unmerged.year;
+		} else {
+			throw new Error("Cannot makeVeryShortLabel without complete date information!")
+		}
+	}
+	year = year + '';
+	var shortYear = year.substring(year.length-2);
+	return `${getShortMonth(month)} '${shortYear}`;
+}
+
   //--------------------------//
  /*   ARTIST DATA HANDLING   */
 //--------------------------//
@@ -377,7 +451,7 @@ var makeAdjustmentsUncompact = function (string, length) {
 // ALL THE REST
 
 var compactEverything = function (rotation) {
-	rotation = JSON.parse(JSON.stringify(rotation));
+	rotation = clone(rotation);
 	var compactLabel = makeLabelCompact(rotation.rotationLabel);
 	var up = makeFloorCompact(rotation.artists.up);
 	var down = makeFloorCompact(rotation.artists.down);
@@ -516,8 +590,8 @@ var emptyRotationObject = {
 
 var makeRotationObjectFromQuery = function (queryObject, querySource) {
 	// setting things up
-	var result = JSON.parse(JSON.stringify(emptyRotationObject));
-	result.originalQuery = JSON.parse(JSON.stringify(queryObject));
+	var result = clone(emptyRotationObject);
+	result.originalQuery = clone(queryObject);
 	// parse label
 	if (queryObject.l) {
 		result.rotationLabel = makeLabelUncompact(queryObject.l);
@@ -628,8 +702,8 @@ var cutLineAtDistance = function (lineObj, distance) {
 		x: Math.cos(angleInRadians) * distance + lineObj.x1,
 		y: Math.sin(angleInRadians) * distance + lineObj.y1,
 	}
-	var lineA = JSON.parse(JSON.stringify(lineObj));
-	var lineB = JSON.parse(JSON.stringify(lineObj));
+	var lineA = clone(lineObj);
+	var lineB = clone(lineObj);
 	lineA.x2 = splitPoint.x;
 	lineA.y2 = splitPoint.y;
 	lineB.x1 = splitPoint.x;
@@ -734,7 +808,7 @@ var lineToLeftRectangle = function (coords, width) {
 	var normalizedTangent = getNormalizedTangent(coords);
 	var xExtension = normalizedTangent.x * width;
 	var yExtension = normalizedTangent.y * width;
-	var result = JSON.parse(JSON.stringify(coords));
+	var result = clone(coords);
 	result.x3 = result.x2 + xExtension;
 	result.y3 = result.y2 + yExtension;
 	result.x4 = result.x1 + xExtension;
@@ -832,6 +906,215 @@ var getArtistsPar = function (artists, halfSlotSize, snappedFusedSlotsFlat) {
 	return floorResult;
 };
 
+
+  //-------------------------------------------//
+ /*   WIZARD QUIZ + ROTATION = NEW ROTATION   */
+//-------------------------------------------//
+
+var applyWizardQuizAnswersToRotation = function (quizAnswers, origRot) {
+	var working = clone(origRot);
+	working.quizResults = {};
+	working.quizOptions = {};
+	var rawMergedMonth = quizAnswers.rotationMergedMonthDif +
+		origRot.rotationLabel.mergedMonth;
+	// set working label
+	working.rotationLabel.mergedMonth = rawMergedMonth;
+	var unMerged = unmergeMergedMonth(working.rotationLabel.mergedMonth);
+	working.rotationLabel.month = unMerged.month;
+	working.rotationLabel.year = unMerged.year;
+	// swap floors
+	if (quizAnswers.swapFloors === true) {
+		var swap = working.artists.up;
+		working.artists.up = working.artists.down;
+		working.artists.down = swap;
+	}
+	// excise GUEST if present
+	working.artists.up = working.artists.up.filter(function (item) {
+		return item !== 'GUEST';
+	})
+	working.artists.down = working.artists.down.filter(function (item) {
+		return item !== 'GUEST';
+	})
+	// 2D featured options
+	var featured2DOptions = {
+		up: working.artists.up.filter(getUnique),
+		down: working.artists.down.filter(getUnique),
+	};
+	// making fancy featured info
+	var featuredType = quizAnswers.featuredType;
+	var featured2DName = quizAnswers.featured2DName;
+	var featured3DName = quizAnswers.featured3DName;
+	var featuredGroupTheme = quizAnswers.featuredGroupTheme;
+	var newFeatured = origRot.artists.feat;
+	if (featuredType === '2D' && featured2DName) {
+		var preFeaturedCount = working.artists.up.length + working.artists.down.length;
+		working.artists.up = working.artists.up.filter(function (item) {
+			return item !== featured2DName;
+		})
+		working.artists.down = working.artists.down.filter(function (item) {
+			return item !== featured2DName;
+		})
+		var postFeaturedCount = working.artists.up.length + working.artists.down.length;
+		var featuredCountDif = (preFeaturedCount - postFeaturedCount);
+		newFeatured = [{
+			name: featured2DName,
+			type: '2D',
+			origSlotSize: featuredCountDif / 2,
+		}];
+	} else if (featuredType === '3D' && featured3DName) {
+		newFeatured = [{
+			name: featured3DName,
+			type: '3D',
+		}];
+	} else if (featuredType === 'group') {
+		newFeatured = [{
+			name: featuredGroupTheme || 'no theme',
+			type: 'group',
+		}];
+	}
+	// making advanced artist info for various other steps
+	var fusedArtistTable = [];
+	if (featuredType !== 'same') {
+		working.artists.feat.forEach(function (artist) {
+			if (artist.type === '2D') {
+				fusedArtistTable[artist.name] = {
+					name: artist.name,
+					slotSize: artist.origSlotSize,
+					displaySlotSize: makeSlotCountPretty(artist.origSlotSize),
+					location: 'limbo',
+				}
+			}
+		})
+	}
+	limitedFloorNames.forEach(function (floorName) {
+		working.artists[floorName].forEach(function (artistName) {
+			if (fusedArtistTable[artistName]) {
+				fusedArtistTable[artistName].slotSize += 0.5;
+				fusedArtistTable[artistName].displaySlotSize =
+					makeSlotCountPretty(fusedArtistTable[artistName].slotSize);
+			} else {
+				fusedArtistTable[artistName] = {
+					name: artistName,
+					slotSize: 0.5,
+					displaySlotSize: makeSlotCountPretty(0.5),
+					location: floorName,
+				}
+			}
+		})
+	})
+	// quiz options: departing artists
+	var departingArtists = quizAnswers.departingArtists;
+	var departingOptions = Object.keys(fusedArtistTable)
+		.filter(getUnique)
+	// inserting artists that are in limbo
+	var arrivingArtists = quizAnswers.arrivingArtists;
+	arrivingArtists.forEach(function (artistName) {
+		fusedArtistTable[artistName] = {
+			name: artistName,
+			slotSize: 1,
+			displaySlotSize: '1',
+			location: 'limbo',
+		}
+	})
+	//Remove artists from the fusedArtistTable that are explicitly departing
+	departingArtists.forEach(function (departingName) {
+		delete fusedArtistTable[departingName];
+	})
+	// slot size changes
+	var origSlotSizeOptions = {};
+	Object.keys(fusedArtistTable).forEach(function (artistName) {
+		origSlotSizeOptions[artistName] = fusedArtistTable[artistName].slotSize;
+	})
+	var artistSlotSizeChanges = quizAnswers.artistSlotSizeChanges;
+	Object.keys(fusedArtistTable).forEach(function (artistName) {
+		if (artistSlotSizeChanges.includes(artistName)) {
+			var currSlotSize = fusedArtistTable[artistName].slotSize;
+			fusedArtistTable[artistName].slotSize = currSlotSize === 1 ? 0.5 : 1;
+			fusedArtistTable[artistName].displaySlotSize =
+				makeSlotCountPretty(fusedArtistTable[artistName].slotSize);
+		}
+	})
+	var slotSizeOptions = {};
+	Object.keys(fusedArtistTable).forEach(function (artistName) {
+		slotSizeOptions[artistName] = fusedArtistTable[artistName].slotSize;
+	})
+	// settling limbo stuff
+	var origLimboLists = {
+		limbo: Object.keys(fusedArtistTable)
+		.filter(function (item) {
+			return fusedArtistTable[item].location === 'limbo';
+		}),
+		up: Object.keys(fusedArtistTable)
+		.filter(function (item) {
+			return fusedArtistTable[item].location === 'up';
+		}),
+		down: Object.keys(fusedArtistTable)
+		.filter(function (item) {
+			return fusedArtistTable[item].location === 'down';
+		}),
+	};
+	var limboAssignments = quizAnswers.newArtistsNewFloor
+	Object.keys(limboAssignments).forEach(function (artistName) {
+		fusedArtistTable[artistName].location = limboAssignments[artistName];
+	})
+	var limboLists = {
+		limbo: Object.keys(fusedArtistTable)
+		.filter(function (item) {
+			return fusedArtistTable[item].location === 'limbo';
+		}),
+		up: Object.keys(fusedArtistTable)
+		.filter(function (item) {
+			return fusedArtistTable[item].location === 'up';
+		}),
+		down: Object.keys(fusedArtistTable)
+		.filter(function (item) {
+			return fusedArtistTable[item].location === 'down';
+		}),
+	};
+	// finall, floor assignment overrides
+	var overrides = quizAnswers.artistFloorAssignmentOverrides;
+	overrides.forEach(function (artistName) {
+		var origLocation = fusedArtistTable[artistName].location;
+		fusedArtistTable[artistName].location =
+			origLocation === 'up' ? 'down' : 'up';
+	})
+	var afterOverridesList = {
+		up: Object.keys(fusedArtistTable)
+		.filter(function (item) {
+			return fusedArtistTable[item].location === 'up';
+		}),
+		down: Object.keys(fusedArtistTable)
+		.filter(function (item) {
+			return fusedArtistTable[item].location === 'down';
+		})
+	};
+	// putting everything together for the return statement
+	working.fusedArtistTable = fusedArtistTable;
+	working.quizOptions = {
+		featured2DOptions: featured2DOptions,
+		departingOptions: departingOptions,
+		slotSizeOptions: slotSizeOptions,
+		origSlotSizeOptions: origSlotSizeOptions,
+		origLimboLists: origLimboLists,
+		limboLists: limboLists,
+		afterOverridesList: afterOverridesList,
+	};
+	// ...setting up remaining quiz results...
+	var guestPresent = quizAnswers.guestPresent;
+	var guestSharesFeatured = quizAnswers.guestSharesFeatured;
+	working.quizResults.insertGuest = guestPresent && !guestSharesFeatured;
+	working.quizResults.feat = newFeatured;
+	working.quizResults.up = [];
+	working.quizResults.down = [];
+	Object.values(fusedArtistTable).forEach(function (object) {
+		if (object.location === 'up' || object.location === 'down') {
+			working.quizResults[object.location].push(object);
+		}
+	})
+	working.orig = origRot;
+	return working;
+};
+
   //----------------------//
  /*   LINE INTERATIONS   */
 //----------------------//
@@ -920,8 +1203,8 @@ var getAdjustedHalfSlotLengths = function (templatesToDraw, artists, adjustments
 //  ]
 
 var makeComplexLines = function (templateArray, baselineHalfSlots) {
-	var lines = JSON.parse(JSON.stringify(templateArray));
-	var artists = JSON.parse(JSON.stringify(baselineHalfSlots));
+	var lines = clone(templateArray);
+	var artists = clone(baselineHalfSlots);
 	var combinedLines = [];
 	var pc = -1;
 	var shiftLine = function () {
@@ -990,7 +1273,7 @@ var makeComplexLines = function (templateArray, baselineHalfSlots) {
 };
 
 var fuseComplexLinesByArtist = function (complexSlotsArray) {
-	var fusedSlots = JSON.parse(JSON.stringify(complexSlotsArray));
+	var fusedSlots = clone(complexSlotsArray);
 	var extractNames = function (sharedLine) {
 		return sharedLine.map(function (line) {
 			return line.name;
@@ -1056,7 +1339,7 @@ var fuseComplexLinesByArtist = function (complexSlotsArray) {
 };
 
 var snapLast = function (_lineSegmentPieces) {
-	var lineSegmentPieces = JSON.parse(JSON.stringify(_lineSegmentPieces));
+	var lineSegmentPieces = clone(_lineSegmentPieces);
 	var penultimate = lineSegmentPieces[lineSegmentPieces.length - 2];
 	var last = lineSegmentPieces[lineSegmentPieces.length - 1];
 	var fusion = makeFusedLine( // last segment is snapped (removed)
@@ -1072,7 +1355,7 @@ var snapLast = function (_lineSegmentPieces) {
 	return lineSegmentPieces;
 };
 var snapFirst = function (_lineSegmentPieces) {
-	var lineSegmentPieces = JSON.parse(JSON.stringify(_lineSegmentPieces));
+	var lineSegmentPieces = clone(_lineSegmentPieces);
 	var first = lineSegmentPieces[0];
 	var second = lineSegmentPieces[1];
 	var fusion = makeFusedLine( // first segment is snapped (removed)
@@ -1088,7 +1371,7 @@ var snapFirst = function (_lineSegmentPieces) {
 	return lineSegmentPieces;
 };
 var snapShortSegments = function (_lineSegmentPieces, threshold, priority) {
-	var lineSegmentPieces = JSON.parse(JSON.stringify(_lineSegmentPieces));
+	var lineSegmentPieces = clone(_lineSegmentPieces);
 	var arrayLength = lineSegmentPieces.length;
 	if (arrayLength > 1) {
 		var firstLengthShort = getLengthFromLineCoords(lineSegmentPieces[0]) < threshold;
@@ -1119,7 +1402,7 @@ var snapShortSegments = function (_lineSegmentPieces, threshold, priority) {
 };
 
 var snapAllShortSegments = function (_complexSlots, threshold, priority) {
-	var complexSlots = JSON.parse(JSON.stringify(_complexSlots));
+	var complexSlots = clone(_complexSlots);
 	for (var index = 0; index < complexSlots.length; index++) {
 		complexSlots[index] = snapShortSegments(complexSlots[index], threshold, priority);
 	}
@@ -1269,6 +1552,7 @@ var compareLabelAges = function (first, second) {
 };
 
 var getLongLabel = function (labelObject, omitVersion) {
+	// TODO: bring this in line with the other monthmap stuff
 	var year = labelObject.year || 1970;
 	var month = labelObject.month || 13;
 	var version = labelObject.version || 1;
@@ -1277,11 +1561,7 @@ var getLongLabel = function (labelObject, omitVersion) {
 	if (custom.length) {
 		result = custom;
 	} else {
-		var monthMap = [
-			'Jan', 'Feb', 'Mar', 'April', 'May', 'June',
-			'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
-		]
-		var monthName = monthMap[parseInt(month,10) - 1] || 'ERROR';
+		var monthName = shortMonthMap[parseInt(month,10) - 1] || 'ERROR';
 		result = monthName + ' ' + year
 		if (version > 1 && !omitVersion) {
 			result += ' v' + version;

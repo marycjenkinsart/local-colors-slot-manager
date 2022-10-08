@@ -9,18 +9,24 @@ Vue.component('history-row', {
 			require: true,
 		},
 		names: {
+			// unfancy artist names
 			type: Array,
 			require: true,
 		},
 		featured: {
+			// the featured array
 			type: Array,
 			require: false,
 		},
 		insertable: {
+			// whether this row is eligible for name insertion
+			// (affects whether names will turn black if insertable)
 			type: Boolean,
 			require: false
 		},
 		pale: {
+			// if true, draws the boxes (and words) paler
+			// (meant for the table header)
 			type: Boolean,
 			require: false
 		},
@@ -30,15 +36,12 @@ Vue.component('history-row', {
 			return makeFloorFancy(this.names);
 		},
 		featuredString: function () {
-			var result = '';
-			if (this.featured.length > 0) {
-				var working = this.featured.slice();
-				result = working.shift().name;
-				while (working.length > 0) {
-					result += ' + ' + working.shift().name;
-				}
-			}
-			return result;
+			// a string to put in the "featured" column
+			var featured = this.featured || [];
+			var names = featured.map(function (item) {
+				return item.name;
+			})
+			return names.join(' + ') || '(none)';
 		},
 	},
 	methods: {

@@ -1,20 +1,33 @@
 // mixins for history views
 
 var mixinsHistory = {
+	data: function () {
+		return {
+			showTips: false,
+		}
+	},
 	computed: {
+		fromEditMode: function () {
+			// whether history was entered from edit mode
+			return this.$store.state.history.fromEditMode;
+		},
 		selectedFloor: function () {
+			// which floor's history will be viewed
 			return this.$store.state.history.selectedFloor;
 		},
 		highlightedName: function () {
+			// which name should turn red (through all history rows)
 			return this.$store.state.history.highlightedName;
 		},
 		insertName: function () {
+			// which name should turn black (to insert)
 			return this.$store.state.history.insertName;
 		},
 		fullHistory: function () {
 			return this.$store.getters.fullHistory;
 		},
 		practicalHistory: function () {
+			// the history a normal table will display
 			return this.$store.getters.practicalHistory;
 		},
 		historyItemsRange: function () {
@@ -27,6 +40,7 @@ var mixinsHistory = {
 	},
 	methods: {
 		setFloor: function (string) {
+			// change which floor is to be viewed
 			this.setHighlightedName('');
 			this.setInsertName('');
 			this.$store.dispatch('historySetSelectedFloor', string);
@@ -37,23 +51,6 @@ var mixinsHistory = {
 		setInsertName: function (name) {
 			this.$store.dispatch('historySetInsertName', name);
 		},
-		makeShortLabel: function (label) {
-			var monthMap = [
-				'Jan', 'Feb', 'Mar', 'April', 'May', 'June',
-				'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
-			];
-			var result = '';
-			if (!!label.custom) {
-				result = label.custom;
-			} else {
-				result = monthMap[label.month-1]
-					+ ' '
-					+ label.year;
-				if (label.version !== 1) {
-					result = result + ' v' + label.version
-				}
-			}
-			return result;
-		},
+		makeShortLabel: makeShortLabel
 	},
 };

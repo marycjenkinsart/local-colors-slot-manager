@@ -39,7 +39,7 @@ Vue.component('history-placement', {
 			return filteredUnplacedNames[this.selectedFloor];
 		},
 		paddedNames: function () { // padded with null to the target length
-			var result = JSON.parse(JSON.stringify(this.placedNames));
+			var result = clone(this.placedNames);
 			var halfSlotCounts = this.halfSlotCounts;
 			Object.keys(result).forEach(function (floor) {
 				var halfSlotCount = halfSlotCounts[floor];
@@ -50,7 +50,7 @@ Vue.component('history-placement', {
 			return result;
 		},
 		inProgressNames: function () { // with unique names for null slots
-			var result = JSON.parse(JSON.stringify(this.paddedNames));
+			var result = clone(this.paddedNames);
 			Object.keys(result).forEach(function (floor){
 				var editingArray = result[floor].slice()
 				var newArray = editingArray.map(function (item, index) {
@@ -61,7 +61,7 @@ Vue.component('history-placement', {
 			return result;
 		},
 		displayNames: function () { // to send to display component
-			var result = JSON.parse(JSON.stringify(this.inProgressNames));
+			var result = clone(this.inProgressNames);
 			if (this.autoInsertGuest) {
 				result.up.unshift('GUEST');
 			};
@@ -133,7 +133,7 @@ Vue.component('history-placement', {
 					// console.log('No name to insert, however')
 				}
 			}
-			var finishedStuff = JSON.parse(JSON.stringify(this.placedNames));
+			var finishedStuff = clone(this.placedNames);
 			finishedStuff[this.selectedFloor] = arrayWithNulls
 			this.setPlacedNames(finishedStuff);
 		},

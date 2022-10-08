@@ -57,7 +57,7 @@ var makeShareableLinkIntoRawQuery = function (string) {
 };
 
 var addRotationToHistory = function (historyArray, newRotation) {
-	var newArray = JSON.parse(JSON.stringify(historyArray));
+	var newArray = clone(historyArray);
 	// TODO lol
 	return newArray;
 };
@@ -67,7 +67,7 @@ var addRotationToHistory = function (historyArray, newRotation) {
 //----------------------//
 
 var sortHistoryRecords = function (historyArray) {
-	var newArray = JSON.parse(JSON.stringify(historyArray));
+	var newArray = clone(historyArray);
 	newArray.sort(function (a, b) {
 		return b.rotationLabel.version - a.rotationLabel.version;
 	})

@@ -6,87 +6,21 @@ var wizardPage = Vue.component('wizard', {
 		return {
 			wizardQuizChapters: makeWizardQuizChapters(),
 			newArtistName: '',
-			showTips: false,
+			quizAnswers: clone(defaultQuizAnswers),
 		}
 	},
 	computed: {
 		rotation: function () {
 			return this.$store.getters.rotation;
 		},
-		// the below is set up so these values can be kept in vuex store
-		// but also be the target of v-model
-		swapFloors: {
-			get() { return this.$store.state.wizard.quizAnswers.swapFloors; },
-			set(value) {
-				this.$store.dispatch('wizardSetQuizAnswerBool', {
-					name: 'swapFloors',
-					value: value
-				});
-			},
-		},
-		guestPresent: {
-			get() { return this.$store.state.wizard.quizAnswers.guestPresent; },
-			set(value) {
-				this.$store.dispatch('wizardSetQuizAnswerBool', {
-					name: 'guestPresent',
-					value: value
-				});
-			},
-		},
-		guestSharesFeatured: {
-			get() { return this.$store.state.wizard.quizAnswers.guestSharesFeatured; },
-			set(value) {
-				this.$store.dispatch('wizardSetQuizAnswerBool', {
-					name: 'guestSharesFeatured',
-					value: value
-				});
-			},
-		},
-		featuredType: {
-			get() { return this.$store.state.wizard.quizAnswers.featuredType; },
-			set(value) {
-				this.$store.dispatch('wizardSetQuizAnswer', {
-					name: 'featuredType',
-					value: value
-				});
-			},
-		},
-		featured2DName: {
-			get() { return this.$store.state.wizard.quizAnswers.featured2DName; },
-			set(value) {
-				this.$store.dispatch('wizardSetQuizAnswer', {
-					name: 'featured2DName',
-					value: value
-				});
-			},
-		},
-		featured3DName: {
-			get() { return this.$store.state.wizard.quizAnswers.featured3DName; },
-			set(value) {
-				this.$store.dispatch('wizardSetQuizAnswer', {
-					name: 'featured3DName',
-					value: value
-				});
-			},
-		},
-		featuredGroupTheme: {
-			get() { return this.$store.state.wizard.quizAnswers.featuredGroupTheme; },
-			set(value) {
-				this.$store.dispatch('wizardSetQuizAnswer', {
-					name: 'featuredGroupTheme',
-					value: value
-				});
-			},
-		},
-		// end magic stackoverflow stuff
 		currentQuestionIndex: function () {
 			return this.$store.state.wizard.currentQuestionIndex;
 		},
 		currentQuestion: function () {
-			return this.$store.getters.currentQuizQuestion;
+			return wizardQuiz[this.currentQuestionIndex];
 		},
 		currentForm: function () {
-			return this.$store.getters.currentForm;
+			return this.currentQuestion.formName;
 		},
 		dummyTrue: function () {
 			return true;
@@ -96,14 +30,16 @@ var wizardPage = Vue.component('wizard', {
 		},
 		// computeds for goTo branches
 		guestArtistBranch: function () {
+			var quizAnswers = this.quizAnswers;
 			var defaultGoTo = 40;
 			var extraQGoTo = 31;
-			var doExtraQ = this.$store.state.wizard.quizAnswers.guestPresent;
+			var doExtraQ = quizAnswers.guestPresent;
 			return doExtraQ ? extraQGoTo : defaultGoTo;
 		},
 		featuredArtistBranch: function () {
+			var quizAnswers = this.quizAnswers;
 			var result = 50;
-			var type = this.$store.state.wizard.quizAnswers.featuredType;
+			var type = quizAnswers.featuredType;
 			if (type === '2D') {
 				result = 41;
 			} else if (type === '3D') {
@@ -116,11 +52,13 @@ var wizardPage = Vue.component('wizard', {
 		limboArtistsBranch: function () {
 			var defaultGoTo = 90;
 			var extraQGoTo = 80;
+			console.log(this.limboLists.limbo.length === 0 ? defaultGoTo : extraQGoTo)
 			return this.limboLists.limbo.length === 0 ? defaultGoTo : extraQGoTo;
 		},
 		// computeds for whether buttons are enabled
 		featArtistIsSet2D: function () {
-			return !!this.$store.state.wizard.quizAnswers.featured2DName;
+			var quizAnswers = this.quizAnswers;
+			return quizAnswers.featured2DName;
 		},
 		featArtist3DForbiddenReport: function () {
 			return forbiddenAnalysis(this.featured3DName);
@@ -178,12 +116,12 @@ var wizardPage = Vue.component('wizard', {
 			var origArtists = {
 				up: makeFloorFancy(this.originalRotation.artists.up),
 				down: makeFloorFancy(this.originalRotation.artists.down),
-				feat: JSON.parse(JSON.stringify(this.originalRotation.artists.feat)),
+				feat: clone(this.originalRotation.artists.feat),
 			};
-			var fancyObject = JSON.parse(JSON.stringify(origArtists));
+			var fancyObject = clone(origArtists);
 			var result = {};
 			limitedFloorNames.forEach(function (floorName) {
-				var floorObject = JSON.parse(JSON.stringify(fancyObject[floorName]));
+				var floorObject = clone(fancyObject[floorName]);
 				result[floorName] = Object.values(floorObject)
 					.map(function (artist) {
 						return makePrintName(artist.name, artist.slotSize);
@@ -198,218 +136,14 @@ var wizardPage = Vue.component('wizard', {
 			return result;
 		},
 		workingRotation: function () {
-			var orig = this.originalRotation;
-			var working = JSON.parse(JSON.stringify(orig));
-			working.quizResults = {};
-			working.quizOptions = {};
-			var rawMergedMonth = this.$store.state.wizard.quizAnswers.rotationMergedMonth;
-			// set working label
-			working.rotationLabel.mergedMonth =
-				rawMergedMonth ? rawMergedMonth : orig.rotationLabel.mergedMonth;
-			working.rotationLabel.year = Math.floor(working.rotationLabel.mergedMonth / 12);
-			working.rotationLabel.month = working.rotationLabel.mergedMonth % 12;
-			if (working.rotationLabel.month === 0) {
-				working.rotationLabel.year -= 1;
-				working.rotationLabel.month = 12;
-			}
-			// swap floors
-			var swapFloors = this.$store.state.wizard.quizAnswers.swapFloors;
-			if (swapFloors) {
-				var swap = working.artists.up;
-				working.artists.up = working.artists.down;
-				working.artists.down = swap;
-			}
-			// excise GUEST if present
-			working.artists.up = working.artists.up.filter(function (item) {
-				return item !== 'GUEST';
-			})
-			working.artists.down = working.artists.down.filter(function (item) {
-				return item !== 'GUEST';
-			})
-			// 2D featured options
-			var featured2DOptions = {
-				up: working.artists.up.filter(getUnique),
-				down: working.artists.down.filter(getUnique),
-			};
-			// making fancy featured info
-			var featuredType = this.$store.state.wizard.quizAnswers.featuredType;
-			var featured2DName = this.$store.state.wizard.quizAnswers.featured2DName;
-			var featured3DName = this.$store.state.wizard.quizAnswers.featured3DName;
-			var featuredGroupTheme = this.$store.state.wizard.quizAnswers.featuredGroupTheme;
-			var newFeatured = orig.artists.feat;
-			if (featuredType === '2D' && featured2DName) {
-				var preFeaturedCount = working.artists.up.length + working.artists.down.length;
-				working.artists.up = working.artists.up.filter(function (item) {
-					return item !== featured2DName;
-				})
-				working.artists.down = working.artists.down.filter(function (item) {
-					return item !== featured2DName;
-				})
-				var postFeaturedCount = working.artists.up.length + working.artists.down.length;
-				var featuredCountDif = (preFeaturedCount - postFeaturedCount);
-				newFeatured = [{
-					name: featured2DName,
-					type: '2D',
-					origSlotSize: featuredCountDif / 2,
-				}];
-			} else if (featuredType === '3D' && featured3DName) {
-				newFeatured = [{
-					name: featured3DName,
-					type: '3D',
-				}];
-			} else if (featuredType === 'group') {
-				newFeatured = [{
-					name: featuredGroupTheme || 'no theme',
-					type: 'group',
-				}];
-			}
-			// making advanced artist info for various other steps
-			var fusedArtistTable = [];
-			if (featuredType !== 'same') {
-				working.artists.feat.forEach(function (artist) {
-					if (artist.type === '2D') {
-						fusedArtistTable[artist.name] = {
-							name: artist.name,
-							slotSize: artist.origSlotSize,
-							displaySlotSize: makeSlotCountPretty(artist.origSlotSize),
-							location: 'limbo',
-						}
-					}
-				})
-			}
-			limitedFloorNames.forEach(function (floorName) {
-				working.artists[floorName].forEach(function (artistName) {
-					if (fusedArtistTable[artistName]) {
-						fusedArtistTable[artistName].slotSize += 0.5;
-						fusedArtistTable[artistName].displaySlotSize =
-							makeSlotCountPretty(fusedArtistTable[artistName].slotSize);
-					} else {
-						fusedArtistTable[artistName] = {
-							name: artistName,
-							slotSize: 0.5,
-							displaySlotSize: makeSlotCountPretty(0.5),
-							location: floorName,
-						}
-					}
-				})
-			})
-			// quiz options: departing artists
-			var departingArtists = this.$store.state.wizard.quizAnswers.departingArtists;
-			var departingOptions = Object.keys(fusedArtistTable)
-				.filter(getUnique)
-				// .filter(function (item) {
-				// 	return !departingArtists.includes(item);
-				// });
-			// inserting artists that are in limbo
-			var arrivingArtists = this.$store.state.wizard.quizAnswers.arrivingArtists;
-			arrivingArtists.forEach(function (artistName) {
-				fusedArtistTable[artistName] = {
-					name: artistName,
-					slotSize: 1,
-					displaySlotSize: '1',
-					location: 'limbo',
-				}
-			})
-			//Remove artists from the fusedArtistTable that are explicitly departing
-			departingArtists.forEach(function (departingName) {
-				delete fusedArtistTable[departingName];
-			})
-			// slot size changes
-			var origSlotSizeOptions = {};
-			Object.keys(fusedArtistTable).forEach(function (artistName) {
-				origSlotSizeOptions[artistName] = fusedArtistTable[artistName].slotSize;
-			})
-			var artistSlotSizeChanges = this.$store.state.wizard.quizAnswers.artistSlotSizeChanges;
-			Object.keys(fusedArtistTable).forEach(function (artistName) {
-				if (artistSlotSizeChanges.includes(artistName)) {
-					var currSlotSize = fusedArtistTable[artistName].slotSize;
-					fusedArtistTable[artistName].slotSize = currSlotSize === 1 ? 0.5 : 1;
-					fusedArtistTable[artistName].displaySlotSize =
-						makeSlotCountPretty(fusedArtistTable[artistName].slotSize);
-				}
-			})
-			var slotSizeOptions = {};
-			Object.keys(fusedArtistTable).forEach(function (artistName) {
-				slotSizeOptions[artistName] = fusedArtistTable[artistName].slotSize;
-			})
-			// settling limbo stuff
-			var origLimboLists = {
-				limbo: Object.keys(fusedArtistTable)
-				.filter(function (item) {
-					return fusedArtistTable[item].location === 'limbo';
-				}),
-				up: Object.keys(fusedArtistTable)
-				.filter(function (item) {
-					return fusedArtistTable[item].location === 'up';
-				}),
-				down: Object.keys(fusedArtistTable)
-				.filter(function (item) {
-					return fusedArtistTable[item].location === 'down';
-				}),
-			};
-			var limboAssignments = this.$store.state.wizard.quizAnswers.newArtistsNewFloor
-			Object.keys(limboAssignments).forEach(function (artistName) {
-				fusedArtistTable[artistName].location = limboAssignments[artistName];
-			})
-			var limboLists = {
-				limbo: Object.keys(fusedArtistTable)
-				.filter(function (item) {
-					return fusedArtistTable[item].location === 'limbo';
-				}),
-				up: Object.keys(fusedArtistTable)
-				.filter(function (item) {
-					return fusedArtistTable[item].location === 'up';
-				}),
-				down: Object.keys(fusedArtistTable)
-				.filter(function (item) {
-					return fusedArtistTable[item].location === 'down';
-				}),
-			};
-			// finall, floor assignment overrides
-			var overrides = this.$store.state.wizard.quizAnswers.artistFloorAssignmentOverrides;
-			overrides.forEach(function (artistName) {
-				var origLocation = fusedArtistTable[artistName].location;
-				fusedArtistTable[artistName].location =
-					origLocation === 'up' ? 'down' : 'up';
-			})
-			var afterOverridesList = {
-				up: Object.keys(fusedArtistTable)
-				.filter(function (item) {
-					return fusedArtistTable[item].location === 'up';
-				}),
-				down: Object.keys(fusedArtistTable)
-				.filter(function (item) {
-					return fusedArtistTable[item].location === 'down';
-				})
-			};
-			// putting everything together for the return statement
-			working.fusedArtistTable = fusedArtistTable;
-			working.quizOptions = {
-				featured2DOptions: featured2DOptions,
-				departingOptions: departingOptions,
-				slotSizeOptions: slotSizeOptions,
-				origSlotSizeOptions: origSlotSizeOptions,
-				origLimboLists: origLimboLists,
-				limboLists: limboLists,
-				afterOverridesList: afterOverridesList,
-			};
-			// ...setting up remaining quiz results...
-			var guestPresent = this.$store.state.wizard.quizAnswers.guestPresent;
-			var guestSharesFeatured = this.$store.state.wizard.quizAnswers.guestSharesFeatured;
-			working.quizResults.insertGuest = guestPresent && !guestSharesFeatured;
-			working.quizResults.feat = newFeatured;
-			working.quizResults.up = [];
-			working.quizResults.down = [];
-			Object.values(fusedArtistTable).forEach(function (object) {
-				if (object.location === 'up' || object.location === 'down') {
-					working.quizResults[object.location].push(object);
-				}
-			})
-			return working;
+			return applyWizardQuizAnswersToRotation(
+				this.quizAnswers,
+				this.originalRotation
+			);
 		},
 		wizardResults: function () {
-			var working = JSON.parse(JSON.stringify(this.workingRotation));
-			var empty = JSON.parse(JSON.stringify(emptyRotationObject));
+			var workingRotation = this.workingRotation;
+			var empty = emptyRotationObject;
 			var placedNames = this.$store.state.wizard.placedNames;
 			var rotation = {
 				templateInfo: empty.templateInfo,
@@ -417,32 +151,21 @@ var wizardPage = Vue.component('wizard', {
 				artists: {
 					up: placedNames.up,
 					down: placedNames.down,
-					feat: working.quizResults.feat,
+					feat: workingRotation.quizResults.feat,
 				}
 			}
-			if (working.quizResults.insertGuest) {
+			if (workingRotation.quizResults.insertGuest) {
 				rotation.artists.up.unshift('GUEST');
 			}
 			rotation.meta.appVersion = 'v2';
 			rotation.meta.querySource = 'wizard';
-			var mergedMonth =
-				this.$store.state.wizard.quizAnswers.rotationMergedMonth
-				|| this.$store.getters.rotation.rotationLabel.mergedMonth;
-			var year = Math.floor(mergedMonth / 12);
-			var month = mergedMonth % 12;
-			if (month === 0) {
-				year -= 1;
-				month = 12;
-			}
-			var fullHistory = this.$store.getters.fullHistory;
-			var version = incrementVersionNumberBasedOnHistory(fullHistory, year, month);
-			rotation.rotationLabel = {
-				mergedMonth: mergedMonth,
-				year: year,
-				month: month,
-				version: version,
-				custom: '',
-			}
+			rotation.rotationLabel = clone(workingRotation.rotationLabel);
+			rotation.rotationLabel.version = incrementVersionNumberBasedOnHistory(
+				this.$store.getters.fullHistory,
+				workingRotation.rotationLabel.year,
+				workingRotation.rotationLabel.month
+			)
+			rotation.rotationLabel.custom = '';
 			rotation.originalQuery = generateQueryFromRotation(rotation);
 			return rotation;
 		},
@@ -450,12 +173,14 @@ var wizardPage = Vue.component('wizard', {
 			return this.workingRotation.quizResults.insertGuest;
 		},
 		departingArtistsString: function () {
-			var departing = this.$store.state.wizard.quizAnswers.departingArtists;
+			var quizAnswers = this.quizAnswers;
+			var departing = quizAnswers.departingArtists;
 			return departing.length > 0 ? departing.join(', ') : 'no one';
 		},
 		departingCheckboxes: function () {
 			var result = {};
-			var departing = this.$store.state.wizard.quizAnswers.departingArtists;
+			var quizAnswers = this.quizAnswers;
+			var departing = quizAnswers.departingArtists;
 			var options = this.workingRotation.quizOptions.departingOptions || [];
 			options.forEach(function (artistName) {
 				result[artistName] = false;
@@ -466,10 +191,12 @@ var wizardPage = Vue.component('wizard', {
 			return result;
 		},
 		arrivingArtists: function () {
-			return this.$store.state.wizard.quizAnswers.arrivingArtists || [];
+			var quizAnswers = this.quizAnswers;
+			return quizAnswers.arrivingArtists || [];
 		},
 		artistSlotSizeChanges: function () {
-			return this.$store.state.wizard.quizAnswers.artistSlotSizeChanges || [];
+			var quizAnswers = this.quizAnswers;
+			return quizAnswers.artistSlotSizeChanges || [];
 		},
 		slotSizeOptions: function () {
 			return this.workingRotation.quizOptions.slotSizeOptions;
@@ -564,24 +291,27 @@ var wizardPage = Vue.component('wizard', {
 			this.showTips = bool;
 		},
 		resetQuizAnswerByName: function (name) {
-			this.$store.dispatch('wizardResetQuizAnswer', name);
+			this.quizAnswers[name] = defaultQuizAnswers[name];
 		},
 		initializeQ: function () {
 			scrollToTop();
 			var selfself = this;
-			this.currentQuestion.dataNames.forEach(function (item) {
-				selfself.resetQuizAnswerByName(item);
+			this.currentQuestion.dataNames.forEach(function (name) {
+				selfself.resetQuizAnswerByName(name);
 			})
-			this.currentQuestion.alsoReset.forEach(function (item) {
-				selfself.resetQuizAnswerByName(item);
+			this.currentQuestion.alsoReset.forEach(function (name) {
+				selfself.resetQuizAnswerByName(name);
 			})
 		},
-		attemptNavButton: function (action, goTo, goToComputed) {
+		attemptNavButton: function (action, _goTo, goToComputed) {
+			var goTo = _goTo
 			if (goToComputed) {
 				goTo = this[goToComputed];
 			}
-			var qIndex = getQuizIndexFromID(goTo);
-			this.$store.dispatch('wizardSetCurrentQuestionIndex', qIndex);
+			this.$store.dispatch(
+				'wizardSetCurrentQuestionIndex',
+				getQuizIndexFromID(goTo)
+			);
 			this[action]();
 		},
 		lockAnswers: function () {
@@ -589,30 +319,54 @@ var wizardPage = Vue.component('wizard', {
 			// Guess I dont need this?
 		},
 		incrementMergedMonth: function () {
-			var newValue = this.workingRotation.rotationLabel.mergedMonth + 1;
-			this.$store.dispatch('wizardSetQuizAnswer',  {
-				name: 'rotationMergedMonth',
-				value: newValue,
-			})
+			this.quizAnswers.rotationMergedMonthDif += 1;
 		},
 		decrementMergedMonth: function () {
-			var newValue = this.workingRotation.rotationLabel.mergedMonth - 1;
-			this.$store.dispatch('wizardSetQuizAnswer',  {
-				name: 'rotationMergedMonth',
-				value: newValue,
-			})
+			this.quizAnswers.rotationMergedMonthDif -= 1;
 		},
 		toggleDeparture: function (name) {
-			this.$store.dispatch('wizardToggleDepartureByName', name)
+			var result = this.quizAnswers.departingArtists.slice();
+			if (result.includes(name)) {
+				result = result.filter(function (item) {
+					return item !== name;
+				});
+			} else {
+				result.push(name);
+			}
+			this.quizAnswers.departingArtists = result;
 		},
 		toggleArrival: function (name) {
-			this.$store.dispatch('wizardToggleArrivalByName', name)
+			var result = this.quizAnswers.arrivingArtists.slice();
+			if (result.includes(name)) {
+				result = result.filter(function (item) {
+					return item !== name;
+				});
+			} else {
+				result.push(name);
+			}
+			this.quizAnswers.arrivingArtists = result;
 		},
 		toggleSlotSizeChange: function (name) {
-			this.$store.dispatch('wizardToggleSlotSizeChangeByName', name)
+			var result = this.quizAnswers.artistSlotSizeChanges.slice();
+			if (result.includes(name)) {
+				result = result.filter(function (item) {
+					return item !== name;
+				});
+			} else {
+				result.push(name);
+			}
+			this.quizAnswers.artistSlotSizeChanges = result;
 		},
 		toggleFloorOverride: function (name) {
-			this.$store.dispatch('wizardToggleFloorOverrideByName', name)
+			var result = this.quizAnswers.artistFloorAssignmentOverrides.slice();
+			if (result.includes(name)) {
+				result = result.filter(function (item) {
+					return item !== name;
+				});
+			} else {
+				result.push(name);
+			}
+			this.quizAnswers.artistFloorAssignmentOverrides = result;
 		},
 		submitNewArtistName: function () {
 			var artistName = this.newArtistName;
@@ -622,10 +376,9 @@ var wizardPage = Vue.component('wizard', {
 			this.newArtistName = '';
 		},
 		assignLimboToFloor: function (name, floor) {
-			this.$store.dispatch('wizardAssignLimboToFloor', {
-				name: name,
-				floor: floor,
-			})
+			var result = clone(this.quizAnswers);
+			result.newArtistsNewFloor[name] = floor;
+			this.quizAnswers = result;
 		},
 		makeSlotCountPretty: makeSlotCountPretty,
 		makePrintName: makePrintName,
@@ -633,7 +386,7 @@ var wizardPage = Vue.component('wizard', {
 			scrollToTop();
 			this.$store.dispatch(
 				'wizardSubmitQuizResults',
-				JSON.parse(JSON.stringify(this.workingRotation.quizResults))
+				clone(this.workingRotation.quizResults)
 			);
 			this.$store.dispatch('historySetSelectedFloor','up');
 		},
@@ -649,7 +402,7 @@ var wizardPage = Vue.component('wizard', {
 			scrollToTop();
 		},
 		loadFinalWizardResults: function () {
-			var results = JSON.parse(JSON.stringify(this.wizardResults));
+			var results = clone(this.wizardResults);
 			console.log(results);
 			this.$store.dispatch('loadRotation', results);
 		},
@@ -752,27 +505,27 @@ var wizardPage = Vue.component('wizard', {
 					<label>
 						<input
 							type="radio"
-							value="false"
-							v-model="swapFloors"
+							:value="false"
+							v-model="quizAnswers.swapFloors"
 						> <span>Don't swap</span>
 					</label>
 					<br/>
 					<label>
 						<input
 							type="radio"
-							value="true"
-							v-model="swapFloors"
+							:value="true"
+							v-model="quizAnswers.swapFloors"
 						> <span>Swap</span>
 					</label>
 				</p>
 				<p
-					v-if="swapFloors"
+					v-if="quizAnswers.swapFloors"
 				>
 					Upstairs → <strong>downstairs</strong><br/>
 					Downstairs → <strong>upstairs</strong>
 				</p>
 				<p
-					v-if="!swapFloors"
+					v-if="!quizAnswers.swapFloors"
 				>
 					Upstairs → upstairs<br/>
 					Downstairs → downstairs
@@ -790,16 +543,16 @@ var wizardPage = Vue.component('wizard', {
 					<label>
 						<input
 							type="radio"
-							value="false"
-							v-model="guestPresent"
+							:value="false"
+							v-model="quizAnswers.guestPresent"
 						> <span>No guest</span>
 					</label>
 					<br/>
 					<label>
 						<input
 							type="radio"
-							value="true"
-							v-model="guestPresent"
+							:value="true"
+							v-model="quizAnswers.guestPresent"
 						> <span>Guest</span>
 					</label>
 				</p>
@@ -816,16 +569,16 @@ var wizardPage = Vue.component('wizard', {
 					<label>
 						<input
 							type="radio"
-							value="true"
-							v-model="guestSharesFeatured"
+							:value="true"
+							v-model="quizAnswers.guestSharesFeatured"
 						> <span>Guest DOES share featured space</span>
 					</label>
 					<br/>
 					<label>
 						<input
 							type="radio"
-							value="false"
-							v-model="guestSharesFeatured"
+							:value="false"
+							v-model="quizAnswers.guestSharesFeatured"
 						> <span>Guest DOES NOT share featured space</span>
 					</label>
 				</p>
@@ -843,7 +596,7 @@ var wizardPage = Vue.component('wizard', {
 						<input
 							type="radio"
 							value="2D"
-							v-model="featuredType"
+							v-model="quizAnswers.featuredType"
 						> <span>Someone from the 2D rotation</span>
 					</label>
 					<br/>
@@ -851,7 +604,7 @@ var wizardPage = Vue.component('wizard', {
 						<input
 							type="radio"
 							value="same"
-							v-model="featuredType"
+							v-model="quizAnswers.featuredType"
 						> <span>The same artist(s) as before</span>
 					</label>
 					<br/>
@@ -859,7 +612,7 @@ var wizardPage = Vue.component('wizard', {
 						<input
 							type="radio"
 							value="3D"
-							v-model="featuredType"
+							v-model="quizAnswers.featuredType"
 						> <span>Someone else (e.g. a 3D artist)</span>
 					</label>
 					<br/>
@@ -867,7 +620,7 @@ var wizardPage = Vue.component('wizard', {
 						<input
 							type="radio"
 							value="group"
-							v-model="featuredType"
+							v-model="quizAnswers.featuredType"
 						> <span>Group show</span>
 					</label>
 				</p>
@@ -882,7 +635,7 @@ var wizardPage = Vue.component('wizard', {
 			>
 				<p>
 					<select
-						v-model="featured2DName"
+						v-model="quizAnswers.featured2DName"
 					>
 						<optgroup label="Upstairs">
 							<option
@@ -911,7 +664,7 @@ var wizardPage = Vue.component('wizard', {
 					<label>
 						<span>Name:</span>
 						<input
-							v-model="featured3DName"
+							v-model="quizAnswers.featured3DName"
 							type="text"
 						/>
 					</label>
@@ -933,7 +686,7 @@ var wizardPage = Vue.component('wizard', {
 					<label>
 						<span>Name:</span>
 						<input
-							v-model="featuredGroupTheme"
+							v-model="quizAnswers.featuredGroupTheme"
 							type="text"
 						/>
 					</label>

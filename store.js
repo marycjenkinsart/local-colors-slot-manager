@@ -6,13 +6,14 @@ var historyStore = {
 		selectedFloor: 'up',
 		highlightedName: '',
 		insertName: '',
+		fromEditMode: false,
 	},
 	getters: {
 		fullHistory: function (state) {
 			return state.fullHistory;
 		},
 		practicalHistory: function (state, getters) {
-			var fullHistory = JSON.parse(JSON.stringify(getters.fullHistory));
+			var fullHistory = clone(getters.fullHistory);
 			return fullHistory.filter(function (rotation) {
 				return isLatestRotationInHistory(fullHistory, rotation);
 			})
@@ -34,12 +35,12 @@ var historyStore = {
 	},
 	actions: {
 		historySortRecords: function (context) {
-			var fullHistoryArray = JSON.parse(JSON.stringify(context.state.fullHistory));
+			var fullHistoryArray = clone(context.state.fullHistory);
 			fullHistoryArray = sortHistoryRecords(fullHistoryArray);
 			context.commit('HISTORY_SET_FULL_HISTORY', fullHistoryArray);
 		},
 		historyAddSingleHistoryItem: function (context, newHistoryItem) {
-			var fullHistoryArray = JSON.parse(JSON.stringify(context.state.fullHistory));
+			var fullHistoryArray = clone(context.state.fullHistory);
 			var duplicate = detectDuplicateRotationInHistory(fullHistoryArray, newHistoryItem);
 			if (!duplicate) {
 				fullHistoryArray.push(newHistoryItem);
@@ -66,73 +67,93 @@ var wizardStore = {
 	// the intermediate states should be handled here and nowhere else
 	state: {
 		currentQuestionIndex: 0,
-		quizAnswers: JSON.parse(JSON.stringify(defaultQuizAnswers)),
+		quizResults: {},
 		// INSERTION STUFF BELOW
 		placedNames: {
 			up: [],
 			down: [],
 		},
-		quizResults: {},
 	},
 	getters: {
 		originalRotation: function (state, getters) {
 			return getters.rotation;
 		},
-		currentQuizQuestion: function (state) {
-			return wizardQuiz[state.currentQuestionIndex];
-		},
-		currentForm: function (state, getters) {
-			return getters.currentQuizQuestion.formName;
-		},
 		// INSERTION STUFF BELOW
 		autoInsertGuest: function (state, getters) {
-			return state.guest.present && !state.guest.withFeatured;
+			var wizardGuest = state.guest.present && !state.guest.withFeatured;
+			var currentGuest = getters.guestCurrentlyExists;
+			return wizardGuest || currentGuest;
 		},
-		quizResultsSlotCounts: function (state, getters) {
+		quizResultsSlotCounts: function (state, getters, rootState) {
 			var tally = {
 				up: 0,
 				down: 0,
 			};
-			var quizResults = state.quizResults;
-			Object.keys(tally).forEach(function (floor) {
-				quizResults[floor].forEach(function (artist) {
-					tally[floor] += artist.slotSize;
+			if (rootState.history.fromEditMode) {// non-wizard bodge
+				var bodgeNames = getters.artists;
+				limitedFloorNames.forEach(function (floor) {
+					tally[floor] = bodgeNames[floor].length / 2;
 				})
-			})
+			} else {// normal
+				var quizResults = state.quizResults;
+				Object.keys(tally).forEach(function (floor) {
+					quizResults[floor].forEach(function (artist) {
+						tally[floor] += artist.slotSize;
+					})
+				})
+			}
 			return tally;
 		},
 		namesToSlotSizes: function (state, getters) {
+			// returns an object map of artist name to slot size
+			var totalNames = getters.rawUnplacedNames;
 			var result = {};
-			var potential = state.quizResults;
 			limitedFloorNames.forEach(function (floor) {
-				potential[floor].forEach(function (artist) {
-					result[artist.name] = artist.slotSize;
+				totalNames[floor].forEach(function (item) {
+					result[item.name] = item.slotSize;
 				})
 			})
 			return result;
 		},
-		rawUnplacedNames: function (state, getters) {
+		rawUnplacedNames: function (state, getters, rootState) {
 			var unplaced = {
 				'up': [],
 				'down': [],
 			}
-			var potentialState = state.quizResults;
-			limitedFloorNames.forEach(function (floor) {
-				potentialState[floor].forEach(function (item) {
-					var displayName = makePrintName(item.name, item.slotSize);
-					var insert = {
-						name: item.name,
-						displayName: displayName,
-						slotSize: item.slotSize,
-					};
-					unplaced[floor].push(insert);
+			if (rootState.history.fromEditMode) {// non-wizard bodge
+				var currentState = getters.artists;
+				var fancyFloors = {};
+				limitedFloorNames.forEach(function (floor) {
+					fancyFloors[floor] = makeFloorFancy(currentState[floor])
 				})
-			})
+				limitedFloorNames.forEach(function (floor) {
+					var insert = fancyFloors[floor].map(function (item) {
+						return {
+							name: item.name,
+							displayName: makePrintName(item.name, item.slotSize),
+							slotSize: item.slotSize,
+						}
+					})
+					unplaced[floor] = insert;
+				})
+			} else { // normal
+				var potentialState = state.quizResults;
+				limitedFloorNames.forEach(function (floor) {
+					potentialState[floor].forEach(function (item) {
+						var insert = {
+							name: item.name,
+							displayName: makePrintName(item.name, item.slotSize),
+							slotSize: item.slotSize,
+						};
+						unplaced[floor].push(insert);
+					})
+				})
+			}
 			return unplaced;
 		},
 		filteredUnplacedNames: function (state, getters) {
-			var orig = JSON.parse(JSON.stringify(getters.rawUnplacedNames));
-			var placedNames = JSON.parse(JSON.stringify(state.placedNames));
+			var orig = clone(getters.rawUnplacedNames);
+			var placedNames = clone(state.placedNames);
 			var filtered = {
 				'up': [],
 				'down': [],
@@ -151,60 +172,6 @@ var wizardStore = {
 		WIZARD_SET_CURRENT_QUESTION_INDEX: function (state, value) {
 			state.currentQuestionIndex = value;
 		},
-		WIZARD_SET_QUIZ_ANSWER: function (state, args) {
-			var result = JSON.parse(JSON.stringify(state.quizAnswers));
-			result[args.name] = args.value;
-			state.quizAnswers = result;
-		},
-		WIZARD_ASSIGN_LIMBO_TO_FLOOR: function (state, args) {
-			var result = JSON.parse(JSON.stringify(state.quizAnswers));
-			result.newArtistsNewFloor[args.name] = args.floor;
-			state.quizAnswers = result;
-		},
-		WIZARD_TOGGLE_DEPARTURE_BY_NAME: function (state, name) {
-			var result = state.quizAnswers.departingArtists.slice();
-			if (result.includes(name)) {
-				result = result.filter(function (item) {
-					return item !== name;
-				});
-			} else {
-				result.push(name);
-			}
-			state.quizAnswers.departingArtists = result;
-		},
-		WIZARD_TOGGLE_ARRIVAL_BY_NAME: function (state, name) {
-			var result = state.quizAnswers.arrivingArtists.slice();
-			if (result.includes(name)) {
-				result = result.filter(function (item) {
-					return item !== name;
-				});
-			} else {
-				result.push(name);
-			}
-			state.quizAnswers.arrivingArtists = result;
-		},
-		WIZARD_TOGGLE_SLOT_SIZE_CHANGE_BY_NAME: function (state, name) {
-			var result = state.quizAnswers.artistSlotSizeChanges.slice();
-			if (result.includes(name)) {
-				result = result.filter(function (item) {
-					return item !== name;
-				});
-			} else {
-				result.push(name);
-			}
-			state.quizAnswers.artistSlotSizeChanges = result;
-		},
-		WIZARD_TOGGLE_FLOOR_OVERRIDE_BY_NAME: function (state, name) {
-			var result = state.quizAnswers.artistFloorAssignmentOverrides.slice();
-			if (result.includes(name)) {
-				result = result.filter(function (item) {
-					return item !== name;
-				});
-			} else {
-				result.push(name);
-			}
-			state.quizAnswers.artistFloorAssignmentOverrides = result;
-		},
 		WIZARD_SUBMIT_QUIZ_RESULTS: function (state, object) {
 			state.placedNames = { up: [], down: [] };
 			state.quizResults = object;
@@ -220,40 +187,6 @@ var wizardStore = {
 	actions: {
 		wizardSetCurrentQuestionIndex: function (context, value) {
 			context.commit('WIZARD_SET_CURRENT_QUESTION_INDEX', value);
-		},
-		wizardSetQuizAnswer: function (context, args) {
-			context.commit('WIZARD_SET_QUIZ_ANSWER', args);
-		},
-		wizardSetQuizAnswerBool: function (context, args) {
-			var newValue = args.value;
-			if (newValue === 'true') { newValue = true };
-			if (newValue === 'false') { newValue = false };
-			context.commit('WIZARD_SET_QUIZ_ANSWER', {
-				name: args.name,
-				value: newValue,
-			});
-		},
-		wizardResetQuizAnswer: function (context, name) {
-			var newValue = defaultQuizAnswers[name];
-			context.commit('WIZARD_SET_QUIZ_ANSWER', {
-				name: name,
-				value: newValue,
-			});
-		},
-		wizardToggleDepartureByName: function (context, name) {
-			context.commit('WIZARD_TOGGLE_DEPARTURE_BY_NAME', name);
-		},
-		wizardToggleArrivalByName: function (context, name) {
-			context.commit('WIZARD_TOGGLE_ARRIVAL_BY_NAME', name);
-		},
-		wizardToggleSlotSizeChangeByName: function (context, name) {
-			context.commit('WIZARD_TOGGLE_SLOT_SIZE_CHANGE_BY_NAME', name);
-		},
-		wizardToggleFloorOverrideByName: function (context, name) {
-			context.commit('WIZARD_TOGGLE_FLOOR_OVERRIDE_BY_NAME', name);
-		},
-		wizardAssignLimboToFloor: function (context, args) {
-			context.commit('WIZARD_ASSIGN_LIMBO_TO_FLOOR', args);
 		},
 		wizardSubmitQuizResults: function (context, object) {
 			context.commit('WIZARD_SUBMIT_QUIZ_RESULTS', object);
@@ -355,6 +288,16 @@ var loadedStore = {
 		rotationLabel: function (state, getters) {
 			return state.current.rotationLabel;
 		},
+		guestCurrentlyExists: function (state, getters) {
+			var result = false;
+			var artists = getters.artists;
+			limitedFloorNames.forEach(function (floor) {
+				if (artists[floor].includes('GUEST')) {
+					result = true;
+				}
+			})
+			return result;
+		},
 	},
 	mutations: {
 		LOAD_ROTATION: function (state, obj) {
@@ -387,8 +330,8 @@ var loadedStore = {
 			context.commit('LOAD_ROTATION', obj);
 		},
 		setAltRotation: function (context, args) {
-			newObject = JSON.parse(JSON.stringify(context.state.altRotations));
-			newObject[args.label] = JSON.parse(JSON.stringify(args.rotation));
+			newObject = clone(context.state.altRotations);
+			newObject[args.label] = clone(args.rotation);
 			context.commit('UPDATE_ALT_ROTATIONS', newObject);
 		},
 		setImportWarningFromURL: function (context, message) {
@@ -398,31 +341,31 @@ var loadedStore = {
 			context.commit('SET_RETURN_TO', message);
 		},
 		setLegacyMode: function (context, bool) {
-			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			var templateInfo = clone(context.getters.templateInfo);
 			templateInfo.legacyMode = bool;
 			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
 		},
 		changeCornerSnapThreshold: function (context, args) {
-			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			var templateInfo = clone(context.getters.templateInfo);
 			var floorName = args.floorName;
 			var value = args.value;
 			templateInfo[floorName].snapInches = value;
 			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
 		},
 		togglelegacyMode: function (context) {
-			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			var templateInfo = clone(context.getters.templateInfo);
 			templateInfo.legacyMode = !templateInfo.legacyMode;
 			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
 		},
 		setSelectedTemplateBase: function (context, args) {
-			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			var templateInfo = clone(context.getters.templateInfo);
 			var floorName = args.floorName;
 			var value = args.value;
 			templateInfo[floorName].selectedTemplateBase = value;
 			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
 		},
 		importAdjustments: function (context, data) {
-			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			var templateInfo = clone(context.getters.templateInfo);
 			limitedFloorNames.forEach(function (floorName) {
 				var halfSlotCount = context.getters.artists[floorName].length;
 				context.getters.templateInfo[floorName].adjustments[halfSlotCount] = data[floorName];
@@ -430,15 +373,15 @@ var loadedStore = {
 			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
 		},
 		resetAdjustments: function (context, floorName) {
-			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			var templateInfo = clone(context.getters.templateInfo);
 			var halfSlotCount = context.getters.artists[floorName].length;
-			var array = JSON.parse(JSON.stringify(templateInfo[floorName].adjustments[halfSlotCount]));
+			var array = clone(templateInfo[floorName].adjustments[halfSlotCount]);
 			array.fill(0);
 			templateInfo[floorName].adjustments[halfSlotCount] = array;
 			context.commit('UDPATE_TEMPLATE_INFO', templateInfo);
 		},
 		updateAdjustments: function (context, data) {
-			var templateInfo = JSON.parse(JSON.stringify(context.getters.templateInfo));
+			var templateInfo = clone(context.getters.templateInfo);
 			var floorName = data.floorName;
 			var newAdjustments = data.adjustments;
 			var halfSlotCount = data.halfSlotCount;
@@ -603,7 +546,7 @@ var store = new Vuex.Store({
 			var originalSlots = getters.fusedHalfSlots; //!
 			var snapOn = getters.snapOn; //!
 			var templateInfo = getters.templateInfo; //!
-			var snappedSlots = JSON.parse(JSON.stringify(originalSlots));
+			var snappedSlots = clone(originalSlots);
 			limitedFloorNames.forEach(function (floorName) {
 				if (snapOn[floorName]) {
 					var snapInches = templateInfo[floorName].snapInches
@@ -658,7 +601,7 @@ var store = new Vuex.Store({
 			return result;
 		},
 		compactEverything: function (state, getters) {
-			var rotation = JSON.parse(JSON.stringify(getters.rotation));
+			var rotation = clone(getters.rotation);
 			return compactEverything(rotation);
 		},
 		compactURL: function (state, getters) {

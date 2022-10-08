@@ -7,13 +7,7 @@ Vue.component('shareable-link', {
 			return this.$store.getters.rotationLabel;
 		},
 		monthName: function () {
-			var labelInfo = this.rotationLabel;
-			var month = labelInfo.month - 1;
-			var lookup = [
-				"January" , "February", "March", "April", "May", "June",
-				"July", "August", "September", "October", "November", "December"
-			]
-			return lookup[month] ? lookup[month] : "???";
+			return getLongMonth(this.rotationLabel.month);
 		},
 		mailToCompactURL: function () {
 			var subject = `Hanging preview for ${this.monthName}`;

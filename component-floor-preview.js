@@ -182,7 +182,7 @@ Vue.component('floor-preview', {
 			return result;
 		},
 		artistNameLabels: function () {
-			var result = JSON.parse(JSON.stringify(this.snappedLineSegments));
+			var result = clone(this.snappedLineSegments);
 			var spacing = 10;
 			result.forEach(function (lineSegment, index) {
 				result[index] = Object.assign(
@@ -240,7 +240,7 @@ Vue.component('floor-preview', {
 			var spacing = this.measurementLabelSpacing;
 			var size = this.measurementLabelSize;
 			var labelSpacing = this.measurementLabelNumberSpacing;
-			var workingLines = JSON.parse(JSON.stringify(this.linesToLabel));
+			var workingLines = clone(this.linesToLabel);
 			workingLines.forEach(function (line) {
 				line.ccw = !line.ccw;
 				var startCoords = lineToRightLineAtOrigin(line, spacing, line.labelLine.x1, line.labelLine.y1);

@@ -97,7 +97,7 @@ Vue.component('featured-manager', {
 			this.$store.dispatch('updateArtistsObject',artistsObject);
 		},
 		removeArtist: function (artistName) {
-			var newObject = JSON.parse(JSON.stringify(this.artists));
+			var newObject = clone(this.artists);
 			var newFeatured = [];
 			newObject.feat.forEach(function (artist) {
 				if (artist.name != artistName) {
@@ -108,7 +108,7 @@ Vue.component('featured-manager', {
 			this.updateArtistsObject(newObject);
 		},
 		moveArtistToFloor: function (artistName, floor) {
-			var newObject = JSON.parse(JSON.stringify(this.artists));
+			var newObject = clone(this.artists);
 			var newFeatured = [];
 			var halfSlotCount = 0;
 			newObject.feat.forEach(function (artist) {
@@ -132,7 +132,7 @@ Vue.component('featured-manager', {
 			this.move2D = '';
 		},
 		move2Dconfirm: function () {
-			var newObject = JSON.parse(JSON.stringify(this.artists));
+			var newObject = clone(this.artists);
 			var slotSize = 0;
 			var newFloor = [];
 			var self = this
@@ -154,7 +154,7 @@ Vue.component('featured-manager', {
 			this.move2Dcancel();
 		},
 		addingCustomConfirm: function () {
-			var newObject = JSON.parse(JSON.stringify(this.artists));
+			var newObject = clone(this.artists);
 			var type = '';
 			if (this.addingGroup) {
 				type = 'group';

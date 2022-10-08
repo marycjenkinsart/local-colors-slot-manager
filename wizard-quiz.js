@@ -1,5 +1,5 @@
 var defaultQuizAnswers = {
-	rotationMergedMonth: null,
+	rotationMergedMonthDif: 0,
 	swapFloors: true,
 	guestPresent: true,
 	guestSharesFeatured: false,
@@ -53,7 +53,7 @@ var wizardQuiz = [
 		title: "This new rotation will be for what month?",
 		subtitles: ["The version number will be incremented automatically, if appropriate."],
 		dataNames: [
-			"rotationMergedMonth",
+			"rotationMergedMonthDif",
 		],
 		alsoReset: [],
 		formName: "selectMonth",

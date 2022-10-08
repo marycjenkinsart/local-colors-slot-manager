@@ -4,24 +4,10 @@ Vue.component('history-table', {
 	],
 	computed: {
 		workingHistory: function () {
-			var monthMap = [
-				'Jan', 'Feb', 'Mar', 'April', 'May', 'June',
-				'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
-			]
 			var floor = this.selectedFloor;
 			return this.practicalHistory.map(function (item) {
-				var label = item.rotationLabel;
-				var shortYear = label.year + '';
-				// var shortLabel = label.year + '-' + label.month;
-				var shortLabel = monthMap[label.month-1] +
-					" '" +
-					shortYear[2] +
-					shortYear[3];
-				// if (label.version !== 1) {
-				// 	shortLabel += 'v' + label.version;
-				// }
 				return {
-					label: shortLabel,
+					label: makeVeryShortLabel(item.rotationLabel),
 					names: item.artists[floor],
 					featured: item.artists.feat,
 				};

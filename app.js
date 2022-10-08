@@ -3,7 +3,7 @@ var app = new Vue({
 	store: store, // available to all children as this.$store(.state.etc)
 	router: router,
 	created: function () {
-		var query = JSON.parse(JSON.stringify(this.$route.query));
+		var query = clone(this.$route.query);
 		var loadMessage = "Something broke fairly early; not sure what. Sorry!";
 		var imported = makeRotationObjectFromQuery(query, 'from URL');
 		var isEmpty = Object.keys(query).length === 0

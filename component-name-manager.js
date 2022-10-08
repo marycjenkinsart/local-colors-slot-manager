@@ -176,7 +176,7 @@ Vue.component('name-manager', {
 			this.$store.dispatch('resetAdjustments',this.floorName);
 		},
 		setAdjustment: function (index, value) {
-			var newAdjustments = JSON.parse(JSON.stringify(this.adjustments));
+			var newAdjustments = clone(this.adjustments);
 			newAdjustments[index] = value;
 			var args = {
 				floorName: this.floorName,
@@ -186,7 +186,7 @@ Vue.component('name-manager', {
 			this.$store.dispatch('updateAdjustments',args);
 		},
 		adjustAdjustment: function (index, direction) {
-			var newAdjustments = JSON.parse(JSON.stringify(this.adjustments));
+			var newAdjustments = clone(this.adjustments);
 			newAdjustments[index] += direction * 3;
 			var args = {
 				floorName: this.floorName,
@@ -202,7 +202,7 @@ Vue.component('name-manager', {
 			this.$store.dispatch('togglelegacyMode');
 		},
 		updateFloor: function (floor) {
-			var artistsObject = JSON.parse(JSON.stringify(this.artists));
+			var artistsObject = clone(this.artists);
 			artistsObject[this.floorName] = floor;
 			this.$store.dispatch('updateArtistsObject',artistsObject);
 		},
@@ -529,6 +529,12 @@ Vue.component('name-manager', {
 					title="Add a new artist and choose their name"
 					@click="newNameStart"
 				>Add Artist</button>
+			</p>
+			<p>
+				<button
+					title="Use the history view to insert these names."
+					@click="goToHistoryInsert(floorName)"
+				>Insert current names via history view</button>
 			</p>
 			<p
 				v-if="hasGuestArtist"

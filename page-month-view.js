@@ -69,7 +69,7 @@ var monthViewPage = Vue.component('month-view', {
 	},
 	methods: {
 		replaceFloor: function (floorName, floorData) {
-			var artists = JSON.parse(JSON.stringify(this.artists));
+			var artists = clone(this.artists);
 			artists[floorName] = floorData;
 			this.replaceArtists(artists);
 		},
@@ -111,7 +111,7 @@ var monthViewPage = Vue.component('month-view', {
 				}
 			})
 			var newArtists = {};
-			newArtists.feat = JSON.parse(JSON.stringify(this.artists.feat));
+			newArtists.feat = clone(this.artists.feat);
 			newArtists.up = downSansGuests;
 			newArtists.down = upSansGuests;
 			downGuestIndices.forEach(function (guestIndex) {
