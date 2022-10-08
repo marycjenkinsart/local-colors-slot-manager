@@ -390,6 +390,14 @@ Vue.component('name-manager', {
 				value: value,
 			});
 		},
+		goToHistoryInsert: function (floor) {
+			scrollToTop();
+			this.$store.dispatch('historySetSelectedFloor', floor);
+			this.$router.push({
+				path: '/insert',
+				query: this.$route.query,
+			});
+		},
 	},
 	template: /*html*/`
 <div class="name-manager">
@@ -530,12 +538,6 @@ Vue.component('name-manager', {
 					@click="newNameStart"
 				>Add Artist</button>
 			</p>
-			<p>
-				<button
-					title="Use the history view to insert these names."
-					@click="goToHistoryInsert(floorName)"
-				>Insert current names via history view</button>
-			</p>
 			<p
 				v-if="hasGuestArtist"
 			>
@@ -617,6 +619,13 @@ Vue.component('name-manager', {
 					</template>
 				</tbody>
 			</table>
+			<p>
+				<button
+					title="Use the history view to insert these names."
+					@click="goToHistoryInsert(floorName)"
+					class="unflat"
+				>Insert current names via history view</button>
+			</p>
 			<div
 				class="unflat"
 			>

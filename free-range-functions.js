@@ -45,6 +45,12 @@ var clone = function (object) {
 	return JSON.parse(JSON.stringify(object));
 }
 
+var capitalizeFirstChar = function (string) {
+	var splits = string.split('');
+	splits[0] = splits[0].toLocaleUpperCase();
+	return splits.join('');
+}
+
   //-------------------------------//
  /*   MONTHS, DATES, and LABELS   */
 //-------------------------------//
@@ -1114,6 +1120,17 @@ var applyWizardQuizAnswersToRotation = function (quizAnswers, origRot) {
 	working.orig = origRot;
 	return working;
 };
+
+var prepareRawUnfilteredNames = function (quizResultsFloor) {
+	var result = quizResultsFloor.map(function (item) {
+		return {
+			name: item.name,
+			displayName: makePrintName(item.name, item.slotSize),
+			slotSize: item.slotSize,
+		};
+	})
+	return result;
+}
 
   //----------------------//
  /*   LINE INTERATIONS   */

@@ -32,7 +32,7 @@ Vue.component('history-placement', {
 		},
 		namesToSlotSizes: function () {
 			// returns an object map of artist name to slot size
-			var totalNames = this.$store.getters.rawUnplacedNames;
+			var totalNames = this.namesToInsert;
 			var result = {};
 			totalNames.forEach(function (item) {
 				result[item.name] = item.slotSize;
@@ -43,7 +43,7 @@ Vue.component('history-placement', {
 			return makeSlotCountPretty(this.slotCount);
 		},
 		filteredUnplacedNames: function () {
-			var rawUnplacedNames = this.$store.getters.rawUnplacedNames;
+			var rawUnplacedNames = this.namesToInsert;
 			var placedNames = this.placedNames; // don't lose the `this`!
 			return rawUnplacedNames.filter(function (item) {
 				return !placedNames.includes(item.name);

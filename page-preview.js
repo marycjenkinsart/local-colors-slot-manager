@@ -7,7 +7,6 @@ var previewPage = Vue.component('preview', {
 			return this.$store.getters.importWarningsGeneric;
 		},
 		rotation: function () {
-			console.log(this.$store.getters.rotation)
 			return this.$store.getters.rotation;
 		},
 	},

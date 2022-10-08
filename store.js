@@ -79,21 +79,9 @@ var wizardStore = {
 			return getters.rotation;
 		},
 		// INSERTION STUFF BELOW
-		autoInsertGuest: function (state, getters) {
-			var wizardGuest = state.guest.present && !state.guest.withFeatured;
-			var currentGuest = getters.guestCurrentlyExists;
-			return wizardGuest || currentGuest;
-		},
 		rawUnplacedNames: function (state, getters, rootState) {
 			var floor = rootState.history.selectedFloor;
-			var result = state.quizResults[floor].map(function (item) {
-				return {
-					name: item.name,
-					displayName: makePrintName(item.name, item.slotSize),
-					slotSize: item.slotSize,
-				};
-			})
-			return result;
+			return prepareRawUnfilteredNames(state.quizResults[floor]);
 		},
 	},
 	mutations: {

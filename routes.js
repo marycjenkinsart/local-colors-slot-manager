@@ -16,6 +16,10 @@ var routes = [
 		component: historyPage
 	},
 	{
+		path: '/insert',
+		component: monthViewInsertPage
+	},
+	{
 		path: '/wizard',
 		component: wizardPage
 	},

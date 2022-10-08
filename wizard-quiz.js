@@ -44,7 +44,13 @@ var wizardQuiz = [
 				enabled: "dummyTrue",
 				action: "dummyNada",
 				goTo: 10,
-			}
+			},
+			// {
+			// 	label: "DEBUG",
+			// 	enabled: "dummyTrue",
+			// 	action: "dummyNada",
+			// 	goTo: 99,
+			// }
 		],
 	},
 	{

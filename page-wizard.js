@@ -31,6 +31,9 @@ var wizardPage = Vue.component('wizard', {
 		potentialState: function () {
 			return this.workingRotation.quizResults;
 		},
+		namesToInsert: function () {
+			return prepareRawUnfilteredNames(this.potentialState[this.selectedHistoryInsertFloor]);
+		},
 		selectedHistoryInsertFloor: function () {
 			return this.$store.state.history.selectedFloor;
 		},
@@ -292,9 +295,6 @@ var wizardPage = Vue.component('wizard', {
 		self: function () {
 			return this;
 		}, // Stack overflow magic
-		setTips: function (bool) {
-			this.showTips = bool;
-		},
 		resetQuizAnswerByName: function (name) {
 			this.quizAnswers[name] = defaultQuizAnswers[name];
 		},
@@ -406,9 +406,11 @@ var wizardPage = Vue.component('wizard', {
 		},
 		setSelectedFloorToUpstairs: function () {
 			this.setSelectedFloor('up');
+			this.updatePlacedNames([]);
 		},
 		setSelectedFloorToDownstairs: function () {
 			this.setSelectedFloor('down');
+			this.updatePlacedNames([]);
 		},
 		dummyNada: function () {
 			scrollToTop();
@@ -926,7 +928,7 @@ var wizardPage = Vue.component('wizard', {
 			<history-placement
 				key="up"
 				:insertGuest="insertGuest"
-				:namesToInsert="potentialState[selectedHistoryInsertFloor]"
+				:namesToInsert="namesToInsert"
 				:featured="potentialState.feat"
 				@update-placed-names="updatePlacedNames($event)"
 			></history-placement>
@@ -945,7 +947,7 @@ var wizardPage = Vue.component('wizard', {
 			<history-placement
 				key="down"
 				:insertGuest="insertGuest"
-				:namesToInsert="potentialState[selectedHistoryInsertFloor]"
+				:namesToInsert="namesToInsert"
 				:featured="potentialState.feat"
 				@update-placed-names="updatePlacedNames($event)"
 			></history-placement>

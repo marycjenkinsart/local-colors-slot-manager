@@ -51,6 +51,9 @@ var mixinsHistory = {
 		setInsertName: function (name) {
 			this.$store.dispatch('historySetInsertName', name);
 		},
+		setTips: function (bool) {
+			this.showTips = bool;
+		},
 		makeShortLabel: makeShortLabel
 	},
 };
