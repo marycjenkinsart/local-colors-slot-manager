@@ -319,7 +319,7 @@ var advancedStore = {
 	state: {
 		advancedModeOn: false,
 		showCircles: false,
-		featuredExtras: true, // featured display speculation stuff
+		featuredExtras: false, // featured display speculation stuff
 		snapOn: {
 			up: true,
 			down: true,
@@ -411,11 +411,14 @@ var store = new Vuex.Store({
 			return {
 				up: templates.up[getters.templateInfo.up.selectedTemplateBase],
 				down: templates.down[getters.templateInfo.down.selectedTemplateBase],
-				feat: templates.down[getters.templateInfo.down.selectedTemplateBase],
+				feat: templates.feat[getters.templateInfo.feat.selectedTemplateBase],
 			}
 		},
 		featLinesTotal: function (state, getters) { // calculates featured space
 			return featLinesTotal(getters.templatesToDraw.feat);
+		},
+		featLineSegments: function (state, getters) {
+			return getters.templatesToDraw.feat;
 		},
 		naiveHalfSlotLengths: function (state, getters) {
 			return {

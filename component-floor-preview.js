@@ -109,10 +109,12 @@ Vue.component('floor-preview', {
 		},
 		lineSegmentsFeat: function () {
 			return this.$store.getters.featLineSegments;
-			// TODO: why isn't this drawn anymore?
 		},
 		showFeaturedExtras: function () {
 			return this.$store.getters.featuredExtras;
+		},
+		drawFeaturedExtras: function () {
+			return this.showFeaturedExtras && this.$route.path === '/';
 		},
 		ghostCircles: function () { // previously 'naiveHalfSlotEdges'
 			// this is where the half slot edges would have landed WITHOUT snapping
@@ -1726,7 +1728,7 @@ Vue.component('floor-preview', {
 	:points="rect.points"
 />
 <polyline
-	v-if="showFeaturedExtras"
+	v-if="drawFeaturedExtras"
 	v-for="rect in processedRectanglesFeat"
 	:points="rect.points"
 />

@@ -1608,3 +1608,21 @@ var makePrintName = function (name, slotSize) {
 var makeFeaturedPrintName = function (name, type) {
 	return name += ' (' + type + ')';
 };
+
+var getSlotSizeParReport = function (actual, par) {
+	var inches = actual;
+	var isOverPar = actual >= par;
+	var prefix = isOverPar ? '+' : '';
+	var result = {
+		isOverPar: isOverPar,
+		color: isOverPar ? 'green' : 'red',
+		inches: inches,
+		feet: (inches / 12).toFixed(1),
+		inchesOverPar: inches - par,
+		feetOverPar: ((inches - par) / 12).toFixed(1),
+		percent: (100 * inches / par).toFixed(0),
+	};
+	result.inchesOverParPrint = prefix + result.inchesOverPar + '"';
+	result.feetOverParPrint = prefix + result.feetOverPar + "'";
+	return result;
+};
