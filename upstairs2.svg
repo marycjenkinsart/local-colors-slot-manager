@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 24.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!-- Generator: Adobe Illustrator 26.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 218.4 630.7" style="enable-background:new 0 0 218.4 630.7;" xml:space="preserve">
 <style type="text/css">
 	.st0{opacity:0.2;}
 	.st1{fill:none;stroke:#2E3192;stroke-miterlimit:10;}
 	.st2{fill:none;stroke:#C7C4E2;stroke-miterlimit:10;}
-	.st3{fill:none;stroke:#2E3192;stroke-width:1;stroke-miterlimit:9.9928;}
+	.st3{fill:none;stroke:#2E3192;stroke-width:1;stroke-miterlimit:9.9924;}
 	.st4{fill:none;stroke:#2E3192;stroke-miterlimit:10;stroke-dasharray:1,1;}
 	.st5{fill:none;stroke:#D3D1E9;stroke-width:1;stroke-miterlimit:10;}
 	.st6{fill:none;stroke:#D3D1E9;stroke-miterlimit:10;}
-	.st7{fill:#FFFFFF;stroke:#C7C4E2;stroke-width:1;stroke-miterlimit:10.009;}
-	.st8{fill:#FFFFFF;stroke:#C7C4E2;stroke-width:1;stroke-miterlimit:9.9964;}
+	.st7{fill:#FFFFFF;stroke:#C7C4E2;stroke-width:1;stroke-miterlimit:10.0095;}
+	.st8{fill:#FFFFFF;stroke:#C7C4E2;stroke-width:1;stroke-miterlimit:9.9962;}
 	.st9{fill:none;stroke:#231F20;stroke-miterlimit:10;}
 </style>
 <g id="Upstairs_Base" class="st0">
@@ -34,7 +34,7 @@
 	<rect x="109.6" y="27" class="st2" width="10.8" height="6.1"/>
 	<g>
 		
-			<rect x="25.6" y="540" transform="matrix(0.255 -0.9669 0.9669 0.255 -493.5293 441.9489)" class="st3" width="28.8" height="2.6"/>
+			<rect x="25.7" y="540" transform="matrix(0.255 -0.9669 0.9669 0.255 -493.5685 441.9957)" class="st3" width="28.8" height="2.6"/>
 		<rect x="38" y="555.8" class="st1" width="28.8" height="2.6"/>
 		<path class="st1" d="M45,527.8c12.5,3.1,21.8,14.4,21.8,28"/>
 	</g>
@@ -51,7 +51,7 @@
 	<polyline class="st1" points="179.5,476.7 183.7,476.7 183.7,484.8 179.5,484.8 179.5,536.1 174,543.2 182.2,549.7 165.7,570.6 
 		157.5,564.2 149.6,574.2 153.4,577.2 159.4,569.7 186.1,590.6 180,598.4 183.6,601.2 160.5,630.7 69.6,559.4 	"/>
 	
-		<rect x="114.9" y="525.1" transform="matrix(0.6181 -0.7861 0.7861 0.6181 -368.7609 305.6535)" class="st5" width="30.6" height="14.5"/>
+		<rect x="114.9" y="525.1" transform="matrix(0.6181 -0.7861 0.7861 0.6181 -368.7573 305.6512)" class="st5" width="30.6" height="14.5"/>
 	<g>
 		<path class="st6" d="M124.6,517.4c4.4,3.5,1.2,6.8-2.3,11.2s-5.9,8.4-10.3,4.9s-5.2-9.9-1.7-14.3
 			C113.7,514.7,120.1,513.9,124.6,517.4z"/>
@@ -64,8 +64,9 @@
 		<path class="st6" d="M153.3,542.7c0.7,0.6,1,1.4-3.5,7.1c-4.5,5.7-5.4,5.6-6.1,5.1c-0.7-0.6-1-1.4,3.5-7.1
 			C151.7,542,152.6,542.1,153.3,542.7z"/>
 		
-			<rect x="146.6" y="532.1" transform="matrix(0.6183 -0.786 0.786 0.6183 -365.9793 321.708)" class="st7" width="3.2" height="11"/>
-		<rect x="136" y="545.6" transform="matrix(0.6182 -0.786 0.786 0.6182 -380.631 318.553)" class="st8" width="3.2" height="11"/>
+			<rect x="146.6" y="532.1" transform="matrix(0.6183 -0.786 0.786 0.6183 -365.9763 321.7099)" class="st7" width="3.2" height="11"/>
+		
+			<rect x="136" y="545.6" transform="matrix(0.6182 -0.786 0.786 0.6182 -380.6299 318.5541)" class="st8" width="3.2" height="11"/>
 	</g>
 </g>
 <g id="u00">
@@ -122,6 +123,36 @@
 	<line id="ccw_10_" class="st9" x1="35.2" y1="481.2" x2="35.2" y2="525.9"/>
 	<line id="ccw_9_" class="st9" x1="165.7" y1="570.6" x2="182.2" y2="549.7"/>
 	<line id="ccw_8_" class="st9" x1="179.5" y1="536.1" x2="179.5" y2="484.8"/>
+	<line class="st9" x1="146.4" y1="351.2" x2="178.6" y2="351.2"/>
+</g>
+<g id="u10">
+	<line id="corner1" class="st9" x1="122.7" y1="27" x2="182.7" y2="27"/>
+	<line id="corner2" class="st9" x1="182.7" y1="27" x2="182.7" y2="99.7"/>
+	<line id="ccw_00000162311263055095858310000006440917852472542650_" class="st9" x1="68" y1="73.5" x2="50" y2="113.2"/>
+	<line id="ccw_00000131356319398750973600000008312659848770108579_" class="st9" x1="43.2" y1="114" x2="34.9" y2="132.4"/>
+	<line id="ccw_00000178894559428860031280000013357073445369555855_" class="st9" x1="34.9" y1="132.4" x2="34.9" y2="233.5"/>
+	<line id="ccw_00000025436947959494003190000017180112940096148868_" class="st9" x1="34.7" y1="265.2" x2="34.7" y2="365.3"/>
+	<line id="ccw_00000102504595857773343060000004298768593100666298_" class="st9" x1="34.7" y1="365.3" x2="41.9" y2="383.7"/>
+	<line class="st9" x1="141.3" y1="329.4" x2="141.3" y2="345.2"/>
+	<line class="st9" x1="141.4" y1="379.4" x2="141.4" y2="485.4"/>
+	<line id="ccw_00000101098365277411035900000005407587105668170129_" class="st9" x1="35.2" y1="481.2" x2="35.2" y2="525.9"/>
+	<line id="ccw_00000034064077288430246030000018349672815672780456_" class="st9" x1="165.7" y1="570.6" x2="182.2" y2="549.7"/>
+	<line id="ccw_00000121241473119844939490000017109068401319290502_" class="st9" x1="179.5" y1="536.1" x2="179.5" y2="484.8"/>
+	<line class="st9" x1="146.4" y1="351.2" x2="178.6" y2="351.2"/>
+</g>
+<g id="u11">
+	<line id="ccw_00000183247974745107722210000009397045455307347615_" class="st9" x1="182.7" y1="99.7" x2="182.7" y2="27"/>
+	<line id="ccw_00000171704312237352950090000008961428293503614118_" class="st9" x1="182.7" y1="27" x2="122.7" y2="27"/>
+	<line id="ccw_00000145758515627986138200000016221573877228249482_" class="st9" x1="68" y1="73.5" x2="50" y2="113.2"/>
+	<line id="ccw_00000183949712615438412090000011358161250213564311_" class="st9" x1="43.2" y1="114" x2="34.9" y2="132.4"/>
+	<line id="ccw_00000080897675547887881800000016585702974646810299_" class="st9" x1="34.9" y1="132.4" x2="34.9" y2="233.5"/>
+	<line id="ccw_00000057847349865004366980000004309509921754335366_" class="st9" x1="34.7" y1="265.2" x2="34.7" y2="365.3"/>
+	<line id="ccw_00000067939510923302997160000010550648151773318037_" class="st9" x1="34.7" y1="365.3" x2="41.9" y2="383.7"/>
+	<line class="st9" x1="141.3" y1="329.4" x2="141.3" y2="345.2"/>
+	<line class="st9" x1="141.4" y1="379.4" x2="141.4" y2="485.4"/>
+	<line id="ccw_00000090295259504516406740000002955094221764022457_" class="st9" x1="35.2" y1="481.2" x2="35.2" y2="525.9"/>
+	<line id="ccw_00000084496744946743031400000008604799296169510823_" class="st9" x1="165.7" y1="570.6" x2="182.2" y2="549.7"/>
+	<line id="ccw_00000003070843688958791040000009253095651155133596_" class="st9" x1="179.5" y1="536.1" x2="179.5" y2="484.8"/>
 	<line class="st9" x1="146.4" y1="351.2" x2="178.6" y2="351.2"/>
 </g>
 </svg>

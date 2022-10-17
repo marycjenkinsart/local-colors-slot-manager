@@ -1,4 +1,4 @@
-var currentAppVersion = "2.4";
+var currentAppVersion = "2.5"; // INFIX
 
 var defaultSnapInches = 18;
 
@@ -10,19 +10,6 @@ var snapPriority = {
   //-------------------//
  /*   GENERIC STUFF   */
 //-------------------//
-
-var makeUnderscoresSpaces = function (string) { // (replaceAll not compatible with iOS <13)
-	while (string.includes('_')) {
-		string = string.replace('_',' ');
-	}
-	return string;
-};
-var makeSpacesUnderscores = function (string) { // (replaceAll not compatible with iOS <13)
-	while (string.includes(' ')) {
-		string = string.replace(' ','_');
-	}
-	return string;
-}
 
 var getUnique = function (value, index, self) {
 	return self.indexOf(value) === index; // thanks, stackOverflow
@@ -196,7 +183,7 @@ var makeCompactFloorUnfancy = function (string) {
 	var result = [];
 	stringSplits.forEach(function (fancyItem) {
 		var innermostSplits = fancyItem.split('-');
-		var name = makeUnderscoresSpaces(innermostSplits[0]);
+		var name = innermostSplits[0].replace(/_/g, ' ');
 		var count = parseInt(innermostSplits[1],10) || 2;
 		while (count > 0) {
 			result.push(name);
@@ -328,7 +315,7 @@ var makeLabelCompact = function (obj) {
 		result += ',' + version;
 	}
 	if (obj.custom) {
-		result += ',' + makeSpacesUnderscores(obj.custom);
+		result += ',' + obj.custom.replace(/ /g, '_');
 	}
 	return result;
 };
@@ -340,7 +327,7 @@ var makeLabelUncompact = function (compactLabelString) {
 		custom: 'LABEL ERROR'
 	};
 	if (compactLabelString) {
-		compactLabelString = makeUnderscoresSpaces(compactLabelString);
+		compactLabelString = compactLabelString.replace(/_/g, ' ');
 		var targetSplits = compactLabelString.split(',')
 		result = {
 			year: parseInt(targetSplits[0],10) || 1970,
@@ -391,7 +378,7 @@ var makeCompactFeaturedUnfancy = function (string) {
 		var stringSplits = string.split(',');
 		stringSplits.forEach(function (fancyItem) {
 			var innermostSplits = fancyItem.split('-');
-			var name = makeUnderscoresSpaces(innermostSplits[0]);
+			var name = innermostSplits[0].replace(/_/g, ' ');
 			var type = innermostSplits[1];
 			var artist = {
 				name: name,
@@ -516,7 +503,7 @@ var compactEverything = function (rotation) {
 			}
 		})
 	}
-	result = makeSpacesUnderscores(result);
+	result = result.replace(/ /g, '_');
 	return result;
 };
 
