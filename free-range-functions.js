@@ -1,4 +1,4 @@
-var currentAppVersion = "2.5"; // INFIX
+var currentAppVersion = "2.6"; // INFIX
 
 var defaultSnapInches = 18;
 

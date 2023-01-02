@@ -3,6 +3,9 @@
 //-----------------------------------------------//
 
 var webAppHistory = [
+	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2.6#/view?l=2022,12,2&u=Claire,Jeff_M,Brokk,Blaine&d=J_Clay-1,Taryn-1,Lorraine,Helene,Pam,Mary&f=no_theme-group&x=v2&t=,d01&au=x3,12,x1,3&ad=33,39,x3,-3',
+	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2.5#/view?l=2022,12&u=Claire,Jeff_M,Brokk,Blaine&d=J_Clay-1,Taryn-1,Lorraine,Pam,Mary&f=no_theme-group&x=v2&au=x3,12,x1,3&ad=9,12,x1,9,x1,6',
+	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2.5#/view?l=2022,11&u=GUEST-1,Taryn-1,Lorraine,J._Clay-1,Mary&d=Brokk,Jeff_M.,Claire,Blaine&f=Pam-2D-2&x=v2&au=x1,27,x1,12,18&ad=x1,-6,x1,-12,x1,-3',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2.5#/view?l=2022,10,3&u=GUEST-1,Blaine,Jeff_M.&d=Pam,Taryn-1,Mary,J._Clay-1&f=Lorraine-2D-2&x=v2&t=u01,&au=54,x1,45,18',
 	// 'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2.4#/view?l=2022,10&u=GUEST-1,Blaine,Jeff_M.-1&d=Pam,Mary,J._Clay-1&f=Lorraine-2D-2&x=v2',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2.3#/view?l=2022,9&u=GUEST-1,Jeff_M.-1,J._Clay-1,Mary,Pam&d=Lorraine,Blaine,Brianna&f=no_theme-group,Lawrence-3D&x=v2',

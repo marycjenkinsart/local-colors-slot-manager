@@ -49,15 +49,16 @@ Vue.component('history-row', {
 			this.$emit('clicked-on-name', args);
 		},
 		classByName: function (name) {
-			var result = '';
-			if (this.insertName === name && this.insertable) {
-				result = 'selected-to-insert';
-			} else if (this.highlightedName === name) {
-				result = 'selected';
+			var sanitizedName = name.replace(/\./g,'');
+			var sanitizedInsertable = this.insertName.replace(/\./g,'');
+			var sanitizedHighlighted = this.highlightedName.replace(/\./g,'');
+			if (sanitizedInsertable === sanitizedName && this.insertable) {
+				return 'selected-to-insert';
+			} else if (sanitizedHighlighted === sanitizedName) {
+				return 'selected';
 			} else {
-				result = 'not-selected';
+				return 'not-selected';
 			}
-			return result;
 		},
 	},
 	template: /*html*/`
