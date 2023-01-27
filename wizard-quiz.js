@@ -509,8 +509,8 @@ var wizardQuiz = [
 		category: "Complete!",
 		title: "All done!",
 		subtitles: [
-			"Click the button below to copy this link into your clipboard, after which you can \"paste\" to share the map with others.",
-			"Remember that the link must be shared and used in its entirety or the map will appear broken. (When sending this link via email, make it a clickable link by hand so that it is not truncated accidentally by your email client.)",
+			"To save this layout permanently, copy and paste the link into the gallery spreadsheet designated for saving these layouts.",
+			"Remember that the link must be shared and used in its entirety or the map will appear broken. In particular, when sending this link via email, make it a clickable link by hand so that it is not truncated accidentally by your email client.",
 		],
 		formName: "copyResult",
 		navButtons: [

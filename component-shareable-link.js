@@ -71,7 +71,7 @@ Vue.component('shareable-link', {
 			class="button"
 			:class="isWizard ? 'big_button' : ''"
 			@click="copyLink"
-			title="Send this link as an email"
+			title="Insert this link into a fresh email message (this will open your default email client)"
 			target="_blank"
 		>Email Link</a>
 	</p>

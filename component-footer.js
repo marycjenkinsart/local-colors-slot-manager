@@ -9,7 +9,7 @@ var myFooter = Vue.component('my-footer', {
 	<hr>
 	<p
 		class="medium-mini gray"
-	>Local Colors Layout Manager (v{{appVersion}}), created and maintained by Mary Jenkins 2022</p>
+	>Local Colors Layout Manager (v{{appVersion}}), created and maintained by Mary Jenkins 2023</p>
 </div>
 `
 });

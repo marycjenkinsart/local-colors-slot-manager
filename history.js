@@ -3,6 +3,7 @@
 //-----------------------------------------------//
 
 var webAppHistory = [
+	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2.6#/view?l=2023,1&u=GUEST-1,Mary,Pam,Helene,Lorraine,J_Clay-1&d=Blaine,Taryn-1,Claire,Brokk,Jeff_M&f=no_theme-group&x=v2&t=u01,&au=x8,-9',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2.6#/view?l=2022,12,2&u=Claire,Jeff_M,Brokk,Blaine&d=J_Clay-1,Taryn-1,Lorraine,Helene,Pam,Mary&f=no_theme-group&x=v2&t=,d01&au=x3,12,x1,3&ad=33,39,x3,-3',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2.5#/view?l=2022,12&u=Claire,Jeff_M,Brokk,Blaine&d=J_Clay-1,Taryn-1,Lorraine,Pam,Mary&f=no_theme-group&x=v2&au=x3,12,x1,3&ad=9,12,x1,9,x1,6',
 	'https://marycjenkinsart.github.io/local-colors-slot-manager/?v2.5#/view?l=2022,11&u=GUEST-1,Taryn-1,Lorraine,J._Clay-1,Mary&d=Brokk,Jeff_M.,Claire,Blaine&f=Pam-2D-2&x=v2&au=x1,27,x1,12,18&ad=x1,-6,x1,-12,x1,-3',
